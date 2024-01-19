@@ -1,0 +1,69 @@
+<div class="container">
+    <div class="box">
+        <p class="game-name">{{ gameName }}</p>
+
+
+        <div class="time-diff">
+
+            <div class="diff-box"
+                *ngIf="gameService.gameInfo.gameMode === gameMode.ClassicSolo || gameService.gameInfo.gameMode === gameMode.ClassicOneVersusOne">
+                <h3>{{ gameService.gameInfo.username }}
+                    ({{ gameService.foundDifferences }} / {{ totalDifferences }})</h3>
+                <h3 *ngIf="gameService.gameInfo.otherPlayerUsername">
+                    {{ gameService.gameInfo.otherPlayerUsername }}
+                    ({{ gameService.opponentFoundDifferences }} / {{ totalDifferences }})</h3>
+            </div>
+
+            <div class="diff-box"
+                *ngIf="gameService.gameInfo.gameMode === gameMode.TimeLimitedSolo || gameService.gameInfo.gameMode === gameMode.TimeLimitedCoop">
+                <h3>{{ gameService.gameInfo.username }}
+                    <span *ngIf="gameService.gameInfo.otherPlayerUsername"> ET {{
+                        gameService.gameInfo.otherPlayerUsername }}</span>
+                </h3>
+                <h3>{{ gameService.foundDifferences }} différences trouvées</h3>
+            </div>
+
+            <app-timer [gameService]="gameService" #timer class="timer"></app-timer>
+
+        </div>
+
+        <div class="images">
+            <app-image-area-game [imageArea]="areas.ORIGINAL" [gameService]="gameService"></app-image-area-game>
+            <app-image-area-game [imageArea]="areas.MODIFIED" [gameService]="gameService"></app-image-area-game>
+        </div>
+
+        <div class="options" *ngIf="!classicModeService || !classicModeService.replayInstance">
+            <app-button class="button" icon="mood_bad" (click)="giveUp()">Abandonner la partie</app-button>
+            <app-button class="button" icon="vpn_key" [isDisabled]="!canGetHint()" (click)="getHint()">Un
+                indice</app-button>
+            <div class="informations">
+                <p class="title-info"> INFORMATIONS : </p>
+                <p>Difficulté : {{ gameDifficulty }}</p>
+                <!-- //FIX ME : envoyer le bon mode de jeu -->
+                <p>Mode de jeu : Classique</p>
+                <p>Indices Restants : {{ remainingHints }}</p>
+            </div>
+        </div>
+
+        <div class="options" *ngIf="classicModeService && classicModeService.replayInstance">
+            <app-button class="button" icon="mood_bad" (click)="classicModeService.endReplay()">Accueil</app-button>
+            <app-button class="button" icon="replay"
+                (click)="classicModeService.replayInstance.restart()">Recommencer</app-button>
+            <app-button class="button" icon="fast_forward" (click)="classicModeService.replayInstance.speed = 1"
+                [isDisabled]="classicModeService.replayInstance.speed === 1">X1</app-button>
+            <app-button class="button" icon="fast_forward" (click)="classicModeService.replayInstance.speed = 2"
+                [isDisabled]="classicModeService.replayInstance.speed === 2">X2</app-button>
+            <app-button class="button" icon="fast_forward" (click)="classicModeService.replayInstance.speed = 4"
+                [isDisabled]="classicModeService.replayInstance.speed === 4">X4</app-button>
+            <app-button class="button" icon="pause" (click)="classicModeService.replayInstance.pause()"
+                *ngIf="!classicModeService.replayInstance.isPaused()">Pause</app-button>
+            <app-button class="button" icon="play_arrow" (click)="classicModeService.replayInstance.resume()"
+                *ngIf="classicModeService.replayInstance.isPaused()">Resume</app-button>
+        </div>
+
+    </div>
+    <div class="messages">
+        <p class="title">Messages</p>
+        <app-message-bar [gameService]="gameService"></app-message-bar>
+    </div>
+</div>

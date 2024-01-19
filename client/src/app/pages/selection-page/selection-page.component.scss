@@ -1,0 +1,53 @@
+.container {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #274472;
+    align-self: center;
+    user-select: none;
+}
+
+.game-sheet-container {
+    display: grid;
+    grid-template:
+        'game-sheet1 game-sheet2'
+        'game-sheet3 game-sheet4';
+    width: 100%;
+    height: 100%;
+}
+
+.game-sheet {
+    justify-self: center;
+    align-self: center;
+    height: inherit;
+    width: inherit;
+}
+
+.footer {
+    display: flex;
+    width: inherit;
+    justify-content: space-between;
+}
+
+.navigation {
+    scale: 0.75;
+}
+
+#game-sheet1 {
+    grid-area: game-sheet1;
+}
+
+#game-sheet2 {
+    grid-area: game-sheet2;
+}
+
+#game-sheet3 {
+    grid-area: game-sheet3;
+}
+
+#game-sheet4 {
+    grid-area: game-sheet4;
+}

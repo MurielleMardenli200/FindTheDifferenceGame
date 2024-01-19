@@ -1,0 +1,17 @@
+<div class="container">
+    <h1 *ngIf="!gameSelectionService.gamesLoaded" class="loading-text">Loading...</h1>
+    <div *ngIf="gameSelectionService.gamesLoaded" class="game-sheet-container">
+        <div class="game-sheet" *ngFor="let game of this.gameSelectionService.gamesToRender; trackBy: id">
+            <app-game-sheet [game]="game" [isConfig]="isConfig" class="game-sheet"></app-game-sheet>
+        </div>
+    </div>
+    <div *ngIf="gameSelectionService.gamesLoaded" class="footer">
+        <app-button icon="keyboard_arrow_left" class="navigation" (click)="gameSelectionService.previous()"
+            [isDisabled]="gameSelectionService.isFirstPage()">PREVIOUS</app-button>
+        
+        <app-button icon="home" class="back-button" routerLink="/home">PAGE D'ACCUEIL</app-button>
+
+        <app-button icon="keyboard_arrow_right" class="navigation" (click)="gameSelectionService.next()"
+            [isDisabled]="gameSelectionService.isLastPage()">NEXT</app-button>
+    </div>
+</div>

@@ -1,0 +1,17 @@
+// 10 MB
+const MAX_HTTP_BUFFER_SIZE = 1e7;
+
+const ALLOWED_ORIGINS: string[] = [
+    'http://localhost:4200',
+    'https://admin.socket.io',
+    'https://spot7.step.polymtl.ca',
+    'https://polytechnique-montr-al.gitlab.io',
+];
+
+export const GATEWAY_CONFIGURATION_OBJECT = {
+    cors: {
+        origin: ALLOWED_ORIGINS,
+        credentials: true,
+    },
+    maxHttpBufferSize: MAX_HTTP_BUFFER_SIZE,
+};

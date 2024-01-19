@@ -1,0 +1,44 @@
+<div class="background">
+    <app-animated-background></app-animated-background>
+    <div class="container">
+        <div class="sub-container">
+            <div class="main-box">
+                <div>
+                    <p class="title">CRÉEZ VOTRE JEU</p>
+                </div>
+                <div class="image-areas">
+                    <app-image-area [imageArea]="areas.ORIGINAL"></app-image-area>
+                    <app-image-area [imageArea]="areas.MODIFIED"></app-image-area>
+                </div>
+                <div>
+                    <p class="warning">ATTENTION : Le système accepte seulement des images en format BMP 24-bit de
+                        taille
+                        640x480
+                    </p>
+                </div>
+                <div class="buttons">
+                    
+                    <app-button class="quit" link="/config" icon="sentiment_very_dissatisfied">Abandonner</app-button>
+
+                    <div class="buttons-container">
+                        <app-load-image-button [imageArea]="areas.BOTH"></app-load-image-button>
+                        <span>
+                            <p>Sélectionnez un rayon d'élargissement</p>
+                            <select [(ngModel)]="selectedRadius">
+                                <option *ngFor="let radius of radiuses" [ngValue]="radius">{{ radius }}</option>
+                                
+                            </select>
+
+                        </span>
+                        <button class="validation" mat-raised-button (click)="handleValidation()">Lancer la validation
+                            des différences</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="paint-tools">
+                <app-paint-tools></app-paint-tools>
+            </div>
+
+    </div>
+</div>

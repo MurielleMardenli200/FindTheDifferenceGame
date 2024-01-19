@@ -1,0 +1,2 @@
+export const DEFAULT_PORT = 3000;
+export const MILLISECONDS_IN_ONE_SECOND = 1000;

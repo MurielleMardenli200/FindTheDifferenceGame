@@ -1,0 +1,10 @@
+<h2 mat-dialog-title>Choisissez votre pseudo</h2>
+<form #form (submit)="playGame($event)">
+  <div mat-dialog-content>
+    <label for="username">Pseudo:</label>
+    <input [formControl]="userNameFormControl" [(ngModel)]="username" type="text" name="username" required>
+  </div>
+  <div mat-dialog-actions>
+    <app-button type="submit" (submit)="playGame($event)" value="submit" [isDisabled]="userNameFormControl.invalid">{{ data.state }}</app-button>
+  </div>
+</form>

@@ -1,0 +1,8 @@
+<p [ngClass]="{
+        'system-message': message.author === authors.System,
+        'user-message': message.author === authors.User,
+        'opponent-message': message.author === authors.Opponent,
+        'leaderboard-message': message.author === authors.Leaderboard
+    }">
+    {{ messageTime }} - {{ message.content }}
+</p>

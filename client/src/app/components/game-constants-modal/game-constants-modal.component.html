@@ -1,0 +1,12 @@
+<h2 mat-dialog-title>Constantes de jeu</h2>
+<div md-dialog-content>
+    {{data.constantMessage}}
+    <mat-form-field appearance="fill">
+        <mat-label>Constante</mat-label>
+        <input type="number" matInput [formControl]="gameConstantsFormControl">
+    </mat-form-field>
+</div>
+<div md-dialog-actions>
+    <app-button type="button" (click)="modal.close(false)">Annuler</app-button>
+    <app-button type="button" [isDisabled]="gameConstantsFormControl.invalid" (click)="modal.close(getValue())">Confirmer</app-button>
+</div>

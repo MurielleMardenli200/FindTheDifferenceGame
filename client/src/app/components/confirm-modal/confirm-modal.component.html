@@ -1,0 +1,6 @@
+<h2 mat-dialog-title>Confirmation</h2>
+<div md-dialog-content>{{data.confirmMessage}}</div>
+<div md-dialog-actions>
+    <app-button type="button" (click)="modal.close(false)">Annuler</app-button>
+    <app-button type="button" (click)="modal.close(true)">Confirmer</app-button>
+</div>

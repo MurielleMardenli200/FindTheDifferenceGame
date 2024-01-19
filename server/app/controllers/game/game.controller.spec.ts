@@ -1,0 +1,69 @@
+import { ExistingGame, Game } from '@app/model/database/game.entity';
+import { defaultGame } from '@app/samples/game';
+import { BitmapService } from '@app/services/bitmap/bitmap.service';
+import { DifferencesService } from '@app/services/differences/differences.service';
+import { GameService } from '@app/services/game/game.service';
+import { Test, TestingModule } from '@nestjs/testing';
+import { SinonStubbedInstance, createStubInstance } from 'sinon';
+import { GameController } from './game.controller';
+
+describe('GameController', () => {
+    let controller: GameController;
+    let gameService: SinonStubbedInstance<GameService>;
+    let bitmapService: SinonStubbedInstance<BitmapService>;
+    let differencesService: SinonStubbedInstance<DifferencesService>;
+
+    beforeEach(async () => {
+        gameService = createStubInstance(GameService);
+        bitmapService = createStubInstance(BitmapService);
+        differencesService = createStubInstance(DifferencesService);
+
+        const module: TestingModule = await Test.createTestingModule({
+            controllers: [GameController],
+            providers: [
+                {
+                    provide: GameService,
+                    useValue: gameService,
+                },
+                {
+                    provide: BitmapService,
+                    useValue: bitmapService,
+                },
+                {
+                    provide: DifferencesService,
+                    useValue: differencesService,
+                },
+            ],
+        }).compile();
+
+        controller = module.get<GameController>(GameController);
+    });
+
+    it('should be defined', () => {
+        expect(controller).toBeDefined();
+    });
+
+    it('getGames() should return games', async () => {
+        const games = [
+            new Game({ ...defaultGame, name: 'first' }),
+            new Game({ ...defaultGame, name: 'second' }),
+            new Game({ ...defaultGame, name: 'third' }),
+        ] as ExistingGame[];
+        gameService.getGames.resolves(games);
+
+        expect(await controller.getGames()).toEqual(games);
+    });
+
+    it('deleteGame() should delete game', async () => {
+        const gameServiceSpy = jest.spyOn(gameService, 'deleteGame');
+        const gameId = 'hello';
+        await controller.deleteGame(gameId);
+        expect(gameServiceSpy).toHaveBeenCalledWith(gameId);
+    });
+
+    it('should delete all games and return no content', async () => {
+        const gameServiceSpy = jest.spyOn(gameService, 'deleteAllGames');
+        await controller.deleteAllGame();
+        expect(gameServiceSpy).toHaveBeenCalled();
+    });
+});

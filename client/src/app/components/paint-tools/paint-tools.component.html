@@ -1,0 +1,45 @@
+<div class="paint-zone">
+    <p class="title">OUTILS</p>
+    <div class="buttons">
+        <button class="button" (click)="paintService.setMode(modes.Pencil)">DESSINER
+            <img src="./assets/images-buttons/pencil.png" alt="pencil" />
+        </button>
+
+        <button class="button" (click)="paintService.setMode(modes.Eraser)">EFFACER
+            <img src="./assets/images-buttons/eraser.png" alt="eraser" />
+        </button>
+
+        <button class="button" (click)="paintService.setMode(modes.Rectangle)">RECTANGLE
+            <img src="./assets/images-buttons/drawRectangle.png" alt="rectangle" />
+        </button>
+
+
+        <button class="button" [disabled]="!paintService.canRedo()" (click)="paintService.redo()">REFAIRE
+            <img src="./assets/images-buttons/redo.png" alt="redo" />
+        </button>
+
+
+        <button class="button" [disabled]="!paintService.canUndo()" (click)="paintService.undo()" >ANNULER
+            <img src="./assets/images-buttons/undo.png" alt="undo" />
+        </button>
+
+        <div class="color">
+            <input type="color" (change)="paintService.changeColor($event)">
+        </div>
+
+
+        <div class="size">
+            <select (change)="paintService.changeRadius($event)">
+                <optgroup label="Choisissez une taille de pinceau"></optgroup>
+                <option value="1">1</option>
+                <option value="3">3</option>
+                <option value="5" selected>5</option>
+                <option value="10">10</option>
+            </select>
+        </div>
+
+        <div class="intervert">
+            <button class="intervert-button"(click)="paintService.intervert()">Inverser les Canvas </button>
+        </div>
+    </div>
+</div>
