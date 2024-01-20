@@ -108,7 +108,7 @@ describe('CanvasEditorService', () => {
         const putImageDataSpy = spyOn(otherContext, 'putImageData');
         service.replaceImageData(fakeContext, otherContext);
         expect(getImageDataSpy).toHaveBeenCalledWith(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
-        // @ts-ignore
+        // @ts-expect-error the other arguments are unnecessary for this test case
         expect(putImageDataSpy).toHaveBeenCalledWith(fakeImageData, 0, 0);
     });
 
@@ -123,9 +123,9 @@ describe('CanvasEditorService', () => {
         service.intervertImageData(fakeContext, otherContext);
         expect(originalGetImageDataSpy).toHaveBeenCalledWith(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
         expect(modifiedGetImageDataSpy).toHaveBeenCalledWith(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
-        // @ts-ignore
+        // @ts-expect-error the other arguments are unnecessary for this test case
         expect(originalPutImageDataSpy).toHaveBeenCalledWith(fakeModifiedImageData, 0, 0);
-        // @ts-ignore
+        // @ts-expect-error the other arguments are unnecessary for this test case
         expect(modifiedPutImageDataSpy).toHaveBeenCalledWith(fakeOriginalImageData, 0, 0);
     });
 

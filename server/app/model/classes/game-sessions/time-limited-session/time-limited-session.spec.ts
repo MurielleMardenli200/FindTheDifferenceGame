@@ -14,6 +14,7 @@ import { TimeLimitedSession } from './time-limited-session';
 describe('TimeLimitedSession', () => {
     let gameSession: TimeLimitedSession;
     const mockDifferenceService = {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         loadDifferences: async (_: string) => {
             return Promise.resolve(differences);
         },

@@ -49,11 +49,11 @@ describe('DrawableShape', () => {
     it('getPositionsToDraw should return an array with all positions between lastPosition and position', () => {
         const lastPosition = { x: 5, y: 10 };
         const position = { x: 10, y: 20 };
-        // @ts-ignore
+        // @ts-expect-error this function is supposed to exist
         const getPixelsBetweenTwoPositionsSpy = spyOn(drawableShape, 'getPixelsBetweenTwoPositions').and.returnValue([lastPosition, position]);
         drawableShape['lastPosition'] = lastPosition;
         expect(drawableShape['getPositionsToDraw'](position)).toEqual([lastPosition, position]);
-        // @ts-ignore
+        // @ts-expect-error these are the good parameters for this test
         expect(getPixelsBetweenTwoPositionsSpy).toHaveBeenCalledWith(lastPosition, position);
     });
 

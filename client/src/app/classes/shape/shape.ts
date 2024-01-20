@@ -17,15 +17,15 @@ export abstract class Shape implements ShapeInterface, HistoryEnabledOf<Shape> {
     // They can't be abstract because of the decorator
 
     @History(true)
-    // eslint-disable-next-line @typescript-eslint/no-empty-function, no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars, no-unused-vars
     begin(position: Coordinate) {}
 
     @History()
-    // eslint-disable-next-line @typescript-eslint/no-empty-function, no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars, no-unused-vars
     draw(options: DrawOptions) {}
 
     @History()
-    // eslint-disable-next-line @typescript-eslint/no-empty-function, no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars, no-unused-vars
     pause() {}
 
     @History()

@@ -32,6 +32,7 @@ export const History = (clear: boolean = false) => {
         descriptor.value = function (this: HistoryEnabled<T>, ...args: unknown[]) {
             if (clear) this.clearHistory();
 
+            // eslint-disable-next-line prefer-spread
             this.addToHistory((self: HistoryEnabled<T>) => self[propertyKey].apply(self, args));
 
             return originalMethod.apply(this, args);

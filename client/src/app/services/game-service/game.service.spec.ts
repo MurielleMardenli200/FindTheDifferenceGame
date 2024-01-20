@@ -199,7 +199,7 @@ describe('GameService', () => {
         service.executeThirdHint({ x: 5, y: 7 });
 
         expect(imageSpy).toHaveBeenCalledWith();
-        // @ts-expect-error
+        // @ts-expect-error Only 5 arguments needed not 9
         expect(drawImageSpy).toHaveBeenCalledWith(fakeImage, 5 + RADIUS, 7, FINGER_WIDTH, FINGER_HEIGHT);
     });
 

@@ -24,7 +24,7 @@ describe('Eraser', () => {
     });
 
     it('draw should call drawOnFront', () => {
-        // @ts-ignore
+        // @ts-expect-error this function is supposed to exist
         const positionsToDrawSpy = spyOn(eraser, 'getPositionsToDraw').and.returnValue([{ x: 0, y: 0 }]);
         const contextClearRectSpy = spyOn(fakeContext, 'clearRect');
         const position = { x: 5, y: 10 };

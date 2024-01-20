@@ -211,7 +211,7 @@ describe('BitmapService', () => {
 
     it('deleteImageFile should call fs.unlink', async () => {
         const unlinkSpy = jest.spyOn(fs, 'unlink').mockImplementation(async () => undefined);
-        // @ts-ignore
+        // @ts-expect-error error is not important
         const getFullPathSpy = jest.spyOn(service, 'getFullPath').mockImplementation(() => 'blablabli');
 
         fileService.fileExists.resolves(true);

@@ -301,8 +301,9 @@ describe('GameManagerService', () => {
         waitingRoomService.addPlayer.resolves(false);
 
         waitingRoomService.getGameWaitingRoom.returns(defaultWaitingRoomWithOnePlayerInQueue);
-        // @ts-ignore
-        mockSocket.id = player2.socketId;
+        // @ts-except-error ignore because id need to be tested
+        Object.defineProperty(mockSocket, 'id', { value: player2.socketId });
+        // mockSocket['id'] = player2.socketId;
 
         const result = await service.createClassicOneVersusOneSession(mockServer, mockSocket, createGameSessionDto);
 

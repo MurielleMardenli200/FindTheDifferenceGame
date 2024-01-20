@@ -30,7 +30,7 @@ describe('DrawInstructionsManager', () => {
         setIntervalSpy = spyOn(window, 'setInterval');
         clearTimeoutSpy = spyOn(window, 'clearTimeout');
 
-        // @ts-ignore
+        // @ts-expect-error the case where it is undefined should not happen in tests
         gameServiceSpy.replaySpeedChangedObservable.subscribe.and.callFake((callback) => {
             callback(1);
             return { unsubscribe: () => {} };

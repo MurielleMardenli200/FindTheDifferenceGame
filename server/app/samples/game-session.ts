@@ -24,13 +24,14 @@ export const defaultSecondPlayer: PlayerCreationInfo = { playerId: 'def', userna
 export const defaultDifferenceSet = [firstDifference, secondDifference, thirdDifference];
 
 export const mockDifferenceService = {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     loadDifferences: async (_: string) => {
         return Promise.resolve(differences);
     },
 } as DifferencesService;
 
 // FIXME: USE THIS
-// eslint-disable-next-line no-unused-vars
+// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
 const defaultThrottledSinglePlayerMap: Map<string, PlayerData> = new Map([
     [
         defaultFirstPlayer.playerId,

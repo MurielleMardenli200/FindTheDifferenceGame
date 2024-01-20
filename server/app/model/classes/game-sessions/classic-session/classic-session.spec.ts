@@ -15,6 +15,7 @@ import { ClassicSession } from './classic-session';
 describe('ClassicSession', () => {
     let gameSession: ClassicSession;
     const mockDifferenceService = {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         loadDifferences: async (_: string) => {
             return Promise.resolve(differences);
         },
@@ -53,6 +54,7 @@ describe('ClassicSession', () => {
             ['no', { differencesFound: 0 } as PlayerData],
         ]);
         gameSession.game.differencesCount = 2;
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const expected = 'yes';
         expect(gameSession.getWinner('yes')).toEqual('yes');
     });
@@ -61,6 +63,7 @@ describe('ClassicSession', () => {
         gameSession.game.differencesCount = 0;
         gameSession.players = new Map([['yes', { differencesFound: 37 } as PlayerData]]);
         gameSession.differences = [];
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const expected = 'yes';
         expect(gameSession.getWinner('yes')).toEqual('yes');
     });

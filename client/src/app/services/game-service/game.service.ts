@@ -257,7 +257,7 @@ export abstract class GameService implements HistoryEnabledOf<GameService>, OnDe
     }
 
     // The function parameter is required for children classes to override
-    // eslint-disable-next-line no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
     addToHistory(entry: HistoryEntryOf<GameService>): void {
         if (this.constructor === GameService) {
             throw new Error('Abstract method called');
@@ -271,13 +271,13 @@ export abstract class GameService implements HistoryEnabledOf<GameService>, OnDe
     }
 
     // We need the function argument for children classes to override
-    // eslint-disable-next-line no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
     endGame(gameResult: EndGameResultDto) {
         this.gameEnded = true;
     }
 
     // We need the function argument for children classes to override
-    // eslint-disable-next-line no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
     protected async onDifferenceFound(guessResult: GuessResult, otherPlayer: boolean = false): Promise<void> {
         new Audio('./assets/audio/good.mp3').play();
     }

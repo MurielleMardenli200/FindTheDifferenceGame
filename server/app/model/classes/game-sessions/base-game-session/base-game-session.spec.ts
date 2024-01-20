@@ -12,9 +12,11 @@ import { GuessResult } from '@common/model/guess-result';
 import { BaseGameSession } from './base-game-session';
 
 export class BaseGameSessionStub extends BaseGameSession {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     getWinner(playerId: string): string | null {
         throw new Error('Method not implemented.');
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     manageClick(coord: Coordinate, playerId: string): GuessResult {
         throw new Error('Method not implemented.');
     }
@@ -28,6 +30,7 @@ describe('BaseGameSession', () => {
 
     let baseGameSession: BaseGameSessionStub;
     const mockDifferenceService = {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         loadDifferences: async (_: string) => {
             return Promise.resolve(differences);
         },
