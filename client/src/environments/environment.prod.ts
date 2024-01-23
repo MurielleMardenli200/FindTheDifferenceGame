@@ -1,4 +1,4 @@
-const baseUrl = 'https://api.spot7.step.polymtl.ca';
+const baseUrl = 'https://api.spot-seven.step.polymtl.ca';
 
 export const environment = {
     production: true,
