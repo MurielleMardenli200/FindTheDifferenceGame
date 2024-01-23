@@ -1,7 +1,7 @@
 image: registry.gitlab.com/nikolayradoev/docker-images/chrome-mongo-node:20233
 
 cache:
-    key: '${CI_COMMIT_REF_SLUG}-client'
+    key: "${CI_COMMIT_REF_SLUG}-client"
     paths:
         - client/node_modules/
         - server/node_modules/
@@ -16,7 +16,7 @@ cache:
             - client/**/*
             - common/**/*
     cache:
-        key: '${CI_COMMIT_REF_SLUG}-client'
+        key: "${CI_COMMIT_REF_SLUG}-client"
         paths:
             - client/node_modules/
         policy: pull
@@ -30,7 +30,7 @@ cache:
             - server/**/*
             - common/**/*
     cache:
-        key: '${CI_COMMIT_REF_SLUG}-server'
+        key: "${CI_COMMIT_REF_SLUG}-server"
         paths:
             - server/node_modules/
         policy: pull
@@ -49,7 +49,7 @@ install:client:
         - cd client
         - npm ci --cache .npm --prefer-offline
     cache:
-        key: '${CI_COMMIT_REF_SLUG}-client'
+        key: "${CI_COMMIT_REF_SLUG}-client"
         paths:
             - client/node_modules/
             - client/.npm/
@@ -62,7 +62,7 @@ install:server:
         - cd server
         - npm ci --cache .npm --prefer-offline
     cache:
-        key: '${CI_COMMIT_REF_SLUG}-server'
+        key: "${CI_COMMIT_REF_SLUG}-server"
         paths:
             - server/node_modules/
             - server/.npm/
@@ -70,7 +70,7 @@ install:server:
 
 lint:client:
     stage: lint
-    needs: ['install:client']
+    needs: ["install:client"]
     allow_failure: true
     <<: *only-client
     script:
@@ -80,7 +80,7 @@ lint:client:
 
 lint:server:
     stage: lint
-    needs: ['install:server']
+    needs: ["install:server"]
     allow_failure: true
     <<: *only-server
     script:
@@ -90,7 +90,7 @@ lint:server:
 
 test:client:
     stage: test
-    needs: ['install:client']
+    needs: ["install:client"]
     <<: *only-client
     script:
         - Xvfb :99 -ac -screen 0 1920x1080x24 &
@@ -110,7 +110,7 @@ test:client:
 
 test:server:
     stage: test
-    needs: ['install:server']
+    needs: ["install:server"]
     <<: *only-server
     script:
         - cd server
@@ -130,7 +130,7 @@ test:server:
 build:server:
     stage: build
     rules:
-        - if: '$CI_COMMIT_TAG =~ /deploy/'
+        - if: "$CI_COMMIT_TAG =~ /deploy/"
     image: docker
     services:
         - name: docker:dind
@@ -149,7 +149,7 @@ build:server:
 pages:
     stage: deploy
     rules:
-        - if: '$CI_COMMIT_TAG =~ /deploy/'
+        - if: "$CI_COMMIT_TAG =~ /deploy/"
           when: manual
     script:
         - cd client
@@ -163,79 +163,16 @@ pages:
 
 variables:
     EC2_USER: ec2-user
-    ORIGIN: 'https://gitlab-ci-token:${CI_JOB_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}'
+    ORIGIN: "https://gitlab-ci-token:${CI_JOB_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}"
 
 deploy:server:
-    image: debian
     stage: deploy
-    needs: ['build:server']
+    needs: ["build:server"]
     variables:
         IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_TAG
+        DOMAIN_NAME: $DOMAIN_NAME
     rules:
-        - if: '$CI_COMMIT_TAG =~ /deploy/'
+        - if: "$CI_COMMIT_TAG =~ /deploy/"
           when: manual
-    script:
-        - 'which ssh-agent || (apt-get update -qq && apt-get install -qq openssh-client )'
-        - eval $(ssh-agent -s)
-        - ssh-add <(echo "$EC2_PEM_FILE_CONTENT")
-        - mkdir -p ~/.ssh
-        - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
-        - 'scp ./docker-compose.yml "${EC2_USER}@${EC2_HOST}:"'
-        - |
-            timeout 600 ssh -t -o ServerAliveInterval=15 -o ServerAliveCountMax=5 "${EC2_USER}@${EC2_HOST}" "
-                set -e
-
-                echo 'Update repository cache'
-                sudo yum update -y
-
-                echo 'Setting up swap memory'
-                if test -f '/swapfile'
-                then
-                    echo 'swap memory is already configured, skipping...'
-                else
-                    sudo dd if=/dev/zero of=/swapfile bs=128M count=16
-                    sudo chmod 600 /swapfile
-                    sudo mkswap -f /swapfile
-                    sudo swapon /swapfile
-                    echo '/swapfile swap swap defaults 0 0' | sudo tee -a /etc/fstab
-                fi
-
-                echo 'Setting up git'
-                if which git &> /dev/null
-                then
-                    echo 'git is already installed, skipping...'
-                else
-                    sudo yum install -y git
-                fi
-
-                echo 'Setting up docker'
-                if which docker &> /dev/null
-                then
-                    echo 'docker is already installed, skipping...'
-                else
-                    sudo amazon-linux-extras enable docker
-                    sudo yum -y install docker
-                    sudo systemctl enable --now docker.service
-                    sudo usermod -aG docker ${EC2_USER}
-                fi
-
-                echo 'Setting up docker-compose'
-                if test -f ~/.docker/cli-plugins/docker-compose
-                then
-                    echo 'docker-compose is already installed, skipping...'
-                else
-                    mkdir -p ~/.docker/cli-plugins
-                    curl -SL https://github.com/docker/compose/releases/latest/download/docker-compose-linux-x86_64 -o ~/.docker/cli-plugins/docker-compose
-                    chmod +x ~/.docker/cli-plugins/docker-compose
-                fi
-
-                # Setup docker repo
-                mkdir docker || echo Repo already there
-                mv docker-compose.yml docker/
-                cd docker
-                echo -e 'IMAGE_TAG=${IMAGE_TAG}\nDOMAIN_NAME=${DOMAIN_NAME}\nDATABASE_CONNECTION_STRING=${DATABASE_CONNECTION_STRING}\n' > .env
-                touch acme.json && chmod 600 acme.json
-                sg docker -c 'docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY'
-                sg docker -c 'docker compose pull'
-                sg docker -c 'docker compose up -d'
-            "
+    trigger:
+        project: polytechnique-montr-al/log3900/24-1/equipe-103/spot-sev-ansible
