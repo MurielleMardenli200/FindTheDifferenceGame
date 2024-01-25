@@ -155,14 +155,14 @@ describe('GameManagerService', () => {
     });
 
     it('createClassicSession() should create a new game session', async () => {
-        gameConstantsService.findAll.resolves(DEFAULT_GAME_CONSTANTS);
+        gameConstantsService.getAll().resolves(DEFAULT_GAME_CONSTANTS);
         differenceService.loadDifferences.resolves(defaultDifferences);
         const result = await service.createClassicSession(defaultEmptyWaitingRoom as ClassicWaitingRoom);
         expect(result).toBeInstanceOf(ClassicSession);
     });
 
     it('createTimeLimitedSession() should create a new game session', async () => {
-        gameConstantsService.findAll.resolves(DEFAULT_GAME_CONSTANTS);
+        gameConstantsService.getAll().resolves(DEFAULT_GAME_CONSTANTS);
         gameService.getGames.resolves(defaultGames);
         differenceService.loadDifferences.resolves(defaultDifferences);
         jest.spyOn(service, 'createGameHistory').mockImplementation();

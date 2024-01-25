@@ -17,7 +17,7 @@ export class History implements HistoryInterface {
     @Column()
     gameMode!: GameMode;
 
-    @Column("text", { array: true })
+    @Column('text', { array: true })
     players!: string[];
 
     @Column({ nullable: true })

@@ -4,10 +4,10 @@ import { ClassicWaitingRoom, TimeLimitedWaitingRoom } from '@app/interfaces/wait
 import { ClassicSession } from '@app/model/classes/game-sessions/classic-session/classic-session';
 import { SECOND_IN_MILLISECONDS } from '@app/model/classes/game-sessions/game-session.constants';
 import { TimeLimitedSession } from '@app/model/classes/game-sessions/time-limited-session/time-limited-session';
-import { GameConstants } from '@app/model/database/game-constants.entity';
 import { Coordinate } from '@app/model/dto/coordinate.dto';
 import { PlayerCreationInfo, PlayerData } from '@app/model/schema/game-session';
 import { DifferencesService } from '@app/services/differences/differences.service';
+import { GameConstants } from '@common/game-constants';
 import { INIT, PENALTY, WIN } from '@common/game-default.constants';
 import { GameMode } from '@common/game-mode';
 import { defaultGames } from './game';
@@ -40,7 +40,6 @@ const defaultThrottledSinglePlayerMap: Map<string, PlayerData> = new Map([
 ]);
 
 export const DEFAULT_GAME_CONSTANTS: GameConstants = {
-    id: "123",
     initialTime: INIT,
     hintPenalty: PENALTY,
     differenceFoundBonus: WIN,

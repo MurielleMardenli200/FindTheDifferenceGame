@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-magic-numbers */
-import { GameConstants, GameConstantsDocument, gameConstantsSchema } from '@app/model/database/game-constants.entity';
+import { GameConstants, GameConstantsDocument, gameConstantsSchema } from '@app/model/database/game-constant.entity';
 import { GameConstantsService } from '@app/services/game-constants/game-constants.service';
 import { MongooseModule, getConnectionToken, getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -55,13 +55,13 @@ describe('GameConstantsService', () => {
             initialTime: 60,
         });
         await constantsModel.create(constants);
-        const result = await service.findAll();
+        const result = await service.getAll()();
         expect(result).toEqual(constants);
     });
 
     it('findAll() should return default game constants if they do not exist', async () => {
         constantsModel.deleteMany({});
-        const result = await service.findAll();
+        const result = await service.getAll()();
         expect(result).toEqual(new GameConstants());
         expect(constantsModel.countDocuments()).resolves.toBe(1);
     });
@@ -75,7 +75,7 @@ describe('GameConstantsService', () => {
         });
         await constantsModel.create(constants);
         await service.update('hintPenalty', 20);
-        const result = await service.findAll();
+        const result = await service.getAll()();
         expect(result.hintPenalty).toEqual(20);
     });
 
@@ -93,7 +93,7 @@ describe('GameConstantsService', () => {
         });
         await constantsModel.create(constants);
         await service.resetToDefault();
-        const result = await service.findAll();
+        const result = await service.getAll()();
         expect(result).toEqual(new GameConstants());
     });
 });

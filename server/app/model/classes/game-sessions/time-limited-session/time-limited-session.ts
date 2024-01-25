@@ -2,11 +2,11 @@ import { TimeLimitedWaitingRoom } from '@app/interfaces/waiting-room/waiting-roo
 import { BaseGameSession } from '@app/model/classes/game-sessions/base-game-session/base-game-session';
 import { SECOND_IN_MILLISECONDS } from '@app/model/classes/game-sessions/game-session.constants';
 import { Timer } from '@app/model/classes/timer/timer';
-import { GameConstants } from '@app/model/database/game-constants.entity';
 import { ExistingGame } from '@app/model/database/game.entity';
 import { Coordinate } from '@app/model/dto/coordinate.dto';
 import { TimeLimitedGameSession } from '@app/model/schema/game-session';
 import { DifferencesService } from '@app/services/differences/differences.service';
+import { GameConstants } from '@common/game-constants';
 import { GuessResultTimeLimited, ResultType, SessionType } from '@common/model/guess-result';
 import { WsException } from '@nestjs/websockets';
 import { randomInt } from 'crypto';

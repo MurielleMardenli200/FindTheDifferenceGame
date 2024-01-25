@@ -1,42 +1,60 @@
-import { GameConstants } from '@app/model/database/game-constants.entity';
-import { ConstantName } from '@common/game-constants';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { GameConstantEntity } from '@app/model/database/game-constant.entity';
+import { ConstantName, GameConstants } from '@common/game-constants';
+import { defaultGameConstants } from '@common/game-default.constants';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 @Injectable()
 export class GameConstantsService {
     constructor(
-        @InjectRepository(GameConstants)
-        private readonly gameConstantsRepository: Repository<GameConstants>,
-    ) {}
+        @InjectRepository(GameConstantEntity)
+        private readonly gameConstantsRepository: Repository<GameConstantEntity>,
+    ) {
+        this.gameConstantsRepository
+            .createQueryBuilder()
+            .select('game_constant_entity')
+            .getCount()
+            .then((count) => {
+                if (count === 0) {
+                    this.resetToDefault();
+                }
+            });
+    }
 
-    async findAll(): Promise<GameConstants> {
-        const constants = await this.gameConstantsRepository.findOne({});
+    async getAll(): Promise<GameConstants> {
+        const constants: Partial<GameConstants> = {};
 
-        if (constants === null) {
-            throw new NotFoundException('Game constants not found');
+        for (const constantName of Object.keys(defaultGameConstants)) {
+            constants[constantName as ConstantName] = (
+                await this.gameConstantsRepository.findOneByOrFail({
+                    name: constantName,
+                })
+            ).value;
         }
 
-        return constants;
+        return constants as GameConstants;
     }
 
     async update(constant: ConstantName, value: number): Promise<number> {
-        const gameConstants = await this.findAll();
+        await this.gameConstantsRepository.update({ name: constant }, { value });
 
-        gameConstants[constant] = value;
-
-        await this.gameConstantsRepository.save(gameConstants);
-
-        return gameConstants[constant];
+        return value;
     }
 
     async resetToDefault(): Promise<GameConstants> {
-        const defaultConstants = new GameConstants();
+        const defaultConstants = defaultGameConstants;
 
         await this.gameConstantsRepository.clear();
 
-        await this.gameConstantsRepository.save(defaultConstants);
+        for (const [constantName, value] of Object.entries(defaultConstants)) {
+            await this.gameConstantsRepository.save(
+                this.gameConstantsRepository.create({
+                    name: constantName,
+                    value,
+                }),
+            );
+        }
 
         return defaultConstants;
     }

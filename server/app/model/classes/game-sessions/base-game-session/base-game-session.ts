@@ -1,10 +1,10 @@
 import { ID_LENGTH } from '@app/constants/game-session.constants';
 import { WaitingRoom } from '@app/interfaces/waiting-room/waiting-room.interface';
-import { GameConstants } from '@app/model/database/game-constants.entity';
 import { ExistingGame } from '@app/model/database/game.entity';
 import { Coordinate } from '@app/model/dto/coordinate.dto';
 import { GameSession, PlayerData } from '@app/model/schema/game-session';
 import { DifferencesService } from '@app/services/differences/differences.service';
+import { GameConstants } from '@common/game-constants';
 import { GuessResult } from '@common/model/guess-result';
 
 export abstract class BaseGameSession implements GameSession {

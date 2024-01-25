@@ -92,7 +92,7 @@ export class GameManagerService {
     }
 
     async createClassicSession(waitingRoom: ClassicWaitingRoom): Promise<ClassicSession> {
-        const gameConstants = await this.gameConstantsService.findAll();
+        const gameConstants = await this.gameConstantsService.getAll();
         const gameSession = new ClassicSession(this.differencesService, waitingRoom, gameConstants);
         this.roomIdToGameSession.set(gameSession.roomId, gameSession);
         return gameSession;
@@ -100,7 +100,7 @@ export class GameManagerService {
 
     async createTimeLimitedSession(waitingRoom: TimeLimitedWaitingRoom): Promise<TimeLimitedSession> {
         const games = await this.gameService.getGames();
-        const gameConstants = await this.gameConstantsService.findAll();
+        const gameConstants = await this.gameConstantsService.getAll();
         const gameSession = new TimeLimitedSession(this.differencesService, waitingRoom, games, gameConstants);
         this.roomIdToGameSession.set(gameSession.roomId, gameSession);
         return gameSession;

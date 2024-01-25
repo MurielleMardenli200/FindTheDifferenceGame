@@ -7,7 +7,7 @@ import { ConfigurationGateway } from './gateways/configuration/configuration.gat
 import { GameCreateGateway } from './gateways/game-create/game-create.gateway';
 import { GameSessionGateway } from './gateways/game-session/game-session.gateway';
 import { DuelHighScore } from './model/database/duel-highscore.entity';
-import { GameConstants } from './model/database/game-constants.entity';
+import { GameConstantEntity } from './model/database/game-constant.entity';
 import { History } from './model/database/game-history.entity';
 import { Game } from './model/database/game.entity';
 import { HighScore } from './model/database/highscore.entity';
@@ -48,18 +48,11 @@ import { WaitingRoomService } from './services/waiting-room/waiting-room.service
                 username: configService.get<string>('DB_USERNAME'),
                 password: configService.get<string>('DB_PASSWORD'),
                 database: configService.get<string>('DB_DATABASE'),
-                entities: [Game, GameConstants, History, HighScore, SoloHighScore, DuelHighScore],
+                entities: [Game, GameConstantEntity, History, HighScore, SoloHighScore, DuelHighScore],
                 synchronize: true, // TODO: Set to false
             }),
         }),
-        TypeOrmModule.forFeature([
-            Game,
-            GameConstants,
-            History,
-            HighScore,
-            SoloHighScore,
-            DuelHighScore
-        ]),
+        TypeOrmModule.forFeature([Game, GameConstantEntity, History, HighScore, SoloHighScore, DuelHighScore]),
     ],
     controllers: [GameController, ConfigurationController],
     providers: [
