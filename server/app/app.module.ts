@@ -1,14 +1,14 @@
 import { Logger, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { MongooseModule } from '@nestjs/mongoose';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigurationController } from './controllers/configuration/configuration.controller';
 import { GameController } from './controllers/game/game.controller';
 import { ConfigurationGateway } from './gateways/configuration/configuration.gateway';
 import { GameCreateGateway } from './gateways/game-create/game-create.gateway';
 import { GameSessionGateway } from './gateways/game-session/game-session.gateway';
-import { GameConstants, gameConstantsSchema } from './model/database/game-constants.entity';
-import { History, gameHistorySchema } from './model/database/game-history.entity';
-import { Game, gameSchema } from './model/database/game.entity';
+import { GameConstants } from './model/database/game-constants.entity';
+import { History } from './model/database/game-history.entity';
+import { Game } from './model/database/game.entity';
 import { BitmapService } from './services/bitmap/bitmap.service';
 import { DifferencesService } from './services/differences/differences.service';
 import { FileService } from './services/file/file.service';
@@ -23,17 +23,36 @@ import { WaitingRoomService } from './services/waiting-room/waiting-room.service
 @Module({
     imports: [
         ConfigModule.forRoot({ isGlobal: true }),
-        MongooseModule.forRootAsync({
+        // MongooseModule.forRootAsync({
+        //     imports: [ConfigModule],
+        //     inject: [ConfigService],
+        //     useFactory: async (config: ConfigService) => ({
+        //         uri: config.get<string>('DATABASE_CONNECTION_STRING'), // Loaded from .env
+        //     }),
+        // }),
+        // MongooseModule.forFeature([
+        //     { name: Game.name, schema: gameSchema },
+        //     { name: GameConstants.name, schema: gameConstantsSchema },
+        //     { name: History.name, schema: gameHistorySchema },
+        // ]),
+        TypeOrmModule.forRootAsync({
             imports: [ConfigModule],
             inject: [ConfigService],
-            useFactory: async (config: ConfigService) => ({
-                uri: config.get<string>('DATABASE_CONNECTION_STRING'), // Loaded from .env
+            useFactory: (configService: ConfigService) => ({
+                type: 'postgres',
+                host: configService.get<string>('DB_HOST'),
+                port: configService.get<number>('DB_PORT'),
+                username: configService.get<string>('DB_USERNAME'),
+                password: configService.get<string>('DB_PASSWORD'),
+                database: configService.get<string>('DB_DATABASE'),
+                entities: [Game, GameConstants, History],
+                synchronize: true, // TODO: Set to false
             }),
         }),
-        MongooseModule.forFeature([
-            { name: Game.name, schema: gameSchema },
-            { name: GameConstants.name, schema: gameConstantsSchema },
-            { name: History.name, schema: gameHistorySchema },
+        TypeOrmModule.forFeature([
+            Game,
+            GameConstants,
+            History,
         ]),
     ],
     controllers: [GameController, ConfigurationController],

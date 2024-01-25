@@ -1,4 +1,4 @@
-import { GameConstants, GameConstantsDocument } from '@app/model/database/game-constants.entity';
+import { GameConstants } from '@app/model/database/game-constants.entity';
 import { GameConstantsService } from '@app/services/game-constants/game-constants.service';
 import { GameHistoryService } from '@app/services/game-history/game-history.service';
 import { ConstantName } from '@common/game-constants';
@@ -33,7 +33,7 @@ export class ConfigurationController {
 
     @ApiOperation({ summary: 'Reset game constants' })
     @Put('constants/reset')
-    async resetToDefault(): Promise<GameConstantsDocument> {
+    async resetToDefault(): Promise<GameConstants> {
         return await this.gameConstantsService.resetToDefault();
     }
 

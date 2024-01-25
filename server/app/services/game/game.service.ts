@@ -4,9 +4,9 @@ import { PendingGame } from '@app/model/schema/pending-game';
 import { BitmapService } from '@app/services/bitmap/bitmap.service';
 import { DifferencesService } from '@app/services/differences/differences.service';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Observable, Subject } from 'rxjs';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class GameService {
@@ -14,7 +14,7 @@ export class GameService {
     private pendingGames: Map<string, PendingGame>;
 
     constructor(
-        @InjectModel(Game.name) private gameModel: Model<Game>,
+        @InjectRepository(Game) private gameRepository: Repository<Game>,
         private bitmapService: BitmapService,
         private differencesService: DifferencesService,
     ) {
@@ -39,18 +39,19 @@ export class GameService {
     }
 
     async getGames(): Promise<ExistingGame[]> {
-        return await this.gameModel.find();
+        return await this.gameRepository.find();
     }
 
     async getGame(id: string): Promise<ExistingGame | null> {
-        return await this.gameModel.findById(id);
+        return await this.gameRepository.findOne({
+            where: {
+                _id: id
+            },
+        });
     }
 
     async deleteAllGames(): Promise<void> {
-        const games = await this.getGames();
-        for (const game of games) {
-            await this.deleteGame(game._id);
-        }
+        await this.gameRepository.clear();
     }
 
     async createGame(pendingGame: PendingGame, name: string): Promise<ExistingGame> {
@@ -65,7 +66,7 @@ export class GameService {
             differencesCount: pendingGame.differences.length,
         });
 
-        return await this.gameModel.create(game);
+        return await this.gameRepository.save(game);
     }
 
     async deleteGame(id: string): Promise<void> {
@@ -78,11 +79,12 @@ export class GameService {
         await this.bitmapService.deleteImageFile(game.modifiedImageFilename);
         await this.differencesService.deleteDifferences(game.differencesFilename);
 
-        await this.gameModel.findByIdAndDelete(game._id);
+        await this.gameRepository.delete(game);
     }
 
     async updateGame(id: string, isMultiplayer: boolean, highScores: HighScore[]): Promise<void> {
-        if (isMultiplayer) await this.gameModel.findByIdAndUpdate(id, { duelHighScores: highScores });
-        else await this.gameModel.findByIdAndUpdate(id, { soloHighScores: highScores });
+        const game = await this.getGame(id);
+        if (isMultiplayer) await this.gameRepository.save({ ...game, duelHighScores: highScores });
+        else await this.gameRepository.save({ ...game, soloHighScores: highScores });
     }
 }

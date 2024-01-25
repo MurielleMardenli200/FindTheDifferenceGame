@@ -1,7 +1,7 @@
 import { ExistingGame, Game } from '@app/model/database/game.entity';
-import { TemporaryGame } from '@app/model/database/temporary-game.entity';
 import { NewGameInfo } from '@app/model/schema/new-game-info';
 import { PendingGame } from '@app/model/schema/pending-game';
+import { TemporaryGame } from '@app/model/schema/temporary-game';
 import { Difficulty } from '@common/model/difficulty';
 import { defaultDifferences } from './differences';
 

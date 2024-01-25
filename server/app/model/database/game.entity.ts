@@ -1,41 +1,44 @@
 import { defaultDuelHighScores, defaultSoloHighScores } from '@app/constants/configuration.constants';
 import { HighScore } from '@app/model/dto/high-score.dto';
 import { NewGameInfo } from '@app/model/schema/new-game-info';
+import { TemporaryGame } from '@app/model/schema/temporary-game';
 import { Game as GameInterface } from '@common/model/game';
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiHideProperty } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
-import { Document } from 'mongoose';
-import { TemporaryGame } from './temporary-game.entity';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { v4 as uuid } from 'uuid';
 
-export type GameDocument = Game & Document;
+
 export type ExistingGame = Game & { _id: string };
 
-@Schema()
+@Entity()
 export class Game extends TemporaryGame implements GameInterface {
-    @Prop({ required: true })
+    @PrimaryGeneratedColumn('uuid')
+    _id: string;
+
+    @Column({ nullable: false })
     name: string;
 
-    @Prop({ required: true })
+    @Column({ nullable: false })
     originalImageFilename: string;
 
     @ApiHideProperty()
-    @Prop({ required: true })
+    @Column({ nullable: false })
     @Expose({ groups: ['game-session'] })
     modifiedImageFilename: string;
 
     @ApiHideProperty()
-    @Prop({ required: true })
+    @Column({ nullable: false })
     @Exclude()
     differencesFilename: string;
 
-    @Prop({ required: true })
+    @Column({ nullable: false })
     differencesCount: number;
 
-    @Prop()
+    @Column({ array: true })
     soloHighScores: HighScore[] = defaultSoloHighScores;
 
-    @Prop()
+    @Column({ array: true })
     duelHighScores: HighScore[] = defaultDuelHighScores;
 
     constructor(game: Game);
@@ -55,6 +58,7 @@ export class Game extends TemporaryGame implements GameInterface {
         } else {
             // Second prototype is used, so newGameInfo is definitely defined.
             const newGameInfoAssert = newGameInfo as NewGameInfo;
+            this._id = uuid();
             this.name = newGameInfoAssert.name;
             this.originalImageFilename = newGameInfoAssert.originalImageFilename;
             this.modifiedImageFilename = newGameInfoAssert.modifiedImageFilename;
@@ -63,6 +67,3 @@ export class Game extends TemporaryGame implements GameInterface {
         }
     }
 }
-
-export const gameSchema = SchemaFactory.createForClass(Game);
-gameSchema.loadClass(Game);

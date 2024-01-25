@@ -40,6 +40,7 @@ const defaultThrottledSinglePlayerMap: Map<string, PlayerData> = new Map([
 ]);
 
 export const DEFAULT_GAME_CONSTANTS: GameConstants = {
+    id: "123",
     initialTime: INIT,
     hintPenalty: PENALTY,
     differenceFoundBonus: WIN,
