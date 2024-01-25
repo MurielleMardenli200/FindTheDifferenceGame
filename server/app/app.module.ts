@@ -6,9 +6,12 @@ import { GameController } from './controllers/game/game.controller';
 import { ConfigurationGateway } from './gateways/configuration/configuration.gateway';
 import { GameCreateGateway } from './gateways/game-create/game-create.gateway';
 import { GameSessionGateway } from './gateways/game-session/game-session.gateway';
+import { DuelHighScore } from './model/database/duel-highscore.entity';
 import { GameConstants } from './model/database/game-constants.entity';
 import { History } from './model/database/game-history.entity';
 import { Game } from './model/database/game.entity';
+import { HighScore } from './model/database/highscore.entity';
+import { SoloHighScore } from './model/database/solo-highscore.entity';
 import { BitmapService } from './services/bitmap/bitmap.service';
 import { DifferencesService } from './services/differences/differences.service';
 import { FileService } from './services/file/file.service';
@@ -45,7 +48,7 @@ import { WaitingRoomService } from './services/waiting-room/waiting-room.service
                 username: configService.get<string>('DB_USERNAME'),
                 password: configService.get<string>('DB_PASSWORD'),
                 database: configService.get<string>('DB_DATABASE'),
-                entities: [Game, GameConstants, History],
+                entities: [Game, GameConstants, History, HighScore, SoloHighScore, DuelHighScore],
                 synchronize: true, // TODO: Set to false
             }),
         }),
@@ -53,6 +56,9 @@ import { WaitingRoomService } from './services/waiting-room/waiting-room.service
             Game,
             GameConstants,
             History,
+            HighScore,
+            SoloHighScore,
+            DuelHighScore
         ]),
     ],
     controllers: [GameController, ConfigurationController],

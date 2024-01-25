@@ -1,3 +1,4 @@
+import { defaultDuelHighScores, defaultSoloHighScores } from '@app/constants/configuration.constants';
 import { ExistingGame, Game } from '@app/model/database/game.entity';
 import { HighScore } from '@app/model/dto/high-score.dto';
 import { PendingGame } from '@app/model/schema/pending-game';
@@ -58,15 +59,17 @@ export class GameService {
         const originalImageFilename = await this.bitmapService.saveImage(pendingGame.originalImageBase64);
         const modifiedImageFilename = await this.bitmapService.saveImage(pendingGame.modifiedImageBase64);
         const differencesFilename = await this.differencesService.saveDifferences(pendingGame.differences);
-        const game: Game = new Game(pendingGame.temporaryGame, {
-            name,
-            originalImageFilename,
-            modifiedImageFilename,
-            differencesFilename,
-            differencesCount: pendingGame.differences.length,
-        });
 
-        return await this.gameRepository.save(game);
+        return await this.gameRepository.save(this.gameRepository.create({
+            name: name,
+            originalImageFilename: originalImageFilename,
+            modifiedImageFilename: modifiedImageFilename,
+            differencesFilename: differencesFilename,
+            differencesCount: pendingGame.differences.length,
+            // FIXME: Make sure the highscores are properly initialized in the DB
+            soloHighScores: defaultSoloHighScores,
+            duelHighScores: defaultDuelHighScores
+        }));
     }
 
     async deleteGame(id: string): Promise<void> {
