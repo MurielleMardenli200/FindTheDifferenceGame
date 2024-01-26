@@ -55,7 +55,8 @@ export class GameService {
     }
 
     async deleteAllGames(): Promise<void> {
-        await this.gameRepository.clear();
+        await this.highScoreService.deleteAllHighScores();
+        await this.gameRepository.delete({});
     }
 
     async createGame(pendingGame: PendingGame, name: string): Promise<ExistingGame> {
@@ -86,10 +87,12 @@ export class GameService {
         await this.bitmapService.deleteImageFile(game.modifiedImageFilename);
         await this.differencesService.deleteDifferences(game.differencesFilename);
 
-        await this.gameRepository.delete(game);
+        await this.highScoreService.deleteGameHighScores(id);
+        await this.gameRepository.createQueryBuilder().delete().where('_id = :id', { id }).execute();
     }
 
     async updateGame(id: string, isMultiplayer: boolean, highScores: HighScore[]): Promise<void> {
+        // FIXME: Fix other highScore being kept in the DB when new ones are added for a game
         const game = await this.getGame(id);
         if (isMultiplayer) await this.gameRepository.save({ ...game, duelHighScores: highScores });
         else await this.gameRepository.save({ ...game, soloHighScores: highScores });

@@ -46,4 +46,14 @@ export class HighScoreService {
             time: highScore.time,
         });
     }
+
+    async deleteGameHighScores(gameId: string): Promise<void> {
+        await this.soloHighScoreRepository.createQueryBuilder().delete().where('game_id = :id', { id: gameId }).execute();
+        await this.duelHighScoreRepository.createQueryBuilder().delete().where('game_id = :id', { id: gameId }).execute();
+    }
+
+    async deleteAllHighScores(): Promise<void> {
+        await this.soloHighScoreRepository.clear();
+        await this.duelHighScoreRepository.clear();
+    }
 }

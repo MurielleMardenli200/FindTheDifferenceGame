@@ -4,6 +4,6 @@ import { HighScore } from './highscore.entity';
 
 @Entity()
 export class DuelHighScore extends HighScore {
-    @ManyToOne(() => Game, (game) => game.duelHighScores)
+    @ManyToOne(() => Game, (game) => game.duelHighScores, { onDelete: 'CASCADE' })
     game!: Game;
 }

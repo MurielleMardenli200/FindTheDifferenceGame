@@ -32,9 +32,9 @@ export class Game extends TemporaryGame implements GameInterface {
     @Column({ nullable: false })
     differencesCount!: number;
 
-    @OneToMany(() => SoloHighScore, (highScore) => highScore.game, { cascade: true })
+    @OneToMany(() => SoloHighScore, (highScore) => highScore.game, { cascade: true, nullable: true })
     soloHighScores!: SoloHighScore[];
 
-    @OneToMany(() => DuelHighScore, (highScore) => highScore.game, { cascade: true })
+    @OneToMany(() => DuelHighScore, (highScore) => highScore.game, { cascade: true, nullable: true })
     duelHighScores!: DuelHighScore[];
 }
