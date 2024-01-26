@@ -19,6 +19,7 @@ import { GameConstantsService } from './services/game-constants/game-constants.s
 import { GameHistoryService } from './services/game-history/game-history.service';
 import { GameManagerService } from './services/game-manager/game-manager.service';
 import { GameService } from './services/game/game.service';
+import { HighScoreService } from './services/high-score/high-score.service';
 import { HintService } from './services/hints/hint.service';
 import { MessageFormatterService } from './services/message-formatter/message-formatter.service';
 import { WaitingRoomService } from './services/waiting-room/waiting-room.service';
@@ -70,6 +71,7 @@ import { WaitingRoomService } from './services/waiting-room/waiting-room.service
         GameConstantsService,
         HintService,
         GameHistoryService,
+        HighScoreService,
     ],
 })
 export class AppModule {}

@@ -6,7 +6,6 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { DuelHighScore } from './duel-highscore.entity';
 import { SoloHighScore } from './solo-highscore.entity';
 
-
 export type ExistingGame = Game & { _id: string };
 
 @Entity()
@@ -33,9 +32,9 @@ export class Game extends TemporaryGame implements GameInterface {
     @Column({ nullable: false })
     differencesCount!: number;
 
-    @OneToMany((type) => SoloHighScore, (highScore) => highScore.game)
+    @OneToMany(() => SoloHighScore, (highScore) => highScore.game, { cascade: true })
     soloHighScores!: SoloHighScore[];
 
-    @OneToMany((type) => DuelHighScore, (highScore) => highScore.game)
+    @OneToMany(() => DuelHighScore, (highScore) => highScore.game, { cascade: true })
     duelHighScores!: DuelHighScore[];
 }

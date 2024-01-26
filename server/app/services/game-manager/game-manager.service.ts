@@ -134,6 +134,7 @@ export class GameManagerService {
 
         const highScores = gameSession.isMultiplayer() ? game.duelHighScores : game.soloHighScores;
         let position: Position | undefined;
+        // FIXME: Entries
         for (const [index, highScore] of highScores.entries()) {
             if (timeScore < highScore.time) {
                 highScores.splice(index, 0, {

@@ -1,10 +1,9 @@
-import { Entity, ManyToOne } from "typeorm";
-import { Game } from "./game.entity";
-import { HighScore } from "./highscore.entity";
-
+import { Entity, ManyToOne } from 'typeorm';
+import { Game } from './game.entity';
+import { HighScore } from './highscore.entity';
 
 @Entity()
 export class SoloHighScore extends HighScore {
-    @ManyToOne((type) => Game, (game) => game.soloHighScores)
+    @ManyToOne(() => Game, (game) => game.soloHighScores)
     game!: Game;
 }

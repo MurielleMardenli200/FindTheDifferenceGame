@@ -8,10 +8,10 @@ export class History implements HistoryInterface {
     @PrimaryGeneratedColumn('uuid')
     id!: string;
 
-    @Column()
+    @Column('bigint')
     gameStart!: number;
 
-    @Column()
+    @Column('bigint')
     gameTime!: number;
 
     @Column()
