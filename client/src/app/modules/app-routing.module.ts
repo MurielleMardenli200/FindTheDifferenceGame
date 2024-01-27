@@ -3,7 +3,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { ClassicModeComponent } from '@app/pages/classic-mode/classic-mode.component';
 import { ConfigurationComponent } from '@app/pages/configuration/configuration.component';
 import { CreateGamePageComponent } from '@app/pages/create-game-page/create-game-page.component';
-import { LoginPageComponent } from '@app/pages/login-page/login-page.component';
 import { MainPageComponent } from '@app/pages/main-page/main-page.component';
 import { SelectionPageComponent } from '@app/pages/selection-page/selection-page.component';
 import { TimeLimitedSelectionPageComponent } from '@app/pages/time-limited-selection-page/time-limited-selection-page.component';
@@ -18,7 +17,6 @@ const routes: Routes = [
     { path: 'selection', component: SelectionPageComponent },
     { path: 'time-limited', component: TimeLimitedModeComponent },
     { path: 'time-limited-selection', component: TimeLimitedSelectionPageComponent },
-    { path: 'login', component: LoginPageComponent },
     { path: '**', redirectTo: '/home' },
 ];
 
