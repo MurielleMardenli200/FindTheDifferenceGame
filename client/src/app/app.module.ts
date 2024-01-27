@@ -40,6 +40,7 @@ import { PageBaseComponent } from './pages/page-base-component/page-base-compone
 import { SelectionPageComponent } from './pages/selection-page/selection-page.component';
 import { TimeLimitedSelectionPageComponent } from './pages/time-limited-selection-page/time-limited-selection-page.component';
 import { TimeLimitedModeComponent } from './pages/time-limited/time-limited-mode.component';
+import { LoginPageComponent } from './pages/login-page/login-page.component';
 
 /**
  * Main module that is used in main.ts.
@@ -84,6 +85,7 @@ import { TimeLimitedModeComponent } from './pages/time-limited/time-limited-mode
         GameConstantsModalComponent,
         TimerComponent,
         HistoryModalComponent,
+        LoginPageComponent,
     ],
     imports: [
         AppMaterialModule,
