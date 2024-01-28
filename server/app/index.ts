@@ -22,6 +22,17 @@ const bootstrap = async () => {
         .setTitle('Cadriciel Serveur')
         .setDescription('Serveur du projet de base pour le cours de LOG2990')
         .setVersion('1.0.0')
+        .addBearerAuth(
+            {
+                type: 'http',
+                scheme: 'bearer',
+                bearerFormat: 'JWT',
+                name: 'Bearer',
+                description: 'Enter JWT token',
+                in: 'header',
+            },
+            'JWT-auth' 
+        )
         .build();
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('api/docs', app, document);

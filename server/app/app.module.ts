@@ -1,6 +1,7 @@
 import { Logger, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
+import { AuthenticationModule } from './modules/authentication/authentication.module';
 import { ConfigurationController } from './controllers/configuration/configuration.controller';
 import { GameController } from './controllers/game/game.controller';
 import { ConfigurationGateway } from './gateways/configuration/configuration.gateway';
@@ -19,6 +20,7 @@ import { GameService } from './services/game/game.service';
 import { HintService } from './services/hints/hint.service';
 import { MessageFormatterService } from './services/message-formatter/message-formatter.service';
 import { WaitingRoomService } from './services/waiting-room/waiting-room.service';
+import { UsersModule } from './modules/users/users.module';
 
 @Module({
     imports: [
@@ -35,6 +37,8 @@ import { WaitingRoomService } from './services/waiting-room/waiting-room.service
             { name: GameConstants.name, schema: gameConstantsSchema },
             { name: History.name, schema: gameHistorySchema },
         ]),
+        AuthenticationModule,
+        UsersModule,
     ],
     controllers: [GameController, ConfigurationController],
     providers: [
