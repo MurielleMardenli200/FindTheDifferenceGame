@@ -27,18 +27,6 @@ import { WaitingRoomService } from './services/waiting-room/waiting-room.service
 @Module({
     imports: [
         ConfigModule.forRoot({ isGlobal: true }),
-        // MongooseModule.forRootAsync({
-        //     imports: [ConfigModule],
-        //     inject: [ConfigService],
-        //     useFactory: async (config: ConfigService) => ({
-        //         uri: config.get<string>('DATABASE_CONNECTION_STRING'), // Loaded from .env
-        //     }),
-        // }),
-        // MongooseModule.forFeature([
-        //     { name: Game.name, schema: gameSchema },
-        //     { name: GameConstants.name, schema: gameConstantsSchema },
-        //     { name: History.name, schema: gameHistorySchema },
-        // ]),
         TypeOrmModule.forRootAsync({
             imports: [ConfigModule],
             inject: [ConfigService],
@@ -50,7 +38,7 @@ import { WaitingRoomService } from './services/waiting-room/waiting-room.service
                 password: configService.get<string>('DB_PASSWORD'),
                 database: configService.get<string>('DB_DATABASE'),
                 entities: [Game, GameConstantEntity, History, HighScore, SoloHighScore, DuelHighScore],
-                synchronize: true, // TODO: Set to false
+                synchronize: configService.get<boolean>('DB_SYNC'),
             }),
         }),
         TypeOrmModule.forFeature([Game, GameConstantEntity, History, HighScore, SoloHighScore, DuelHighScore]),
