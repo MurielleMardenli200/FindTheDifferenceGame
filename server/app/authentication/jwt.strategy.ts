@@ -10,7 +10,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     constructor(private authenticationService: AuthenticationService) {
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-            ignoreEpiration: false,
+            ignoreEpiration: true,
             secretOrKey: JWT_SECRET,
         });
     }

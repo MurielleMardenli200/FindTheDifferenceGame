@@ -14,10 +14,12 @@ import {
     Param,
     Patch,
     Put,
+    UseGuards,
     UseInterceptors,
     ValidationPipe,
 } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('Game Constants')
 @Controller('configuration')
@@ -26,30 +28,40 @@ export class ConfigurationController {
 
     @UseInterceptors(ClassSerializerInterceptor)
     @ApiOperation({ summary: 'Get game constants' })
+    @ApiBearerAuth('access-token')
+    @UseGuards(AuthGuard('jwt'))
     @Get('/constants')
     async findAll(): Promise<GameConstants> {
         return await this.gameConstantsService.findAll();
     }
 
     @ApiOperation({ summary: 'Reset game constants' })
+    @ApiBearerAuth('access-token')
+    @UseGuards(AuthGuard('jwt'))
     @Put('constants/reset')
     async resetToDefault(): Promise<GameConstantsDocument> {
         return await this.gameConstantsService.resetToDefault();
     }
 
     @ApiOperation({ summary: 'Update game constants' })
+    @ApiBearerAuth('access-token')
+    @UseGuards(AuthGuard('jwt'))
     @Patch('constants/:constant')
     async update(@Param('constant') constant: ConstantName, @Body('value', ValidationPipe) value: number): Promise<number> {
         return await this.gameConstantsService.update(constant, value);
     }
 
     @ApiOperation({ summary: 'Get game history' })
+    @ApiBearerAuth('access-token')
+    @UseGuards(AuthGuard('jwt'))
     @Get('/history')
     async getHistory(): Promise<History[]> {
         return await this.gameHistoryService.getHistory();
     }
 
     @ApiOperation({ summary: 'Delete game history' })
+    @UseGuards(AuthGuard('jwt'))
+    @ApiBearerAuth('access-token')
     @HttpCode(HttpStatus.NO_CONTENT)
     @Delete('/history')
     async deleteHistory(): Promise<void> {

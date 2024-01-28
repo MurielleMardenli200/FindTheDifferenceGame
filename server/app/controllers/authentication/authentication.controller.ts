@@ -1,8 +1,8 @@
 import { SignInDto } from '@app/model/dto/user-dto';
 import { AuthenticationService } from '@app/services/authentication/authentication.service';
-import { Body, Controller, Get, HttpStatus, Post, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiForbiddenResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from '@nestjs/passport';
+import { LoginResultDto } from '@common/model/dto/login-result.dto';
+import { Body, Controller, HttpStatus, Post } from '@nestjs/common';
+import { ApiBody, ApiForbiddenResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Authentification')
 @Controller('auth')
@@ -26,7 +26,7 @@ export class AuthenticationController {
             },
         },
     })
-    async logIn(@Body() signInDto: SignInDto) {
+    async logIn(@Body() signInDto: SignInDto): Promise<LoginResultDto> {
         return { token: await this.authenticationService.logIn(signInDto.username, signInDto.password) };
     }
 
@@ -47,13 +47,5 @@ export class AuthenticationController {
     })
     async signUp(@Body() signInDto: SignInDto) {
         return this.authenticationService.signUp(signInDto.username, signInDto.password);
-    }
-
-    @Get('/test')
-    @ApiBearerAuth('JWT-auth')
-    @UseGuards(AuthGuard('jwt'))
-    @ApiOperation({ summary: 'Test authentification' })
-    async test() {
-        return 'test';
     }
 }
