@@ -41,7 +41,8 @@ import { SelectionPageComponent } from './pages/selection-page/selection-page.co
 import { TimeLimitedSelectionPageComponent } from './pages/time-limited-selection-page/time-limited-selection-page.component';
 import { TimeLimitedModeComponent } from './pages/time-limited/time-limited-mode.component';
 import { LoginPageComponent } from './pages/login-page/login-page.component';
-
+import { GoogleLoginProvider, SocialAuthServiceConfig, SocialLoginModule, GoogleSigninButtonModule } from '@abacritt/angularx-social-login';
+import { environment } from 'src/environments/environment';
 /**
  * Main module that is used in main.ts.
  * All automatically generated components will appear in this module.
@@ -98,8 +99,27 @@ import { LoginPageComponent } from './pages/login-page/login-page.component';
         MatInputModule,
         MatTableModule,
         ReactiveFormsModule,
+        SocialLoginModule,
+        GoogleSigninButtonModule,
     ],
-    providers: [],
+    providers: [
+        {
+            provide: 'SocialAuthServiceConfig',
+            useValue: {
+                autoLogin: false,
+                providers: [
+                    {
+                        id: GoogleLoginProvider.PROVIDER_ID,
+                        provider: new GoogleLoginProvider(environment.googleClientId),
+                    },
+                ],
+                onError: (err) => {
+                    // eslint-disable-next-line no-console
+                    console.error(err);
+                },
+            } as SocialAuthServiceConfig,
+        },
+    ],
     bootstrap: [AppComponent],
 })
 export class AppModule {}

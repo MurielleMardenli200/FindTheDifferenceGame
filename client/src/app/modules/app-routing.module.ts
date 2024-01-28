@@ -8,18 +8,19 @@ import { MainPageComponent } from '@app/pages/main-page/main-page.component';
 import { SelectionPageComponent } from '@app/pages/selection-page/selection-page.component';
 import { TimeLimitedSelectionPageComponent } from '@app/pages/time-limited-selection-page/time-limited-selection-page.component';
 import { TimeLimitedModeComponent } from '@app/pages/time-limited/time-limited-mode.component';
+import { authGuard } from '@app/services/auth-guard/auth.guard';
 
 const routes: Routes = [
-    { path: '', redirectTo: '/home', pathMatch: 'full' },
-    { path: 'home', component: MainPageComponent },
-    { path: 'config', component: ConfigurationComponent },
-    { path: 'classic', component: ClassicModeComponent },
-    { path: 'create-game', component: CreateGamePageComponent },
-    { path: 'selection', component: SelectionPageComponent },
-    { path: 'time-limited', component: TimeLimitedModeComponent },
-    { path: 'time-limited-selection', component: TimeLimitedSelectionPageComponent },
+    { path: '', redirectTo: '/login', pathMatch: 'full' },
+    { path: 'home', component: MainPageComponent, canActivate: [authGuard] },
+    { path: 'config', component: ConfigurationComponent, canActivate: [authGuard] },
+    { path: 'classic', component: ClassicModeComponent, canActivate: [authGuard] },
+    { path: 'create-game', component: CreateGamePageComponent, canActivate: [authGuard] },
+    { path: 'selection', component: SelectionPageComponent, canActivate: [authGuard] },
+    { path: 'time-limited', component: TimeLimitedModeComponent, canActivate: [authGuard] },
+    { path: 'time-limited-selection', component: TimeLimitedSelectionPageComponent, canActivate: [authGuard] },
     { path: 'login', component: LoginPageComponent },
-    { path: '**', redirectTo: '/home' },
+    { path: '**', redirectTo: '/login' },
 ];
 
 @NgModule({
