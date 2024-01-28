@@ -1,11 +1,11 @@
+import { JwtStrategy } from '@app/authentication/jwt.strategy';
+import { JWT_SECRET } from '@app/constants/jwt.constants';
 import { AuthenticationController } from '@app/controllers/authentication/authentication.controller';
+import { UsersModule } from '@app/modules/users/users.module';
 import { AuthenticationService } from '@app/services/authentication/authentication.service';
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
-import { UsersModule } from '@app/modules/users/users.module';
 import { PassportModule } from '@nestjs/passport';
-import { JWT_SECRET } from '@app/constants/jwt.constants';
-import { JwtStrategy } from '@app/controllers/authentication/jwt.strategy';
 
 @Module({
     // FIXME: Use a real secret

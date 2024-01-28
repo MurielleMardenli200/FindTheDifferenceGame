@@ -17,7 +17,7 @@ export class AuthenticationService {
             const payload = { sub: user._id, username: user.username };
             return this.jwtService.signAsync(payload);
         }
-        throw new HttpException('Incorrect username or password', HttpStatus.UNAUTHORIZED);
+        throw new HttpException('Incorrect username or password', HttpStatus.BAD_REQUEST);
     }
 
     async signUp(username: string, password: string): Promise<User> {
