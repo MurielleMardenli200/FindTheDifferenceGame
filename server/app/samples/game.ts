@@ -29,7 +29,7 @@ export const defaultGame: ExistingGame = {
     ...defaultNewGameInfo,
     _id: defaultGameId,
     soloHighScores: defaultSoloHighScores as SoloHighScore[],
-    duelHighScores: defaultDuelHighScores as DuelHighScore[]
+    duelHighScores: defaultDuelHighScores as DuelHighScore[],
 };
 
 export const defaultGames: ExistingGame[] = [defaultGame, defaultGame, defaultGame];

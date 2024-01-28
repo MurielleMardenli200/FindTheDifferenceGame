@@ -2,10 +2,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ClassicWaitingRoom, TimeLimitedWaitingRoom } from '@app/interfaces/waiting-room/waiting-room.interface';
 import { ClassicSession } from '@app/model/classes/game-sessions/classic-session/classic-session';
-import { SECOND_IN_MILLISECONDS } from '@app/model/classes/game-sessions/game-session.constants';
 import { TimeLimitedSession } from '@app/model/classes/game-sessions/time-limited-session/time-limited-session';
 import { Coordinate } from '@app/model/dto/coordinate.dto';
-import { PlayerCreationInfo, PlayerData } from '@app/model/schema/game-session';
+import { PlayerCreationInfo } from '@app/model/schema/game-session';
 import { DifferencesService } from '@app/services/differences/differences.service';
 import { GameConstants } from '@common/game-constants';
 import { INIT, PENALTY, WIN } from '@common/game-default.constants';
@@ -30,26 +29,12 @@ export const mockDifferenceService = {
     },
 } as DifferencesService;
 
-// FIXME: USE THIS
-// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
-const defaultThrottledSinglePlayerMap: Map<string, PlayerData> = new Map([
-    [
-        defaultFirstPlayer.playerId,
-        { username: 'First User Name', differencesFound: 0, throttleEndTimestamp: Date.now() + 1000 * SECOND_IN_MILLISECONDS, remainingHints: 3 },
-    ],
-]);
-
 export const DEFAULT_GAME_CONSTANTS: GameConstants = {
     initialTime: INIT,
     hintPenalty: PENALTY,
     differenceFoundBonus: WIN,
 };
 
-// export const defaultThrottledGameSession: GameSession = new ClassicSession(defaultGame, defaultFirstPlayer);
-
-// defaultThrottledGameSession.players = defaultThrottledSinglePlayerMap;
-// defaultThrottledGameSession.differences = defaultDifferenceSet;
-//
 export const defaultSoloGameSession = new ClassicSession(
     mockDifferenceService,
     defaultEmptyWaitingRoom as ClassicWaitingRoom,
@@ -60,7 +45,6 @@ export const defaultClassicGameSession = new ClassicSession(
     defaultEmptyWaitingRoom as ClassicWaitingRoom,
     DEFAULT_GAME_CONSTANTS,
 );
-// defaultSoloGameSession.differences = defaultDifferenceSet;
 
 export const defaultDuoGameSession = new ClassicSession(
     mockDifferenceService,
@@ -79,12 +63,14 @@ defaultTimeLimitedCoopGameSession['timer'].stopTimer(false);
 
 export const mockHistory = [
     {
+        id: '123',
         gameStart: Date.now(),
         gameTime: 5,
         gameMode: GameMode.ClassicSolo,
         players: ['player'],
     },
     {
+        id: '456',
         gameStart: Date.now(),
         gameTime: 5,
         gameMode: GameMode.ClassicOneVersusOne,
@@ -93,6 +79,7 @@ export const mockHistory = [
         hasAbandonned: 1,
     },
     {
+        id: '789',
         gameStart: Date.now(),
         gameTime: 5,
         gameMode: GameMode.TimeLimitedCoop,
@@ -101,6 +88,7 @@ export const mockHistory = [
         hasAbandonned: 0,
     },
     {
+        id: '012',
         gameStart: Date.now(),
         gameTime: 5,
         gameMode: GameMode.TimeLimitedSolo,
