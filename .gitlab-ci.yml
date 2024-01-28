@@ -175,4 +175,4 @@ deploy:server:
         - if: "$CI_COMMIT_TAG =~ /deploy/"
           when: manual
     trigger:
-        project: polytechnique-montr-al/log3900/24-1/equipe-103/spot-sev-ansible
+        project: polytechnique-montr-al/log3900/24-1/equipe-103/spot-sev-deploy
