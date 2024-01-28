@@ -9,7 +9,8 @@ import { GameService } from '@app/services/game/game.service';
 import { WSValidationPipe } from '@app/validation-pipes/web-socket/web-socket.validation-pipe';
 import { GameCreateEvent } from '@common/game-create.events';
 import { Difficulty } from '@common/model/difficulty';
-import { ClassSerializerInterceptor, Injectable, UseInterceptors, UsePipes } from '@nestjs/common';
+import { ClassSerializerInterceptor, Injectable, UseGuards, UseInterceptors, UsePipes } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import {
     ConnectedSocket,
     MessageBody,
@@ -31,6 +32,7 @@ export class GameCreateGateway implements OnGatewayDisconnect {
     constructor(private gameService: GameService, private bitmapService: BitmapService, private differencesService: DifferencesService) {}
 
     @SubscribeMessage(GameCreateEvent.CreateTemporaryGame)
+    @UseGuards(AuthGuard('jwt'))
     async createTemporaryGame(
         @ConnectedSocket() socket: Socket,
         @MessageBody() createTemporaryGameDto: CreateTemporaryGameDto,
@@ -55,6 +57,7 @@ export class GameCreateGateway implements OnGatewayDisconnect {
     }
 
     @UseInterceptors(ClassSerializerInterceptor)
+    @UseGuards(AuthGuard('jwt'))
     @SubscribeMessage(GameCreateEvent.CreateGame)
     async createGame(@ConnectedSocket() socket: Socket, @MessageBody() createGameDto: CreateGameDto): Promise<string> {
         const pendingGame = this.gameService.getTemporaryGame(socket.id);
