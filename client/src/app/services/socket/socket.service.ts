@@ -23,7 +23,11 @@ export class SocketService implements OnDestroy {
     }
 
     connect() {
-        this.socket = io(environment.socketUrl);
+        this.socket = io(environment.socketUrl, {
+            auth: {
+                token: localStorage.getItem('token'),
+            },
+        });
     }
 
     disconnect() {

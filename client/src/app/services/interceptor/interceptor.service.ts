@@ -1,4 +1,4 @@
-import { HttpErrorResponse, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import { HttpErrorResponse, HttpHandler, HttpInterceptor, HttpRequest, HttpStatusCode } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AccountService } from '@app/services/account/account.service';
 import { catchError } from 'rxjs';
@@ -22,7 +22,7 @@ export class InterceptorService implements HttpInterceptor {
         }
         return next.handle(req).pipe(
             catchError((err: HttpErrorResponse) => {
-                if (err) {
+                if (err.status === HttpStatusCode.Unauthorized) {
                     this.accountService.logOut();
                 }
                 throw new Error(err.message);
