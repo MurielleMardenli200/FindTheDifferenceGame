@@ -1,4 +1,4 @@
-import { SocialAuthService, SocialUser } from '@abacritt/angularx-social-login';
+import { SocialUser } from '@abacritt/angularx-social-login';
 import { HttpClient } from '@angular/common/http';
 import { Injectable, WritableSignal, signal } from '@angular/core';
 import { Router } from '@angular/router';
@@ -12,10 +12,7 @@ export class AccountService {
     user: UserInfo | SocialUser | undefined;
     isLoggedIn: WritableSignal<boolean> = signal(false);
     private readonly baseUrl: string = environment.serverUrl;
-    constructor(private readonly http: HttpClient, private socialAuthService: SocialAuthService, private router: Router) {
-        this.socialAuthService.authState.subscribe((user) => {
-            this.user = user;
-        });
+    constructor(private readonly http: HttpClient, private router: Router) {
         if (localStorage.getItem('token') != null) {
             this.isLoggedIn.set(true);
         }
