@@ -1,61 +1,43 @@
-import { ExistingGame, Game, GameDocument, gameSchema } from '@app/model/database/game.entity';
-import { defaultGame, defaultPendingGame } from '@app/samples/game';
+import { Game } from '@app/model/database/game.entity';
+import { defaultGame, defaultGames, defaultPendingGame } from '@app/samples/game';
 import { BitmapService } from '@app/services/bitmap/bitmap.service';
 import { DifferencesService } from '@app/services/differences/differences.service';
-import { getConnectionToken, getModelToken, MongooseModule } from '@nestjs/mongoose';
+import { HighScoreService } from '@app/services/high-score/high-score.service';
 import { Test } from '@nestjs/testing';
-import { MongoMemoryServer } from 'mongodb-memory-server';
-import { Connection, Model } from 'mongoose';
-import { createStubInstance, SinonStubbedInstance } from 'sinon';
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { SinonStubbedInstance, createStubInstance } from 'sinon';
+import { Repository } from 'typeorm';
 import { GameService } from './game.service';
-
-const DELAY_BEFORE_CLOSING_CONNECTION = 200;
 
 describe('GameService', () => {
     let service: GameService;
-    let gameModel: Model<GameDocument>;
-    let mongoServer: MongoMemoryServer;
-    let connection: Connection;
+    let gameRepoMock: SinonStubbedInstance<Repository<Game>>;
     let bitmapService: SinonStubbedInstance<BitmapService>;
     let differencesService: SinonStubbedInstance<DifferencesService>;
+    let highScoreService: SinonStubbedInstance<HighScoreService>;
 
     beforeEach(async () => {
-        mongoServer = await MongoMemoryServer.create();
         bitmapService = createStubInstance(BitmapService);
         differencesService = createStubInstance(DifferencesService);
+        gameRepoMock = createStubInstance(Repository<Game>) as SinonStubbedInstance<Repository<Game>>;
+        highScoreService = createStubInstance(HighScoreService);
 
         const module = await Test.createTestingModule({
-            imports: [
-                MongooseModule.forRootAsync({
-                    useFactory: () => ({
-                        uri: mongoServer.getUri(),
-                    }),
-                }),
-                MongooseModule.forFeature([{ name: Game.name, schema: gameSchema }]),
-            ],
             providers: [
                 GameService,
                 { provide: BitmapService, useValue: bitmapService },
                 { provide: DifferencesService, useValue: differencesService },
+                { provide: getRepositoryToken(Game), useValue: gameRepoMock },
+                { provide: HighScoreService, useValue: highScoreService },
             ],
         }).compile();
 
         service = module.get<GameService>(GameService);
-        gameModel = module.get<Model<GameDocument>>(getModelToken(Game.name));
-        connection = await module.get(getConnectionToken());
-    });
-
-    afterEach((done) => {
-        setTimeout(async () => {
-            await connection.close();
-            await mongoServer.stop();
-            done();
-        }, DELAY_BEFORE_CLOSING_CONNECTION);
     });
 
     it('should be defined', () => {
         expect(service).toBeDefined();
-        expect(gameModel).toBeDefined();
+        expect(gameRepoMock).toBeDefined();
     });
 
     it('getTemporaryGame() should return a temporary game by id', async () => {
@@ -79,67 +61,63 @@ describe('GameService', () => {
     });
 
     it('getGames() should return all games', async () => {
-        await gameModel.deleteMany({});
-        await gameModel.create(
-            { ...defaultGame, name: 'game1', _id: 'abcdefabcdef1234567890aa' },
-            { ...defaultGame, name: 'game2', _id: 'abcdefabcdef1234567890ab' },
-            { ...defaultGame, name: 'game3', _id: 'abcdefabcdef1234567890ac' },
-        );
+        gameRepoMock.find.resolves(defaultGames);
+
         expect((await service.getGames()).length).toEqual(3);
     });
 
     it('createGame() should create a new game', async () => {
-        await gameModel.deleteMany({});
+        const createSpy = jest.spyOn(gameRepoMock, 'create');
+        const saveSpy = jest.spyOn(gameRepoMock, 'save');
+
         bitmapService.saveImage.resolves('1234.bmp');
         differencesService.saveDifferences.resolves('1234.json');
+
         await service.createGame(defaultPendingGame, 'thisgame');
-        expect(await gameModel.countDocuments()).toEqual(1);
+
+        expect(createSpy).toHaveBeenCalled();
+        expect(saveSpy).toBeCalled();
         expect(bitmapService.saveImage.calledWith(defaultPendingGame.originalImageBase64)).toBe(true);
         expect(bitmapService.saveImage.calledWith(defaultPendingGame.modifiedImageBase64)).toBe(true);
         expect(differencesService.saveDifferences.calledWith(defaultPendingGame.differences)).toBe(true);
     });
 
     it('getGame() should return a game by id', async () => {
-        await gameModel.deleteMany({});
-        const document = await gameModel.create(defaultGame);
-        expect((await service.getGame(document._id))?._id).toEqual(document._id);
+        gameRepoMock.findOne.resolves(defaultGame);
+        expect((await service.getGame(defaultGame._id))?._id).toEqual(defaultGame._id);
     });
 
-    it('getGame() should return null if game does not exist', async () => {
-        await gameModel.deleteMany({});
-        expect(await service.getGame('012345678901234567891234')).toBe(null);
+    it('getGame() should return undefined if game does not exist', async () => {
+        expect(await service.getGame('012345678901234567891234')).toBe(undefined);
     });
 
     it('deleteGame() should delete the game', async () => {
-        await gameModel.deleteMany({});
-        const document = await gameModel.create(defaultGame);
-        const getGameSpy = jest.spyOn(service, 'getGame').mockImplementation(async () => document);
+        const mockBuilder = {
+            delete: jest.fn().mockReturnThis(),
+            where: jest.fn().mockReturnThis(),
+            execute: jest.fn().mockImplementation(() => null),
+        };
+        const getGameSpy = jest.spyOn(service, 'getGame').mockImplementation(async () => defaultGame);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const queryBuilderSpy = jest.spyOn(gameRepoMock, 'createQueryBuilder').mockReturnValue(mockBuilder as unknown as any);
 
-        await service.deleteGame(document._id);
-        expect(await gameModel.countDocuments()).toEqual(0);
-        expect(getGameSpy).toBeCalledWith(document._id);
+        await service.deleteGame(defaultGame._id);
+
+        expect(getGameSpy).toBeCalledWith(defaultGame._id);
+        expect(queryBuilderSpy).toBeCalled();
     });
 
     it('deleteAllGames() should delete all the games', async () => {
-        await gameModel.deleteMany({});
-        const document: ExistingGame[] | PromiseLike<ExistingGame[]>[] = await gameModel.create(
-            { ...defaultGame, name: 'game1', _id: 'abcdefabcdef1234567890aa' },
-            { ...defaultGame, name: 'game2', _id: 'abcdefabcdef1234567890ab' },
-            { ...defaultGame, name: 'game3', _id: 'abcdefabcdef1234567890ac' },
-        );
-        const getGamesSpy = jest.spyOn(service, 'getGames').mockImplementation(async () => document);
+        const deleteSpy = jest.spyOn(gameRepoMock, 'delete');
 
         await service.deleteAllGames();
-        expect(await gameModel.countDocuments()).toEqual(0);
-        expect(getGamesSpy).toBeCalledWith();
+        expect(deleteSpy).toBeCalledWith({});
     });
 
     it('deleteGame() should throw an error if game does not exist', async () => {
-        await gameModel.deleteMany({});
         const getGameSpy = jest.spyOn(service, 'getGame').mockImplementation(async () => null);
 
         await expect(service.deleteGame('012345678901234567891234')).rejects.toThrow();
-        expect(await gameModel.countDocuments()).toEqual(0);
         expect(getGameSpy).toBeCalledWith('012345678901234567891234');
     });
 });
