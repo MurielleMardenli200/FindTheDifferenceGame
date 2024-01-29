@@ -1,3 +1,4 @@
+import { SocketAuthGuard } from '@app/authentication/ws-jwt-auth.guard';
 import { GATEWAY_CONFIGURATION_OBJECT } from '@app/gateways/gateway.constants';
 import { TemporaryGame } from '@app/model/database/temporary-game.entity';
 import { CreateGameDto } from '@app/model/dto/game/create-game.dto';
@@ -10,7 +11,6 @@ import { WSValidationPipe } from '@app/validation-pipes/web-socket/web-socket.va
 import { GameCreateEvent } from '@common/game-create.events';
 import { Difficulty } from '@common/model/difficulty';
 import { ClassSerializerInterceptor, Injectable, UseGuards, UseInterceptors, UsePipes } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
 import {
     ConnectedSocket,
     MessageBody,
@@ -31,8 +31,8 @@ export class GameCreateGateway implements OnGatewayDisconnect {
 
     constructor(private gameService: GameService, private bitmapService: BitmapService, private differencesService: DifferencesService) {}
 
+    @UseGuards(SocketAuthGuard)
     @SubscribeMessage(GameCreateEvent.CreateTemporaryGame)
-    @UseGuards(AuthGuard('jwt'))
     async createTemporaryGame(
         @ConnectedSocket() socket: Socket,
         @MessageBody() createTemporaryGameDto: CreateTemporaryGameDto,
@@ -56,8 +56,8 @@ export class GameCreateGateway implements OnGatewayDisconnect {
         return new TemporaryGameInfo(true, differencesCount, differencesImage);
     }
 
+    @UseGuards(SocketAuthGuard)
     @UseInterceptors(ClassSerializerInterceptor)
-    @UseGuards(AuthGuard('jwt'))
     @SubscribeMessage(GameCreateEvent.CreateGame)
     async createGame(@ConnectedSocket() socket: Socket, @MessageBody() createGameDto: CreateGameDto): Promise<string> {
         const pendingGame = this.gameService.getTemporaryGame(socket.id);

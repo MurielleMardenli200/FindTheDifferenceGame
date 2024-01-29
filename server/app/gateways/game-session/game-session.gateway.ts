@@ -1,5 +1,6 @@
 /* eslint-disable max-lines */
 // FIXME: remove disable
+import { SocketAuthGuard } from '@app/authentication/ws-jwt-auth.guard';
 import { TIME_LIMITED_ID } from '@app/constants/waiting-room.constants';
 import { GATEWAY_CONFIGURATION_OBJECT } from '@app/gateways/gateway.constants';
 import { Player } from '@app/interfaces/player/player.interface';
@@ -25,7 +26,6 @@ import { Hint, HintType, RemainingHints } from '@common/model/hints';
 import { Message, MessageAuthor } from '@common/model/message';
 import { WaitingRoomStatus } from '@common/model/waiting-room-status';
 import { ClassSerializerInterceptor, Injectable, SerializeOptions, UseGuards, UseInterceptors, UsePipes } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
 import {
     ConnectedSocket,
     MessageBody,
@@ -62,7 +62,7 @@ export class GameSessionGateway implements OnGatewayConnection, OnGatewayDisconn
         });
     }
 
-    @UseGuards(AuthGuard('jwt'))
+    @UseGuards(SocketAuthGuard)
     @SubscribeMessage(GameSessionEvent.StartGameSession)
     async startGameSession(
         @ConnectedSocket() socket: Socket,
@@ -104,7 +104,7 @@ export class GameSessionGateway implements OnGatewayConnection, OnGatewayDisconn
         }
     }
 
-    @UseGuards(AuthGuard('jwt'))
+    @UseGuards(SocketAuthGuard)
     @SubscribeMessage(GameSessionEvent.UseHint)
     useHint(@ConnectedSocket() socket: Socket): Hint {
         const rooms = Array.from(socket.rooms.values());
@@ -135,7 +135,7 @@ export class GameSessionGateway implements OnGatewayConnection, OnGatewayDisconn
         return hintInfo;
     }
 
-    @UseGuards(AuthGuard('jwt'))
+    @UseGuards(SocketAuthGuard)
     @SubscribeMessage(GameSessionEvent.AcceptOpponent)
     async acceptOpponent(@ConnectedSocket() socket: Socket, @MessageBody() { socketId }: { socketId: string }): Promise<void> {
         const waitingRoom = this.waitingRoomService.getPlayerWaitingRoom(socket.id);
@@ -174,7 +174,7 @@ export class GameSessionGateway implements OnGatewayConnection, OnGatewayDisconn
         });
     }
 
-    @UseGuards(AuthGuard('jwt'))
+    @UseGuards(SocketAuthGuard)
     @SubscribeMessage(GameSessionEvent.RejectOpponent)
     rejectOpponent(@ConnectedSocket() socket: Socket, @MessageBody() { socketId }: { socketId: string }): void {
         const wasWaitingRoomDeleted = this.waitingRoomService.removePlayer(socketId);
@@ -190,7 +190,7 @@ export class GameSessionGateway implements OnGatewayConnection, OnGatewayDisconn
         this.findNewOpponent(waitingRoom);
     }
 
-    @UseGuards(AuthGuard('jwt'))
+    @UseGuards(SocketAuthGuard)
     @UseInterceptors(ClassSerializerInterceptor)
     @SerializeOptions({
         groups: ['game-session'],
@@ -201,7 +201,7 @@ export class GameSessionGateway implements OnGatewayConnection, OnGatewayDisconn
         this.removePlayer(socket.id);
     }
 
-    @UseGuards(AuthGuard('jwt'))
+    @UseGuards(SocketAuthGuard)
     @SubscribeMessage(GameSessionEvent.GuessDifference)
     async guessDifference(@ConnectedSocket() socket: Socket, @MessageBody() coordinate: Coordinate): Promise<GuessResult> {
         const gameSession = this.gameManagerService.getPlayerGameSession(socket.id);
@@ -229,15 +229,14 @@ export class GameSessionGateway implements OnGatewayConnection, OnGatewayDisconn
         return guessResult;
     }
 
-    @UseGuards(AuthGuard('jwt'))
+    @UseGuards(SocketAuthGuard)
     @SubscribeMessage(GameSessionEvent.RemainingDifferences)
     remainingDifferences(@ConnectedSocket() socket: Socket): Coordinate[][] {
         const gameSession = this.gameManagerService.getPlayerGameSession(socket.id);
         return this.gameManagerService.getRemainingDifferencesArray(gameSession);
     }
 
-    @UseGuards(AuthGuard('jwt'))
-    @SubscribeMessage(GameSessionEvent.GiveUp)
+    @UseGuards(SocketAuthGuard)
     giveUp(@ConnectedSocket() socket: Socket): void {
         const gameSession = this.gameManagerService.getPlayerGameSession(socket.id);
 
@@ -266,7 +265,7 @@ export class GameSessionGateway implements OnGatewayConnection, OnGatewayDisconn
         }
     }
 
-    @UseGuards(AuthGuard('jwt'))
+    @UseGuards(SocketAuthGuard)
     @SubscribeMessage(GameSessionEvent.Message)
     message(@ConnectedSocket() socket: Socket, @MessageBody() message: Message): void {
         if (message.author !== MessageAuthor.User) {
@@ -277,7 +276,7 @@ export class GameSessionGateway implements OnGatewayConnection, OnGatewayDisconn
         socket.to(gameSession.roomId).emit(GameSessionEvent.Message, { ...message, author: MessageAuthor.Opponent });
     }
 
-    @UseGuards(AuthGuard('jwt'))
+    @UseGuards(SocketAuthGuard)
     @SubscribeMessage(GameSessionEvent.GetGameState)
     getGameState(@MessageBody() gameId: string): JoinableGame {
         const waitingRoom = this.waitingRoomService.getGameWaitingRoom(gameId);

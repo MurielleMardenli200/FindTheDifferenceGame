@@ -35,4 +35,13 @@ export class AuthenticationService {
         }
         return null;
     }
+
+    async validateJwtToken(token: string): Promise<boolean> {
+        try {
+            await this.jwtService.verifyAsync(token);
+            return true;
+        } catch (error) {
+            return false;
+        }
+    }
 }
