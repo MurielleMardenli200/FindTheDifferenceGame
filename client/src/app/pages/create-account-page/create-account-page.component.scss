@@ -14,7 +14,7 @@
     background: linear-gradient(-45deg, #b0dfe8, #dde7e9, #11cfcf);
     background-size: 400% 400%;
     animation: gradient 10s ease infinite;
-    justify-content: center
+    justify-content: center;
 }
 
 .top-container {
@@ -32,7 +32,6 @@
     width: inherit;
     color: black;
 }
-
 
 .form-container {
     display: flex;
@@ -67,7 +66,6 @@
     z-index: 1;
 }
 
-
 .form-container form {
     display: flex;
     flex-direction: column;
@@ -77,13 +75,13 @@
 .form-container label {
     font-size: 14pt;
     font-family: 'Pirata';
-    color: #C3E0E5;
+    color: #c3e0e5;
     margin-bottom: 10px;
 }
 
-.form-container input[type="text"],
-.form-container input[type="password"],
-.form-container input[type="password-confirmation"] {
+.form-container input[type='text'],
+.form-container input[type='password'],
+.form-container input[type='password-confirmation'] {
     width: 100%;
     padding: 10px;
     border: none;
@@ -95,17 +93,21 @@
     margin-bottom: 10px;
 }
 
+.error-tooltip {
+    white-space: pre-line;
+}
+
 .form-container a {
     font-size: 12pt;
     font-family: 'Pirata';
-    color: #C3E0E5;
+    color: #c3e0e5;
     text-decoration: none;
 }
 
-.form-container input[type="submit"] {
+.form-container input[type='submit'] {
     width: 100%;
     padding: 10px;
-    background-color: #C3E0E5;
+    background-color: #c3e0e5;
     border: none;
     border-radius: 4px;
     font-size: 14pt;
@@ -118,63 +120,21 @@
 .form-container .or {
     font-size: 14pt;
     font-family: 'Pirata';
-    color: #C3E0E5;
+    color: #c3e0e5;
     text-align: left;
 }
 
 .text {
     font-size: 14pt;
     font-family: 'Pirata';
-    color: #C3E0E5;
+    color: #c3e0e5;
     text-align: left;
     margin-top: 10px;
     margin-bottom: 10px;
 }
 
-.form-container .social-media {
-    display: flex;
-    justify-content: center;
-}
-
-.form-container .social-media a {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s ease;
-}
-
-.form-container .social-media a:hover {
-    background-color: #f2f2f2;
-    transform: scale(1.1);
-    transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-.form-container .social-media a img {
-    width: 25px;
-    height: 25px;
-}
-
-.credits {
-    display: flex;
-    flex-direction: row;
-    width: 80%;
-    font-family: Pirata;
-    height: 10px;
-    font-size: 15pt;
-    justify-self: center;
-    justify-content: space-between;
-    color: black;
-}
-
-//inspired code written by Shireen Taj on https://codepen.io/TajShireen/pen/xxGPEEp
-
 h1 {
-    font-size: 100pt;
+    font-size: 80pt;
     font-family: 'Pirata';
     color: black;
     line-height: 1em;
@@ -192,7 +152,7 @@ h1 {
 }
 
 h2 {
-    font-size: 50pt;
+    font-size: 40pt;
     font-family: 'Pirata';
     color: black;
     line-height: 1em;
@@ -207,4 +167,8 @@ h2 {
     margin: 0;
     position: relative;
     border-color: black;
+}
+
+mat-error {
+    color: red;
 }

@@ -43,6 +43,7 @@ import { TimeLimitedModeComponent } from './pages/time-limited/time-limited-mode
 import { LoginPageComponent } from './pages/login-page/login-page.component';
 import { GoogleLoginProvider, SocialAuthServiceConfig, SocialLoginModule, GoogleSigninButtonModule } from '@abacritt/angularx-social-login';
 import { environment } from 'src/environments/environment';
+import { CreateAccountPageComponent } from './pages/create-account-page/create-account-page.component';
 /**
  * Main module that is used in main.ts.
  * All automatically generated components will appear in this module.
@@ -87,6 +88,7 @@ import { environment } from 'src/environments/environment';
         TimerComponent,
         HistoryModalComponent,
         LoginPageComponent,
+        CreateAccountPageComponent,
     ],
     imports: [
         AppMaterialModule,

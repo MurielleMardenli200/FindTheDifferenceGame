@@ -11,6 +11,7 @@ export class AccountService {
 
     constructor(private readonly http: HttpClient) {}
 
+    // TODO: Complete login in server side
     logInAccount(info: UserInfo) {
         return this.http.post(`${this.baseUrl}/auth/login`, info);
     }
