@@ -58,5 +58,5 @@ coverage/
 #Node Modules
 /node_modules
 
-
+#Angular Packs
 /.angular
