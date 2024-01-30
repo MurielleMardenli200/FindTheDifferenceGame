@@ -14,8 +14,6 @@ function initWindow() {
 
     // Electron Build Path
     const path = `file://${__dirname}/dist/client/index.html`;
-    // const path = 'dist/client';
-    //const path = path.join(__dirname, '/dist/client/index.html');
 
 
     appWindow.loadURL(path);
