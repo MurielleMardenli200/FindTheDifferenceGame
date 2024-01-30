@@ -15,8 +15,8 @@ export class AccountService {
         return this.http.post(`${this.baseUrl}/auth/login`, info);
     }
 
-    // Commented because I am not yet to the registration part of the project
-    // registerAccount(info: UserInfo) {
-    //     return this.http.post(`${this.baseUrl}/auth/register`, info);
-    // }
+    // TODO: Complete registration in server side
+    registerAccount(info: UserInfo) {
+        return this.http.post(`${this.baseUrl}/auth/register`, info);
+    }
 }

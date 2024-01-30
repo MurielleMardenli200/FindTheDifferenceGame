@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ClassicModeComponent } from '@app/pages/classic-mode/classic-mode.component';
 import { ConfigurationComponent } from '@app/pages/configuration/configuration.component';
+import { CreateAccountPageComponent } from '@app/pages/create-account-page/create-account-page.component';
 import { CreateGamePageComponent } from '@app/pages/create-game-page/create-game-page.component';
 import { LoginPageComponent } from '@app/pages/login-page/login-page.component';
 import { MainPageComponent } from '@app/pages/main-page/main-page.component';
@@ -19,6 +20,7 @@ const routes: Routes = [
     { path: 'selection', component: SelectionPageComponent, canActivate: [authGuard] },
     { path: 'time-limited', component: TimeLimitedModeComponent, canActivate: [authGuard] },
     { path: 'time-limited-selection', component: TimeLimitedSelectionPageComponent, canActivate: [authGuard] },
+    { path: 'create-account', component: CreateAccountPageComponent },
     { path: 'login', component: LoginPageComponent },
     { path: '**', redirectTo: '/login' },
 ];
