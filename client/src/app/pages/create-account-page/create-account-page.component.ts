@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+<<<<<<< HEAD
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserInfo } from '@app/interfaces/user-info';
@@ -9,10 +10,22 @@ import { passwordMatchValidator, passwordValidator } from '@app/validators/user-
 @Component({
     selector: 'app-create-account-page',
     standalone: false,
+=======
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { UserInfo } from '@app/interfaces/user-info';
+import { AccountService } from '@app/services/account/account.service';
+
+@Component({
+    selector: 'app-create-account-page',
+    standalone: true,
+    imports: [],
+>>>>>>> dece8f7 (MM: create account page created and view needs to be modified)
     templateUrl: './create-account-page.component.html',
     styleUrl: './create-account-page.component.scss',
 })
 export class CreateAccountPageComponent {
+<<<<<<< HEAD
     createAccountForm = this.formBuilder.group(
         {
             username: ['', Validators.compose([Validators.required, noWhiteSpaceValidator])],
@@ -36,6 +49,22 @@ export class CreateAccountPageComponent {
                 this.router.navigate(['/login']);
             });
             this.createAccountForm.reset();
+=======
+    logInForm: FormGroup = this.formBuilder.group({
+        username: ['', Validators.required],
+        password: ['', Validators.required],
+    });
+
+    constructor(private router: Router, private formBuilder: FormBuilder, private accountService: AccountService) {}
+
+    onSubmit() {
+        if (this.logInForm.valid) {
+            const userInfo = this.logInForm.value as UserInfo;
+            this.accountService.registerAccount(userInfo).subscribe(() => {
+                this.router.navigate(['/login']);
+            });
+            this.logInForm.reset();
+>>>>>>> dece8f7 (MM: create account page created and view needs to be modified)
         }
     }
 }

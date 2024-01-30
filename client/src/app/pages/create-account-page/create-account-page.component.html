@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <app-page-base-component>
     <div class="container">
         <div class="top-container">
@@ -40,3 +41,28 @@
         </div>
     </div>
 </app-page-base-component>
+=======
+<!-- <app-page-base-component> -->
+<div class="container">
+    <div class="top-container">
+        <h1 class="title" data-text="SPOT SEVEN">SPOT SEVEN</h1>
+        <h2>Création de compte</h2>
+    </div>
+    <div class="form-container">
+        <img src="./assets/logo/logo.png" alt="logo" class="logo" />
+        <!-- <form class="form-field" [formGroup]="logInForm" (ngSubmit)="onSubmit()"> -->
+        <form class="form-field" (ngSubmit)="onSubmit()">
+            <label for="username">Nom d'utilisateur</label>
+            <input type="text" id="username" name="username" formControlName="username" />
+            <label for="email">Courriel</label>
+            <input type="text" id="courriel" name="courriel" formControlName="courriel" />
+            <label for="password">Mot de passe</label>
+            <input type="password" id="password" name="password" formControlName="password" />
+            <label for="password-confirmation">Réécrivez votre mot de passe</label>
+            <input type="password-confirmation" id="password-confirmation" name="password-confirmation" formControlName="password-confirmation" />
+            <input type="submit" value="CRÉER UN NOUVEAU COMPTE" [disabled]="!logInForm.valid" />
+        </form>
+    </div>
+</div>
+<!-- </app-page-base-component> -->
+>>>>>>> dece8f7 (MM: create account page created and view needs to be modified)
