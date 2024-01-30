@@ -32,7 +32,7 @@
                 <input type="password" id="password" name="password" formControlName="password" />
 
                 <label for="password confirmation">Réécrivez votre mot de passe</label>
-                <input type="password-confirmation" id="password-confirmation" name="password-confirmation" formControlName="passwordConfirmation" />
+                <input type="password" id="password-confirmation" name="password-confirmation" formControlName="passwordConfirmation" />
                 <mat-error *ngIf="createAccountForm.hasError('notSame')">Le mot de passe n'est pas le même</mat-error>
 
                 <input type="submit" value="CRÉER UN NOUVEAU COMPTE" [disabled]="!createAccountForm.valid" />
