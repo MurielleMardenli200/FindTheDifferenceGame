@@ -4,7 +4,6 @@ let appWindow;
 
 function initWindow() {
     appWindow = new BrowserWindow({
-        // fullscreen: true,
         height: 1080,
         width: 1920,
         webPreferences: {
