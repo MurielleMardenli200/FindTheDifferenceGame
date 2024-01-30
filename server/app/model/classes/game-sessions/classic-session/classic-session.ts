@@ -1,9 +1,9 @@
 import { ClassicWaitingRoom } from '@app/interfaces/waiting-room/waiting-room.interface';
 import { BaseGameSession } from '@app/model/classes/game-sessions/base-game-session/base-game-session';
 import { SECOND_IN_MILLISECONDS } from '@app/model/classes/game-sessions/game-session.constants';
-import { GameConstants } from '@app/model/database/game-constants.entity';
 import { Coordinate } from '@app/model/dto/coordinate.dto';
 import { DifferencesService } from '@app/services/differences/differences.service';
+import { GameConstants } from '@common/game-constants';
 import { GuessResultClassic, ResultType, SessionType } from '@common/model/guess-result';
 import { WsException } from '@nestjs/websockets';
 

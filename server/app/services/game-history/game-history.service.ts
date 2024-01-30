@@ -1,22 +1,22 @@
 import { History } from '@app/model/database/game-history.entity';
+import { History as HistoryInterface } from '@common/model/history';
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class GameHistoryService {
-    constructor(@InjectModel(History.name) private historyModel: Model<History>) {}
+    constructor(@InjectRepository(History) private historyRepository: Repository<History>) {}
 
     async getHistory(): Promise<History[]> {
-        return await this.historyModel.find();
+        return await this.historyRepository.find();
     }
 
     async deleteHistory(): Promise<void> {
-        await this.historyModel.deleteMany();
+        await this.historyRepository.clear();
     }
 
-    async createGameHistory(history: History): Promise<void> {
-        const gameHistory = new History(history);
-        await this.historyModel.create(gameHistory);
+    async createGameHistory(history: HistoryInterface): Promise<void> {
+        await this.historyRepository.save(this.historyRepository.create({ ...history }));
     }
 }

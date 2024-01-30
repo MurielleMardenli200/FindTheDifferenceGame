@@ -1,36 +1,28 @@
 import { GameMode } from '@common/game-mode';
 import { History as HistoryInterface } from '@common/model/history';
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { bigIntTransformer } from './transformers/bigint.transformer';
 
-@Schema()
+@Entity()
 export class History implements HistoryInterface {
-    @Prop({ required: true })
-    gameStart: number;
+    @PrimaryGeneratedColumn('uuid')
+    id!: string;
 
-    @Prop({ required: true })
-    gameTime: number;
+    @Column('bigint', { transformer: bigIntTransformer })
+    gameStart!: number;
 
-    @Prop({ required: true })
-    gameMode: GameMode;
+    @Column()
+    gameTime!: number;
 
-    @Prop({ required: true })
-    players: string[];
+    @Column()
+    gameMode!: GameMode;
 
-    @Prop()
+    @Column('text', { array: true })
+    players!: string[];
+
+    @Column({ nullable: true })
     isWinner?: number;
 
-    @Prop()
+    @Column({ nullable: true })
     hasAbandonned?: number;
-
-    constructor(history: History) {
-        this.gameStart = history.gameStart;
-        this.gameTime = history.gameTime;
-        this.gameMode = history.gameMode;
-        this.players = history.players;
-        this.isWinner = history.isWinner;
-        this.hasAbandonned = history.hasAbandonned;
-    }
 }
-
-export const gameHistorySchema = SchemaFactory.createForClass(History);
-gameHistorySchema.loadClass(History);

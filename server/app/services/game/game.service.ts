@@ -3,20 +3,23 @@ import { HighScore } from '@app/model/dto/high-score.dto';
 import { PendingGame } from '@app/model/schema/pending-game';
 import { BitmapService } from '@app/services/bitmap/bitmap.service';
 import { DifferencesService } from '@app/services/differences/differences.service';
+import { HighScoreService } from '@app/services/high-score/high-score.service';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Observable, Subject } from 'rxjs';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class GameService {
     private gameDeletedSubject: Subject<string>;
     private pendingGames: Map<string, PendingGame>;
 
+    // eslint-disable-next-line max-params
     constructor(
-        @InjectModel(Game.name) private gameModel: Model<Game>,
+        @InjectRepository(Game) private gameRepository: Repository<Game>,
         private bitmapService: BitmapService,
         private differencesService: DifferencesService,
+        private highScoreService: HighScoreService,
     ) {
         this.pendingGames = new Map<string, PendingGame>();
         this.gameDeletedSubject = new Subject();
@@ -39,33 +42,39 @@ export class GameService {
     }
 
     async getGames(): Promise<ExistingGame[]> {
-        return await this.gameModel.find();
+        return await this.gameRepository.find({ relations: { soloHighScores: true, duelHighScores: true } });
     }
 
     async getGame(id: string): Promise<ExistingGame | null> {
-        return await this.gameModel.findById(id);
+        return await this.gameRepository.findOne({
+            where: {
+                _id: id,
+            },
+            relations: { soloHighScores: true, duelHighScores: true },
+        });
     }
 
     async deleteAllGames(): Promise<void> {
-        const games = await this.getGames();
-        for (const game of games) {
-            await this.deleteGame(game._id);
-        }
+        await this.highScoreService.deleteAllHighScores();
+        await this.gameRepository.delete({});
     }
 
     async createGame(pendingGame: PendingGame, name: string): Promise<ExistingGame> {
         const originalImageFilename = await this.bitmapService.saveImage(pendingGame.originalImageBase64);
         const modifiedImageFilename = await this.bitmapService.saveImage(pendingGame.modifiedImageBase64);
         const differencesFilename = await this.differencesService.saveDifferences(pendingGame.differences);
-        const game: Game = new Game(pendingGame.temporaryGame, {
-            name,
-            originalImageFilename,
-            modifiedImageFilename,
-            differencesFilename,
-            differencesCount: pendingGame.differences.length,
-        });
 
-        return await this.gameModel.create(game);
+        return await this.gameRepository.save(
+            this.gameRepository.create({
+                name,
+                originalImageFilename,
+                modifiedImageFilename,
+                differencesFilename,
+                differencesCount: pendingGame.differences.length,
+                soloHighScores: await this.highScoreService.createDefaultSoloHighScores(),
+                duelHighScores: await this.highScoreService.createDefaultDuelHighScores(),
+            }),
+        );
     }
 
     async deleteGame(id: string): Promise<void> {
@@ -78,11 +87,14 @@ export class GameService {
         await this.bitmapService.deleteImageFile(game.modifiedImageFilename);
         await this.differencesService.deleteDifferences(game.differencesFilename);
 
-        await this.gameModel.findByIdAndDelete(game._id);
+        await this.highScoreService.deleteGameHighScores(id);
+        await this.gameRepository.createQueryBuilder().delete().where('_id = :id', { id }).execute();
     }
 
     async updateGame(id: string, isMultiplayer: boolean, highScores: HighScore[]): Promise<void> {
-        if (isMultiplayer) await this.gameModel.findByIdAndUpdate(id, { duelHighScores: highScores });
-        else await this.gameModel.findByIdAndUpdate(id, { soloHighScores: highScores });
+        // FIXME: Fix other highScore being kept in the DB when new ones are added for a game
+        const game = await this.getGame(id);
+        if (isMultiplayer) await this.gameRepository.save({ ...game, duelHighScores: highScores });
+        else await this.gameRepository.save({ ...game, soloHighScores: highScores });
     }
 }

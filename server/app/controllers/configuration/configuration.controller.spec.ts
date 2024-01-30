@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-magic-numbers */
-import { GameConstants } from '@app/model/database/game-constants.entity';
+import { History } from '@app/model/database/game-history.entity';
 import { DEFAULT_GAME_CONSTANTS, mockHistory } from '@app/samples/game-session';
 import { GameConstantsService } from '@app/services/game-constants/game-constants.service';
 import { GameHistoryService } from '@app/services/game-history/game-history.service';
-import { History } from '@common/model/history';
+import { GameConstants } from '@common/game-constants';
 import { Test, TestingModule } from '@nestjs/testing';
-import { createStubInstance, SinonStubbedInstance } from 'sinon';
+import { SinonStubbedInstance, createStubInstance } from 'sinon';
 import { ConfigurationController } from './configuration.controller';
 
 describe('ConfigurationController', () => {
@@ -20,7 +20,10 @@ describe('ConfigurationController', () => {
         const module: TestingModule = await Test.createTestingModule({
             controllers: [ConfigurationController],
             providers: [
-                { provide: GameConstantsService, useValue: gameConstantsService },
+                {
+                    provide: GameConstantsService,
+                    useValue: gameConstantsService,
+                },
                 {
                     provide: GameHistoryService,
                     useValue: gameHistoryService,
@@ -37,7 +40,7 @@ describe('ConfigurationController', () => {
 
     it('findAll() should return all constants', async () => {
         const constants: GameConstants = DEFAULT_GAME_CONSTANTS;
-        gameConstantsService.findAll.resolves(constants);
+        gameConstantsService.getAll.resolves(constants);
 
         expect(await controller.findAll()).toEqual(constants);
     });
