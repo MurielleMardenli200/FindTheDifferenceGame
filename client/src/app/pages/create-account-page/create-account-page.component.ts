@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 <<<<<<< HEAD
 <<<<<<< HEAD
 import { FormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { UserInfo } from '@app/interfaces/user-info';
 import { AccountService } from '@app/services/account/account.service';
 import { noWhiteSpaceValidator } from '@app/validators/no-whitespace/no-white-space';
@@ -50,7 +49,7 @@ export class CreateAccountPageComponent {
     );
 <<<<<<< HEAD
 
-    constructor(private router: Router, private formBuilder: FormBuilder, private accountService: AccountService) {}
+    constructor(private formBuilder: FormBuilder, private accountService: AccountService) {}
 
     showPasswordError(): string {
         return 'Veuillez entrer une valeur avec au moins\n- 8 caractères\n- 1 majuscule\n- 1 nombre';
@@ -59,9 +58,7 @@ export class CreateAccountPageComponent {
     onSubmit() {
         if (this.createAccountForm.valid) {
             const userInfo = this.createAccountForm.value as UserInfo;
-            this.accountService.registerAccount(userInfo).subscribe(() => {
-                this.router.navigate(['/login']);
-            });
+            this.accountService.registerAccount(userInfo);
             this.createAccountForm.reset();
 =======
     logInForm: FormGroup = this.formBuilder.group({
