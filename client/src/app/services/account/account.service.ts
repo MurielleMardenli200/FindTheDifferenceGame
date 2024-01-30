@@ -16,6 +16,9 @@ export class AccountService {
         this.socialAuthService.authState.subscribe((user) => {
             this.user = user;
         });
+        if (localStorage.getItem('token') != null) {
+            this.isLoggedIn.set(true);
+        }
     }
 
     // TODO: Complete login in server side
@@ -30,5 +33,10 @@ export class AccountService {
     // TODO: Complete registration in server side
     registerAccount(info: UserInfo) {
         return this.http.post(`${this.baseUrl}/auth/register`, info);
+    }
+    logOut() {
+        localStorage.removeItem('token');
+        this.isLoggedIn.set(false);
+        this.router.navigate(['/login']);
     }
 }
