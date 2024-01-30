@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 import { SocketService } from '@app/services/socket/socket.service';
 import { GameSessionEvent } from '@common/game-session.events';
 import { Message } from '@common/model/message';
-@Injectable()
+@Injectable({
+    providedIn: 'root',
+})
 export class MessageService {
     messages: Message[] = [];
 

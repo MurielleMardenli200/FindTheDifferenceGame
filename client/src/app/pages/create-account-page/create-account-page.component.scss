@@ -14,15 +14,7 @@
     background: linear-gradient(-45deg, #b0dfe8, #dde7e9, #11cfcf);
     background-size: 400% 400%;
     animation: gradient 10s ease infinite;
-<<<<<<< HEAD
-<<<<<<< HEAD
     justify-content: center;
-=======
-    justify-content: center
->>>>>>> dece8f7 (MM: create account page created and view needs to be modified)
-=======
-    justify-content: center;
->>>>>>> 10a4af1 (first rebase)
 }
 
 .top-container {
@@ -41,13 +33,6 @@
     color: black;
 }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-
->>>>>>> dece8f7 (MM: create account page created and view needs to be modified)
-=======
->>>>>>> 10a4af1 (first rebase)
 .form-container {
     display: flex;
     flex-direction: column;
@@ -81,13 +66,6 @@
     z-index: 1;
 }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-
->>>>>>> dece8f7 (MM: create account page created and view needs to be modified)
-=======
->>>>>>> 10a4af1 (first rebase)
 .form-container form {
     display: flex;
     flex-direction: column;
@@ -97,8 +75,6 @@
 .form-container label {
     font-size: 14pt;
     font-family: 'Pirata';
-<<<<<<< HEAD
-<<<<<<< HEAD
     color: #c3e0e5;
     margin-bottom: 10px;
 }
@@ -106,24 +82,6 @@
 .form-container input[type='text'],
 .form-container input[type='password'],
 .form-container input[type='password-confirmation'] {
-=======
-    color: #C3E0E5;
-    margin-bottom: 10px;
-}
-
-.form-container input[type="text"],
-.form-container input[type="password"],
-.form-container input[type="password-confirmation"] {
->>>>>>> dece8f7 (MM: create account page created and view needs to be modified)
-=======
-    color: #c3e0e5;
-    margin-bottom: 10px;
-}
-
-.form-container input[type='text'],
-.form-container input[type='password'],
-.form-container input[type='password-confirmation'] {
->>>>>>> 10a4af1 (first rebase)
     width: 100%;
     padding: 10px;
     border: none;
@@ -135,15 +93,10 @@
     margin-bottom: 10px;
 }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 10a4af1 (first rebase)
 .error-tooltip {
     white-space: pre-line;
 }
 
-<<<<<<< HEAD
 .form-container a {
     font-size: 12pt;
     font-family: 'Pirata';
@@ -155,25 +108,6 @@
     width: 100%;
     padding: 10px;
     background-color: #c3e0e5;
-=======
-=======
->>>>>>> 10a4af1 (first rebase)
-.form-container a {
-    font-size: 12pt;
-    font-family: 'Pirata';
-    color: #c3e0e5;
-    text-decoration: none;
-}
-
-.form-container input[type='submit'] {
-    width: 100%;
-    padding: 10px;
-<<<<<<< HEAD
-    background-color: #C3E0E5;
->>>>>>> dece8f7 (MM: create account page created and view needs to be modified)
-=======
-    background-color: #c3e0e5;
->>>>>>> 10a4af1 (first rebase)
     border: none;
     border-radius: 4px;
     font-size: 14pt;
@@ -186,89 +120,21 @@
 .form-container .or {
     font-size: 14pt;
     font-family: 'Pirata';
-<<<<<<< HEAD
-<<<<<<< HEAD
     color: #c3e0e5;
-=======
-    color: #C3E0E5;
->>>>>>> dece8f7 (MM: create account page created and view needs to be modified)
-=======
-    color: #c3e0e5;
->>>>>>> 10a4af1 (first rebase)
     text-align: left;
 }
 
 .text {
     font-size: 14pt;
     font-family: 'Pirata';
-<<<<<<< HEAD
-<<<<<<< HEAD
     color: #c3e0e5;
-=======
-    color: #C3E0E5;
->>>>>>> dece8f7 (MM: create account page created and view needs to be modified)
-=======
-    color: #c3e0e5;
->>>>>>> 10a4af1 (first rebase)
     text-align: left;
     margin-top: 10px;
     margin-bottom: 10px;
 }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 h1 {
     font-size: 80pt;
-=======
-.form-container .social-media {
-    display: flex;
-    justify-content: center;
-}
-
-.form-container .social-media a {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s ease;
-}
-
-.form-container .social-media a:hover {
-    background-color: #f2f2f2;
-    transform: scale(1.1);
-    transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-.form-container .social-media a img {
-    width: 25px;
-    height: 25px;
-}
-
-.credits {
-    display: flex;
-    flex-direction: row;
-    width: 80%;
-    font-family: Pirata;
-    height: 10px;
-    font-size: 15pt;
-    justify-self: center;
-    justify-content: space-between;
-    color: black;
-}
-
-//inspired code written by Shireen Taj on https://codepen.io/TajShireen/pen/xxGPEEp
-
-h1 {
-    font-size: 100pt;
->>>>>>> dece8f7 (MM: create account page created and view needs to be modified)
-=======
-h1 {
-    font-size: 80pt;
->>>>>>> 10a4af1 (first rebase)
     font-family: 'Pirata';
     color: black;
     line-height: 1em;
@@ -286,15 +152,7 @@ h1 {
 }
 
 h2 {
-<<<<<<< HEAD
-<<<<<<< HEAD
     font-size: 40pt;
-=======
-    font-size: 50pt;
->>>>>>> dece8f7 (MM: create account page created and view needs to be modified)
-=======
-    font-size: 40pt;
->>>>>>> 10a4af1 (first rebase)
     font-family: 'Pirata';
     color: black;
     line-height: 1em;
@@ -309,18 +167,8 @@ h2 {
     margin: 0;
     position: relative;
     border-color: black;
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 10a4af1 (first rebase)
 }
 
 mat-error {
     color: red;
 }
-<<<<<<< HEAD
-=======
-}
->>>>>>> dece8f7 (MM: create account page created and view needs to be modified)
-=======
->>>>>>> 10a4af1 (first rebase)

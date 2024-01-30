@@ -29,8 +29,11 @@ export class AccountService {
 
     // TODO: Complete registration in server side
     registerAccount(info: UserInfo) {
-        return this.http.post(`${this.baseUrl}/auth/register`, info);
+        return this.http.post(`${this.baseUrl}/auth/signup`, info).subscribe(() => {
+            this.router.navigate(['/login']);
+        });
     }
+
     logOut() {
         localStorage.removeItem('token');
         this.isLoggedIn.set(false);
