@@ -1,6 +1,7 @@
 FROM node:lts-slim as development
 
-WORKDIR /app/server
+WORKDIR  /app/server
+RUN apt-get update && apt-get install -y procps
 
 FROM node:lts-slim as builder
 
