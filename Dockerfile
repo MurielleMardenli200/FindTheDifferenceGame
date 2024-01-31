@@ -1,4 +1,4 @@
-FROM node:lts-alpine as builder
+FROM node:lts-alpine as development
 
 RUN mkdir -p /app/server /app/common
 
@@ -13,7 +13,7 @@ COPY server ../server
 
 RUN npm run build
 
-FROM node:lts-alpine
+FROM node:lts-alpine as production 
 
 WORKDIR /app
 

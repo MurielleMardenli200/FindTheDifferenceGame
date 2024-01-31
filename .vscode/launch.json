@@ -12,14 +12,26 @@
             "restart": true,
             "sourceMaps": true,
             "localRoot": "${workspaceFolder}/server",
-            "type": "pwa-node"
+            "type": "node"
         },
         {
             "name": "Launch Client With Debug",
             "request": "launch",
-            "type": "pwa-chrome",
+            "type": "chrome",
             "url": "http://localhost:4200",
             "webRoot": "${workspaceFolder}/client"
+        },
+        {
+            "name": "Debug Docker Compose",
+            "type": "node",
+            "request": "attach",
+            "restart": true,
+            "port": 9229,
+            "address": "0.0.0.0",
+            "sourceMaps": true,
+            "localRoot": "${workspaceFolder}/server",
+            "remoteRoot": "/app/server",
+            "skipFiles": ["<node_internals>/**"]
         }
     ]
 }
