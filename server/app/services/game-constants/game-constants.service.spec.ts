@@ -1,99 +1,70 @@
 /* eslint-disable @typescript-eslint/no-magic-numbers */
-import { GameConstants, GameConstantsDocument, gameConstantsSchema } from '@app/model/database/game-constants.entity';
+import { GameConstantEntity } from '@app/model/database/game-constant.entity';
 import { GameConstantsService } from '@app/services/game-constants/game-constants.service';
-import { MongooseModule, getConnectionToken, getModelToken } from '@nestjs/mongoose';
+import { defaultGameConstants } from '@common/game-default.constants';
 import { Test, TestingModule } from '@nestjs/testing';
-import { MongoMemoryServer } from 'mongodb-memory-server';
-import { Connection, Model } from 'mongoose';
-
-const DELAY_BEFORE_CLOSING_CONNECTION = 200;
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { SinonStubbedInstance, createStubInstance } from 'sinon';
+import { Repository } from 'typeorm';
 
 describe('GameConstantsService', () => {
+    const NUMBER_OF_CONSTANTS = Object.keys(defaultGameConstants).length;
+
     let service: GameConstantsService;
-    let constantsModel: Model<GameConstantsDocument>;
-    let mongoServer: MongoMemoryServer;
-    let connection: Connection;
+    let constantRepoMock: SinonStubbedInstance<Repository<GameConstantEntity>>;
 
     beforeEach(async () => {
-        mongoServer = await MongoMemoryServer.create();
+        const mockBuilder = {
+            select: jest.fn().mockReturnThis(),
+            getCount: jest.fn().mockResolvedValue(1),
+        };
+
+        constantRepoMock = createStubInstance(Repository<GameConstantEntity>) as SinonStubbedInstance<Repository<GameConstantEntity>>;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        constantRepoMock.createQueryBuilder = jest.fn().mockReturnValue(mockBuilder) as unknown as any;
 
         const module: TestingModule = await Test.createTestingModule({
-            imports: [
-                MongooseModule.forRootAsync({
-                    useFactory: () => ({
-                        uri: mongoServer.getUri(),
-                    }),
-                }),
-                MongooseModule.forFeature([{ name: GameConstants.name, schema: gameConstantsSchema }]),
+            providers: [
+                GameConstantsService,
+                {
+                    provide: getRepositoryToken(GameConstantEntity),
+                    useValue: constantRepoMock,
+                },
             ],
-            providers: [GameConstantsService],
         }).compile();
 
         service = module.get<GameConstantsService>(GameConstantsService);
-        constantsModel = module.get<Model<GameConstantsDocument>>(getModelToken(GameConstants.name));
-        connection = await module.get(getConnectionToken());
-    });
-
-    afterEach((done) => {
-        setTimeout(async () => {
-            await connection.close();
-            await mongoServer.stop();
-            done();
-        }, DELAY_BEFORE_CLOSING_CONNECTION);
     });
 
     it('should be defined', () => {
         expect(service).toBeDefined();
-        expect(constantsModel).toBeDefined();
+        expect(constantRepoMock).toBeDefined();
     });
 
-    it('findAll() should return current game constants if they exist', async () => {
-        constantsModel.deleteMany({});
-        const constants = new GameConstants({
-            differenceFoundBonus: 10,
-            hintPenalty: 5,
-            initialTime: 60,
-        });
-        await constantsModel.create(constants);
-        const result = await service.findAll();
-        expect(result).toEqual(constants);
-    });
+    it('getAll() should return current game constants if they exist', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const findSpy = jest.spyOn(constantRepoMock, 'findOneByOrFail').mockResolvedValue({ value: 1 } as unknown as any);
 
-    it('findAll() should return default game constants if they do not exist', async () => {
-        constantsModel.deleteMany({});
-        const result = await service.findAll();
-        expect(result).toEqual(new GameConstants());
-        expect(constantsModel.countDocuments()).resolves.toBe(1);
+        await service.getAll();
+
+        expect(findSpy).toBeCalledTimes(NUMBER_OF_CONSTANTS);
     });
 
     it('update() should update game constant', async () => {
-        constantsModel.deleteMany({});
-        const constants = new GameConstants({
-            differenceFoundBonus: 10,
-            hintPenalty: 5,
-            initialTime: 60,
-        });
-        await constantsModel.create(constants);
-        await service.update('hintPenalty', 20);
-        const result = await service.findAll();
-        expect(result.hintPenalty).toEqual(20);
-    });
+        const updateSpy = jest.spyOn(constantRepoMock, 'update');
 
-    it("update() should throw an error if the constants don't exist", async () => {
-        constantsModel.deleteMany({});
-        await expect(service.update('hintPenalty', 20)).rejects.toThrowError();
+        await service.update('hintPenalty', 20);
+
+        expect(updateSpy).toHaveBeenCalledWith({ name: 'hintPenalty' }, { value: 20 });
     });
 
     it('resetToDefault() should reset game constants to default', async () => {
-        constantsModel.deleteMany({});
-        const constants = new GameConstants({
-            differenceFoundBonus: 10,
-            hintPenalty: 5,
-            initialTime: 60,
-        });
-        await constantsModel.create(constants);
+        const clearSpy = jest.spyOn(constantRepoMock, 'clear');
+        const saveSpy = jest.spyOn(constantRepoMock, 'save');
+
         await service.resetToDefault();
-        const result = await service.findAll();
-        expect(result).toEqual(new GameConstants());
+
+        expect(clearSpy).toBeCalled();
+        expect(saveSpy).toBeCalledTimes(NUMBER_OF_CONSTANTS);
     });
 });

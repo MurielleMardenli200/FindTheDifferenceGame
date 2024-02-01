@@ -1,5 +1,4 @@
-import { ExistingGame, Game } from '@app/model/database/game.entity';
-import { defaultGame } from '@app/samples/game';
+import { defaultGames } from '@app/samples/game';
 import { BitmapService } from '@app/services/bitmap/bitmap.service';
 import { DifferencesService } from '@app/services/differences/differences.service';
 import { GameService } from '@app/services/game/game.service';
@@ -44,11 +43,7 @@ describe('GameController', () => {
     });
 
     it('getGames() should return games', async () => {
-        const games = [
-            new Game({ ...defaultGame, name: 'first' }),
-            new Game({ ...defaultGame, name: 'second' }),
-            new Game({ ...defaultGame, name: 'third' }),
-        ] as ExistingGame[];
+        const games = defaultGames;
         gameService.getGames.resolves(games);
 
         expect(await controller.getGames()).toEqual(games);

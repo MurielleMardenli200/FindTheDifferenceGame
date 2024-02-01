@@ -1,14 +1,10 @@
 import { Coordinate as CoordinateInterface } from '@common/model/coordinate';
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { IsNumber } from 'class-validator';
 
-@Schema({ _id: false })
 export class Coordinate implements CoordinateInterface {
-    @Prop()
     @IsNumber()
     x: number;
 
-    @Prop()
     @IsNumber()
     y: number;
 
@@ -30,6 +26,3 @@ export class Coordinate implements CoordinateInterface {
         return this.x === other.x && this.y === other.y;
     }
 }
-
-export const coordinateSchema = SchemaFactory.createForClass(Coordinate);
-coordinateSchema.loadClass(Coordinate);

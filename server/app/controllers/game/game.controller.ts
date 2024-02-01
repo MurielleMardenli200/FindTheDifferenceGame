@@ -1,4 +1,4 @@
-import { ExistingGame, Game } from '@app/model/database/game.entity';
+import { ExistingGame } from '@app/model/database/game.entity';
 import { GameService } from '@app/services/game/game.service';
 import { ClassSerializerInterceptor, Controller, Delete, Get, HttpCode, UseGuards, HttpStatus, Param, UseInterceptors } from '@nestjs/common';
 import { ApiOperation, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
@@ -15,8 +15,7 @@ export class GameController {
     @ApiOperation({ summary: 'Get all games' })
     @Get('/')
     async getGames(): Promise<ExistingGame[]> {
-        const games = (await this.gameService.getGames()).map((game) => new Game(game) as ExistingGame);
-        return games;
+        return await this.gameService.getGames();
     }
 
     @ApiOperation({ summary: 'Delete a game' })

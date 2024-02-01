@@ -1,7 +1,6 @@
-import { GameConstants, GameConstantsDocument } from '@app/model/database/game-constants.entity';
 import { GameConstantsService } from '@app/services/game-constants/game-constants.service';
 import { GameHistoryService } from '@app/services/game-history/game-history.service';
-import { ConstantName } from '@common/game-constants';
+import { ConstantName, GameConstants } from '@common/game-constants';
 import { History } from '@common/model/history';
 import {
     Body,
@@ -32,14 +31,14 @@ export class ConfigurationController {
     @UseGuards(AuthGuard('jwt'))
     @Get('/constants')
     async findAll(): Promise<GameConstants> {
-        return await this.gameConstantsService.findAll();
+        return await this.gameConstantsService.getAll();
     }
 
     @ApiOperation({ summary: 'Reset game constants' })
     @ApiBearerAuth('access-token')
     @UseGuards(AuthGuard('jwt'))
     @Put('constants/reset')
-    async resetToDefault(): Promise<GameConstantsDocument> {
+    async resetToDefault(): Promise<GameConstants> {
         return await this.gameConstantsService.resetToDefault();
     }
 

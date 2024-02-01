@@ -1,9 +1,9 @@
 import { SocketAuthGuard } from '@app/authentication/ws-jwt-auth.guard';
 import { GATEWAY_CONFIGURATION_OBJECT } from '@app/gateways/gateway.constants';
-import { TemporaryGame } from '@app/model/database/temporary-game.entity';
 import { CreateGameDto } from '@app/model/dto/game/create-game.dto';
 import { CreateTemporaryGameDto } from '@app/model/dto/game/create-temporary-game.dto';
 import { TemporaryGameInfo } from '@app/model/dto/game/temporary-game-info.dto';
+import { TemporaryGame } from '@app/model/schema/temporary-game';
 import { BitmapService } from '@app/services/bitmap/bitmap.service';
 import { DifferencesService } from '@app/services/differences/differences.service';
 import { GameService } from '@app/services/game/game.service';
