@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CreateAccountPageComponent } from './create-account-page.component';
 
 describe('CreateAccountPageComponent', () => {
@@ -8,7 +10,8 @@ describe('CreateAccountPageComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [CreateAccountPageComponent],
+            imports: [HttpClientModule, HttpClientTestingModule],
+            declarations: [CreateAccountPageComponent],
         }).compileComponents();
 
         fixture = TestBed.createComponent(CreateAccountPageComponent);
@@ -18,5 +21,16 @@ describe('CreateAccountPageComponent', () => {
 
     it('should create', () => {
         expect(component).toBeTruthy();
+    });
+
+    it('should execute submittion logic when form is valid', () => {
+        const registerAccountSpy = spyOn(component['accountService'], 'registerAccount');
+        const userInfo = { username: 'username', email: 'test@gmail.com', password: 'Password1000', passwordConfirmation: 'Password1000' };
+        component['createAccountForm'].setValue(userInfo);
+        fixture.detectChanges();
+
+        component.onSubmit();
+
+        expect(registerAccountSpy).toHaveBeenCalled();
     });
 });
