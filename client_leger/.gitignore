@@ -1,0 +1,14 @@
+# ignore all the files in the dart_tool directory
+.dart_tool/
+
+#ignore macos build
+macos/
+
+#ignore web build
+/build/
+
+#ignore ios build
+ios/
+
+#ignore android build 
+android/
