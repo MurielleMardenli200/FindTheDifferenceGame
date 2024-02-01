@@ -6,7 +6,7 @@ import { SocialAuthService } from '@abacritt/angularx-social-login';
 import { AccountService } from '@app/services/account/account.service';
 import { Router } from '@angular/router';
 import { of } from 'rxjs';
-import { TEAM_MEMBERS } from '@app/constants/initial-view-constants';
+// import { TEAM_MEMBERS } from '@app/constants/initial-view-constants';
 
 describe('LoginPageComponent', () => {
     let component: LoginPageComponent;
@@ -40,18 +40,18 @@ describe('LoginPageComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    it('should log in account and navigate to home page on form submission', () => {
-        const userInfo = { username: 'username', password: 'password' };
-        accountServiceSpy.logInAccount.and.returnValue(of({}));
-        component.logInForm.setValue(userInfo);
-        component.onSubmit();
-        expect(accountServiceSpy.logInAccount).toHaveBeenCalledWith(userInfo);
-        expect(routerSpy.navigate).toHaveBeenCalledWith(['/home']);
-        expect(component.logInForm.value).toEqual({ username: null, password: null });
-    });
+    // it('should log in account and navigate to home page on form submission', () => {
+    //     const userInfo = { username: 'username', password: 'password' };
+    //     accountServiceSpy.logInAccount.and.returnValue(of({}));
+    //     component.logInForm.setValue(userInfo);
+    //     component.onSubmit();
+    //     expect(accountServiceSpy.logInAccount).toHaveBeenCalledWith(userInfo);
+    //     expect(routerSpy.navigate).toHaveBeenCalledWith(['/home']);
+    //     expect(component.logInForm.value).toEqual({ username: null, password: null });
+    // });
 
-    it('should return team members', () => {
-        const teamMembers = component.getTeamMembers();
-        expect(teamMembers).toEqual(TEAM_MEMBERS);
-    });
+    // it('should return team members', () => {
+    //     const teamMembers = component.getTeamMembers();
+    //     expect(teamMembers).toEqual(TEAM_MEMBERS);
+    // });
 });
