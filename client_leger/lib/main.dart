@@ -1,4 +1,5 @@
-import 'package:client_leger/login.dart';
+import 'package:client_leger/pages/account_creation.dart';
+import 'package:client_leger/pages/login.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -17,6 +18,7 @@ class MainApp extends StatelessWidget {
       ),
       routes: {
         '/login': (context) => const LoginPage(),
+        '/account-creation': (context) => const AccountCreationPage(),
       },
       home: const LoginPage(),
     );

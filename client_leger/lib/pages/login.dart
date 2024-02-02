@@ -1,3 +1,4 @@
+import 'package:client_leger/pages/account_creation.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -157,6 +158,28 @@ class _LoginPageState extends State<LoginPage> {
                     children: [
                       // TODO: add Google Sign-In button
                     ],
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const AccountCreationPage()),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFC3E0E5),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4.0),
+                      ),
+                    ),
+                    child: const Text(
+                      "SE CRÉER UN COMPTE",
+                      style: TextStyle(
+                          fontSize: 14.0,
+                          fontFamily: 'Pirata',
+                          color: Colors.black),
+                    ),
                   ),
                 ],
               ),
