@@ -2,16 +2,16 @@
 .dart_tool/
 
 #ignore macos build
-macos/
+/macos/
 
 #ignore web build
 /build/
 
 #ignore ios build
-ios/
+/ios/
 
 #ignore android build
-android/
+/android/
 # Miscellaneous
 *.class
 *.log
@@ -52,6 +52,6 @@ app.*.symbols
 app.*.map.json
 
 # Android Studio will place build artifacts here
-/android/app/debug
+/android/app/src/debug
 /android/app/profile
 /android/app/release
