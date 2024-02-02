@@ -3,3 +3,4 @@ export interface UserInfo {
     password: string;
     email?: string;
 }
+

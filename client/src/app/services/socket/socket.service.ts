@@ -2,6 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { SocketEvent } from '@common/socket-event';
 import { Socket, io } from 'socket.io-client';
 import { environment } from 'src/environments/environment';
+import { AccountService } from '@app/services/account/account.service';
 export const TIMEOUT = 2000;
 
 @Injectable({
@@ -10,7 +11,7 @@ export const TIMEOUT = 2000;
 export class SocketService implements OnDestroy {
     socket!: Socket;
 
-    constructor() {
+    constructor(private accountService: AccountService) {
         this.connect();
     }
 
@@ -23,9 +24,13 @@ export class SocketService implements OnDestroy {
     }
 
     connect() {
+        console.log("Handshake");
+        console.log(this.accountService.user?.username);
+
         this.socket = io(environment.socketUrl, {
             auth: {
-                token: localStorage.getItem('token'),
+                token: localStorage.getItem('access-token'),
+                username: this.accountService.user?.username,
             },
         });
     }
