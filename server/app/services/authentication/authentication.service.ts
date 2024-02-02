@@ -9,7 +9,7 @@ import { JwtTokensDto, TokenType } from '@common/model/dto/jwt-tokens.dto';
 export class AuthenticationService {
     private connectedUsers = new Map<string, JwtTokensDto>();
 
-    constructor(private userService: UserService, private jwtService: JwtService) {}
+    constructor(private userService: UserService, private jwtService: JwtService) { }
 
     async logIn(username: string, password: string): Promise<JwtTokensDto> {
         if (this.connectedUsers.has(username)) {

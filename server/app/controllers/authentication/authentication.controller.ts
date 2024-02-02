@@ -4,7 +4,6 @@ import { JwtTokensDto } from '@common/model/dto/jwt-tokens.dto';
 import { Body, Controller, Get, HttpException, HttpStatus, Post, Req, UseGuards } from '@nestjs/common';
 import { ApiBody, ApiForbiddenResponse, ApiHeader, ApiOkResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RefreshAuthGuard } from '@app/authentication/refresh.guard';
-import { HttpErrorByCode } from '@nestjs/common/utils/http-error-by-code.util';
 import { Request } from 'express';
 @ApiTags('Authentification')
 @ApiHeader({ name: 'username' })
