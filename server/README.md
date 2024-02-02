@@ -1,64 +1,49 @@
 # Serveur NestJS
+Projet de serveur pour le projet du cours LOG3900 de l'équipe 103.
 
-Ce projet est une implémentation du serveur de départ utilisant le cadriciel [NestJS](https://nestjs.com/). Ceci est une alternative à serveur de base qui vous est fournie et qui utilise NodeJS/Express. Vous pouvez utiliser le serveur NodeJS/Express fourni ou ce serveur pour votre projet.
+Ce serveur nécessite Node.js et npm pour fonctionner.
+## Requirements
+- Node.js
+- npm
+- Docker (recommandé)
 
-## NestJS
 
-NestJS est un cadriciel de développement de serveurs web utilisant NodeJS et Expess avec une architecture très similaire à celle d'Angular. Vous remarquerez l'utilisation de termes tels que `service`,`module` et autres similaires à Angular.
+## Développement
+Pour développer, il est utile d'avoir un environnement de développement. Pour ce faire, il est possible d'utiliser Docker pour avoir un environnement de développement similaire à celui de production.
 
-NestJS utilise souvent les décorateurs (annotations avec le symbole `@`) pour attacher des fonctionnalités supplémentaires au code. Par exemple, la configuration d'un gestionnaire de route en NestJS :
-
-```ts
-@Get('/')
-dateInfo(): Message {
-    return {
-        body: this.dateService.currentTime(),
-    };
-}
+Dans l'environnement de développement, votre dossier serveur est monté dans le conteneur Docker. Ainsi, vous pouvez modifier le code source et voir les changements en temps réel. Vous devez donc utiliser les commandes suivantes pour installer les dépendances du projet localement:
+```bash
+npm ci
+```
+Pour démarrer le serveur en mode développement, utilisez la commande suivante:
+```bash
+docker compose -f docker-compose.dev.yml up
 ```
 
-est équivalente à la configuration suivante avec Express :
+Le serveur est maintenant accessible à l'adresse suivante: http://localhost:3000 et vous avez accès à la documentation swagger associé à l'API.
 
-```ts
-this.router.get('/', (req: Request, res: Response) => {
-    this.dateService.currentTime().then((time: Message) => {
-        res.json(time);
-    });
-});
+Si vous avez besoin de ne pas prendre le terminal en otage, vous pouvez utiliser la commande suivante:
+```bash
+docker compose -f docker-compose.dev.yml up -d
 ```
 
-## Intégration avec les autres exemples du cours
+Pour arrêter le serveur, utilisez la commande suivante:
+```bash
+docker compose -f docker-compose.dev.yml down
+```
+Pour inspecter les logs du serveur, utilisez la commande suivante:
+```bash
+docker compose -f docker-compose.dev.yml logs -f
+```
 
-Afin de vous aider, ce projet inclut également le code nécessaire pour présenter les fonctionnalités de communication avec une base de données `MongoDB` et la communication avec `SocketIO`. Le code se base sur les projets suivants disponibles sur GitLab :
+Afin de vous faciliter la tâche, vous pouvez définir un alias pour `docker compose -f docker-compose.dev.yml` dans votre terminal.
+Selon votre terminal, voici une documentation :
+- [Bash](https://linuxize.com/post/how-to-create-bash-aliases/)
+- [Zsh](https://osxdaily.com/2023/05/13/how-to-configure-use-aliases-in-zsh/)
 
--   [`MongoDB`](https://gitlab.com/nikolayradoev/mongodb-example) : la route `/api/docs` du serveur NodeJS offre une interface qui vous permet de tester la connexion avec la base de données. Notez que NestJS utilise la librairie `Mongoose` pour la communication avec MongoDB.
 
-    **Important**: vous devez configurer la variable d'environnement `DATABASE_CONNECTION_STRING` disponible dans le fichier `.env` avant de pouvoir vous connecter à une base de données.
-
--   [`SocketIO`](https://gitlab.com/nikolayradoev/socket-io-exemple) : vous pouvez utiliser le site web (client) de cet exemple pour tester la communication par WebSocket avec le serveur NestJS.
-
-NestJS utilise la librairie `Jest` pour ses tests. L'ensemble du code qui est fourni est déjà testé avec plusieurs exemples de tests unitaires. Vous pouvez vous baser sur ces exemples pour tester vos propres fonctionnalités.
-
-# Choix de serveur à utiliser
-
-Vous devez choisir le serveur à utiliser dans votre projet : NodeJS/Express de base ou NestJS. Dans les deux cas, vous devez apporter quelques changements à votre entrepôt.
-
-Notez que les configurations pour le déploiement et le pipeline de validation assument qu'il a seulement un répertoire `/server` dans votre entrepôt. Peu importe votre choix, le répertoire de votre serveur doit porter ce nom.
-
-### Serveur NodeJS de base
-
-Si vous avez décidé de garder le serveur NodeJS de base, vous n'avez qu'à supprimer le répertoire `/server-nestjs` et pousser vos changements sur Git.
-
-**Note : il est important de retirer le répertoire du serveur non utilisé pour ne pas avoir du _code mort_ qui n'est jamais utilisé dans votre entrepôt.**
-
-### Serveur NestJS
-
-Si vous avez décidé de prendre le serveur NestJS, vous devez :
-
-- Supprimer le répertoire `/server` et renommer `/server-nestjs` à `/server`.
-- Modifier la valeur du champ `entryFile` pour `server/app/index` dans le fichier `nest-cli.json`.
-- Modifier la valeur du champ `@app` à `out/server/app` dans le fichier `/server/package.json`.
-
-N'oubliez pas de pousser vos changements sur Git.
-
-**Note : il est important de retirer le répertoire du serveur non utilisé pour ne pas avoir du _code mort_ qui n'est jamais utilisé dans votre entrepôt.**
+## Production
+Pour démarrer le serveur en mode production, utilisez la commande suivante:
+```bash
+docker compose -f docker-compose.prod.yml up
+```

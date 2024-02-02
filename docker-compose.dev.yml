@@ -12,6 +12,7 @@ services:
             - uploads:/app/uploads
             - differences:/app/assets/differences
             - ./server:/app/server
+            - ./common:/app/common
         depends_on:
             - db
         env_file:
@@ -22,6 +23,9 @@ services:
         image: postgres
         env_file:
             - ./server/.env
+        volumes:
+            - ./data:/var/lib/postgresql/data
+            - ./create-db.sql:/docker-entrypoint-initdb.d/create-db.sql
         ports:
             - 5432:5432
 volumes:
