@@ -1,4 +1,8 @@
-FROM node:lts-alpine as development
+FROM node:lts-slim as development
+
+WORKDIR /app/server
+
+FROM node:lts-slim as builder
 
 RUN mkdir -p /app/server /app/common
 
@@ -13,7 +17,7 @@ COPY server ../server
 
 RUN npm run build
 
-FROM node:lts-alpine as production 
+FROM node:lts-slim as production
 
 WORKDIR /app
 
