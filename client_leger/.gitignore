@@ -41,3 +41,17 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+# ignore all the files in the dart_tool directory
+.dart_tool/
+
+#ignore macos build
+macos/
+
+#ignore web build
+/build/
+
+#ignore ios build
+ios/
+
+#ignore android build
+android/
