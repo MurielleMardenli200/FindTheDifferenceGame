@@ -5,11 +5,13 @@ import { Body, Controller, Get, HttpException, HttpStatus, Post, Req, UseGuards 
 import { ApiBody, ApiForbiddenResponse, ApiHeader, ApiOkResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RefreshAuthGuard } from '@app/authentication/refresh.guard';
 import { Request } from 'express';
+import { LoginDto } from '@common/model/dto/login.dto';
+
 @ApiTags('Authentification')
 @ApiHeader({ name: 'username' })
 @Controller('auth')
 export class AuthenticationController {
-    constructor(private authenticationService: AuthenticationService) {}
+    constructor(private authenticationService: AuthenticationService) { }
 
     @Post('/login')
     @ApiOperation({ summary: 'Log into app' })
@@ -28,7 +30,7 @@ export class AuthenticationController {
             },
         },
     })
-    async logIn(@Body() signInDto: UserDto): Promise<JwtTokensDto> {
+    async logIn(@Body() signInDto: LoginDto): Promise<JwtTokensDto> {
         return await this.authenticationService.logIn(signInDto.username, signInDto.password);
     }
 
@@ -62,7 +64,7 @@ export class AuthenticationController {
     async refreshTokens(@Req() request: any): Promise<JwtTokensDto> {
         const refreshToken = request.payload['refreshToken'];
         if (!request.headers.username) {
-            throw new HttpException('No username given', HttpStatus.UNAUTHORIZED);
+            throw new HttpException('No username given', HttpStatus.BAD_REQUEST);
         }
         const username = request.headers.username as string;
         return await this.authenticationService.refreshTokens(username, refreshToken);
@@ -72,7 +74,7 @@ export class AuthenticationController {
     @ApiOperation({ summary: 'Log out of app' })
     async logOut(@Req() request: Request): Promise<void> {
         if (!request.headers.username) {
-            throw new HttpException('No username given', HttpStatus.UNAUTHORIZED);
+            throw new HttpException('No username given', HttpStatus.BAD_REQUEST);
         }
         const username = request.headers.username as string;
         return await this.authenticationService.logOut(username);

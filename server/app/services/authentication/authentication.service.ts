@@ -69,7 +69,7 @@ export class AuthenticationService {
 
     generateTokens(username: string): JwtTokensDto {
         const payload = { username };
-        const accessToken: string = this.jwtService.sign(payload, { expiresIn: '10m' });
+        const accessToken: string = this.jwtService.sign(payload, { expiresIn: '10s' });
         const refreshToken: string = this.jwtService.sign(payload, { expiresIn: '1h' });
         this.connectedUsers.set(username, { accessToken, refreshToken });
         return { accessToken, refreshToken };
