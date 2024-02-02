@@ -8,7 +8,7 @@
 /build/
 
 #ignore ios build
-/ios/
+/ios
 
 #ignore android build
 /android/
