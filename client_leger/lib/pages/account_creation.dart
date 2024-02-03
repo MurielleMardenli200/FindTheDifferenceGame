@@ -27,41 +27,35 @@ class _AccountCreationPageState extends State<AccountCreationPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Container(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.arrow_back),
-                    onPressed: () {
-                      Navigator.pop(context); // Navigate back to the login page
-                    },
-                  ),
-                ],
-              ),
+            Row(
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: () {
+                    Navigator.pop(context); // Navigate back to the login page
+                  },
+                ),
+              ],
             ),
-            Container(
-              margin: const EdgeInsets.all(70.0),
-              child: const Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "SPOT SEVEN",
-                    style: TextStyle(
-                      fontSize: 50.0,
-                      color: Colors.black,
-                      fontFamily: 'Pirata',
-                    ),
+            const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "SPOT SEVEN",
+                  style: TextStyle(
+                    fontSize: 50.0,
+                    color: Colors.black,
+                    fontFamily: 'Pirata',
                   ),
-                  Text(
-                    "Création de compte",
-                    style: TextStyle(
-                      fontSize: 40.0,
-                      fontFamily: 'Pirata',
-                    ),
+                ),
+                Text(
+                  "Création de compte",
+                  style: TextStyle(
+                    fontSize: 40.0,
+                    fontFamily: 'Pirata',
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
             Container(
                 padding: const EdgeInsets.all(30.0),

@@ -22,13 +22,9 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-          Container(
+          SizedBox(
             height: MediaQuery.of(context).size.height * 0.95,
             width: MediaQuery.of(context).size.width * 0.95,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12.5),
-              color: const Color(0xFF11cfcf),
-            ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
