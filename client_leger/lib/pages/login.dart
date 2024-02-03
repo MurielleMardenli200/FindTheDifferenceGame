@@ -150,13 +150,55 @@ class _LoginPageState extends State<LoginPage> {
                                   fontFamily: 'Pirata',
                                   color: Color(0xFFC3E0E5)),
                             ),
-                            const SizedBox(height: 10.0),
-                            const Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                // TODO: add Google Sign-In button
-                              ],
+                            GestureDetector(
+                              onTap: () async {
+                                // TODO: test google sign
+                                // await googleSign();
+                                if (mounted) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const AccountCreationPage(),
+                                    ),
+                                  );
+                                }
+                              },
+                              child: Container(
+                                width: double.infinity,
+                                height: 45,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Colors.grey,
+                                  ),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8.0),
+                                      child: Image.asset('assets/google.png'),
+                                    ),
+                                    const Text(
+                                      'Continue with google',
+                                      style: TextStyle(
+                                        fontSize: 17,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
+                            // const SizedBox(height: 10.0),
+                            // const Row(
+                            //   mainAxisAlignment: MainAxisAlignment.center,
+                            //   children: [
+                            //     // TODO: add Google Sign-In button
+
+                            //   ],
+                            // ),
                           ],
                         ),
                       ),
