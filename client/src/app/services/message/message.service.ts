@@ -15,6 +15,7 @@ export class MessageService {
     }
 
     sendMessage(message: Message) {
+        console.log('Sending message service', message);
         this.socketService.send(GameSessionEvent.Message, message);
     }
 }
