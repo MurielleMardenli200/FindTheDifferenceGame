@@ -1,3 +1,6 @@
+import 'package:client_leger/base-widgets/wrapper_widget.dart';
+import 'package:client_leger/constants/form_constants.dart';
+import 'package:client_leger/validators/account_form_validator.dart';
 import 'package:flutter/material.dart';
 
 class AccountCreationPage extends StatefulWidget {
@@ -20,13 +23,7 @@ class _AccountCreationPageState extends State<AccountCreationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        height: MediaQuery.of(context).size.height * 0.95,
-        width: MediaQuery.of(context).size.width * 0.95,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12.5),
-          color: const Color(0xFF11cfcf),
-        ),
+      body: WrapperWidget(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -67,59 +64,66 @@ class _AccountCreationPageState extends State<AccountCreationPage> {
               ),
             ),
             Container(
-              padding: const EdgeInsets.all(30.0),
-              decoration: BoxDecoration(
-                color: const Color(0xFF1b3b6f),
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              child: Form(
-                key: accountCreationPageFormKey,
+                padding: const EdgeInsets.all(30.0),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF1b3b6f),
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    buildLabel("Nom d'utilisateur", "username"),
-                    buildTextField(usernameController, 'text', 'username'),
-                    buildLabel("Courriel", "email"),
-                    buildTextField(emailController, 'text', 'email'),
-                    buildLabel("Mot de passe", "password"),
-                    buildTextField(passwordController, 'password', 'password'),
-                    buildLabel("Réécrivez votre mot de passe",
-                        "password confirmation"),
-                    buildTextField(passwordConfirmationController, 'password',
-                        'password-confirmation'),
-                    const Padding(
-                      padding: EdgeInsets.only(top: 8.0),
-                      child: Text(
-                        "Le mot de passe n'est pas le même",
-                        style: TextStyle(color: Colors.red),
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        "assets/logo/logo.png",
+                        height: 150.0,
+                        width: 150.0,
                       ),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        if (accountCreationPageFormKey.currentState
-                                ?.validate() ??
-                            false) {
-                          // TODO: handle account creation
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFC3E0E5),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4.0),
+                      Form(
+                        key: accountCreationPageFormKey,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            buildLabel(
+                                "Nom d'utilisateur", AccountInfo.username),
+                            buildTextField(usernameController,
+                                AccountInfo.username, AccountInfo.username),
+                            buildLabel("Courriel", AccountInfo.email),
+                            buildTextField(emailController, AccountInfo.email,
+                                AccountInfo.email),
+                            buildLabel("Mot de passe", AccountInfo.password),
+                            buildTextField(passwordController,
+                                AccountInfo.password, AccountInfo.password),
+                            buildLabel("Réécrivez votre mot de passe",
+                                AccountInfo.passwordConfirmation),
+                            buildTextField(
+                                passwordConfirmationController,
+                                AccountInfo.passwordConfirmation,
+                                AccountInfo.passwordConfirmation),
+                            ElevatedButton(
+                              onPressed: () {
+                                if (accountCreationPageFormKey.currentState
+                                        ?.validate() ??
+                                    false) {
+                                  // TODO: handle account creation
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFFC3E0E5),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(4.0),
+                                ),
+                              ),
+                              child: const Text(
+                                "CRÉER UN NOUVEAU COMPTE",
+                                style: TextStyle(
+                                    fontSize: 14.0,
+                                    fontFamily: 'Pirata',
+                                    color: Colors.black),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      child: const Text(
-                        "CRÉER UN NOUVEAU COMPTE",
-                        style: TextStyle(
-                            fontSize: 14.0,
-                            fontFamily: 'Pirata',
-                            color: Colors.black),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+                    ])),
           ],
         ),
       ),
@@ -138,16 +142,6 @@ class _AccountCreationPageState extends State<AccountCreationPage> {
             color: Color(0xFFC3E0E5),
           ),
         ),
-        const Row(
-          children: [
-            Icon(
-              Icons.error,
-              color: Colors.red,
-              size: 18.0,
-            ),
-            SizedBox(width: 5.0),
-          ],
-        ),
       ],
     );
   }
@@ -156,10 +150,12 @@ class _AccountCreationPageState extends State<AccountCreationPage> {
       String formControlName) {
     return TextFormField(
       controller: controller,
-      keyboardType: inputType == 'text'
-          ? TextInputType.text
-          : TextInputType.visiblePassword,
-      obscureText: inputType == 'password',
+      keyboardType: inputType == AccountInfo.password ||
+              inputType == AccountInfo.passwordConfirmation
+          ? TextInputType.visiblePassword
+          : TextInputType.text,
+      obscureText: inputType == AccountInfo.password ||
+          inputType == AccountInfo.passwordConfirmation,
       decoration: InputDecoration(
         filled: true,
         fillColor: const Color(0xFFf2f2f2),
@@ -169,12 +165,8 @@ class _AccountCreationPageState extends State<AccountCreationPage> {
           borderSide: BorderSide.none,
         ),
       ),
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Veuillez entrer une valeur';
-        }
-        return null;
-      },
+      validator: (value) =>
+          accountFormValidator(value, inputType, passwordController.text),
     );
   }
 }
