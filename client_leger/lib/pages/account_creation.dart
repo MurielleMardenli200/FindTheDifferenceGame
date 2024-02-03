@@ -32,7 +32,7 @@ class _AccountCreationPageState extends State<AccountCreationPage> {
                 IconButton(
                   icon: const Icon(Icons.arrow_back),
                   onPressed: () {
-                    Navigator.pop(context); // Navigate back to the login page
+                    Navigator.pop(context);
                   },
                 ),
               ],
