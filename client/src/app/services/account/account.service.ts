@@ -21,8 +21,10 @@ export class AccountService {
     private readonly baseUrl: string = environment.serverUrl;
     // eslint-disable-next-line max-params
     constructor(private readonly http: HttpClient, private router: Router, private tokenService: TokenService) {
-        if (localStorage.getItem('refresh-token') != null) {
+        if (localStorage.getItem(REFRESH_TOKEN_KEY) != null) {
             this.isLoggedIn.set(true);
+        } else {
+            this.isLoggedIn.set(false);
         }
     }
 
