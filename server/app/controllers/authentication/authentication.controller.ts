@@ -6,12 +6,13 @@ import { ApiBody, ApiForbiddenResponse, ApiHeader, ApiOkResponse, ApiOperation, 
 import { RefreshAuthGuard } from '@app/authentication/refresh.guard';
 import { Request } from 'express';
 import { LoginDto } from '@common/model/dto/login.dto';
+import { RefreshDto } from '@common/model/dto/refresh.dto';
 
 @ApiTags('Authentification')
 @ApiHeader({ name: 'username' })
 @Controller('auth')
 export class AuthenticationController {
-    constructor(private authenticationService: AuthenticationService) { }
+    constructor(private authenticationService: AuthenticationService) {}
 
     @Post('/login')
     @ApiOperation({ summary: 'Log into app' })
@@ -54,26 +55,18 @@ export class AuthenticationController {
         return this.authenticationService.signUp(userDto);
     }
 
-    @Get('/refresh')
-    @UseGuards(RefreshAuthGuard)
+    @Post('/refresh')
     @ApiOperation({ summary: 'Refresh token' })
     @ApiResponse({ status: HttpStatus.OK, description: 'Token refreshed' })
     @ApiForbiddenResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized to refresh token' })
-    // FIXME: Ugly
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async refreshTokens(@Req() request: any): Promise<JwtTokensDto> {
-        const refreshToken = request.payload['refreshToken'];
-        if (!request.headers.username) {
-            throw new HttpException('No username given', HttpStatus.BAD_REQUEST);
-        }
-        const username = request.headers.username as string;
-        return await this.authenticationService.refreshTokens(username, refreshToken);
+    async refreshTokens(@Body() refreshDto: RefreshDto): Promise<JwtTokensDto> {
+        return await this.authenticationService.refreshTokens(refreshDto.username, refreshDto.refreshToken);
     }
 
     @Post('/logout')
     @ApiOperation({ summary: 'Log out of app' })
     async logOut(@Req() request: Request): Promise<void> {
-        if (!request.headers.username) {
+        if (request.headers.username === null || request.headers.username === undefined) {
             throw new HttpException('No username given', HttpStatus.BAD_REQUEST);
         }
         const username = request.headers.username as string;

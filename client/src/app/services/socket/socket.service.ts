@@ -3,7 +3,8 @@ import { SocketEvent } from '@common/socket-event';
 import { Socket, io } from 'socket.io-client';
 import { environment } from 'src/environments/environment';
 import { AccountService } from '@app/services/account/account.service';
-export const TIMEOUT = 2000;
+import { TokenService } from '@app/services/token/token.service';
+export const TIMEOUT = 100;
 
 @Injectable({
     providedIn: 'root',
@@ -11,7 +12,8 @@ export const TIMEOUT = 2000;
 export class SocketService implements OnDestroy {
     socket!: Socket;
 
-    constructor(private accountService: AccountService) {
+    constructor(private accountService: AccountService, private readonly tokenService: TokenService) {
+        // FIXME: War crimes, socket needs to be connected but auth token needs async or observable
         this.connect();
     }
 
@@ -23,13 +25,10 @@ export class SocketService implements OnDestroy {
         return this.socket && this.socket.connected;
     }
 
-    connect() {
-        console.log("Handshake");
-        console.log(this.accountService.user?.username);
-
+    async connect() {
         this.socket = io(environment.socketUrl, {
-            auth: {
-                token: localStorage.getItem('access-token'),
+            query: {
+                token: this.tokenService.getRefreshToken(),
                 username: this.accountService.user?.username,
             },
         });
@@ -53,7 +52,6 @@ export class SocketService implements OnDestroy {
     // Based on https://gitlab.com/nikolayradoev/socket-io-exemple/-/blob/master/client/src/app/services/socket-client.service.ts
     send<T = unknown, U = unknown>(event: SocketEvent, data?: T, callback?: (data: U) => void): void {
         if (!callback) callback = () => undefined;
-
         this.socket.emit(event, data, callback);
     }
 }

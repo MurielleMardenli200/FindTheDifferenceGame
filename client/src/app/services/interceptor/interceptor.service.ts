@@ -1,45 +1,83 @@
-import { HttpErrorResponse, HttpHandler, HttpInterceptor, HttpRequest, HttpStatusCode } from '@angular/common/http';
+import { HttpHandler, HttpHeaders, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AccountService } from '@app/services/account/account.service';
-import { catchError } from 'rxjs';
+import { JwtTokensDto } from '@common/model/dto/jwt-tokens.dto';
+import { BehaviorSubject, Observable, catchError, concatMap, map, of, tap } from 'rxjs';
+import { TokenService } from '@app/services/token/token.service';
+import { TokenExpiredError } from '@app/services/token/token-expired-error';
+import { Tokens } from '@common/tokens';
 
 @Injectable({
     providedIn: 'root',
 })
 export class InterceptorService implements HttpInterceptor {
-    constructor(private accountService: AccountService) { }
-    intercept(req: HttpRequest<unknown>, next: HttpHandler) {
-        const token = localStorage.getItem('access-token');
-        // eslint-disable-next-line no-console
-        console.log('InterceptorService called');
-        if (token != null && this.accountService.user != null) {
-            const tokenizedReq = req.clone({
-                headers: req.headers.set('Authorization', `Bearer ${token}`).set('username', `${this.accountService.user.username}`),
-            });
-            return next.handle(tokenizedReq);
+    isRefreshing = false;
+    refreshTokenSubject: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
+
+    constructor(private accountService: AccountService, private tokenService: TokenService) {}
+    getAccessToken(): Observable<Tokens> {
+        try {
+            return of(this.tokenService.getTokens());
+        } catch (error) {
+            if (error instanceof TokenExpiredError) {
+                return this.accountService.refreshToken().pipe(
+                    tap((response: JwtTokensDto) => {
+                        this.tokenService.setAccessToken(response.accessToken);
+                        this.tokenService.setRefreshToken(response.refreshToken);
+                    }),
+                    catchError(() => {
+                        this.accountService.logOut();
+                        throw new Error("Can't refresh token");
+                    }),
+                );
+            }
+            throw new Error('Unknown error');
         }
-        return next.handle(req).pipe(
-            catchError((err: HttpErrorResponse) => {
-                if (err.status === HttpStatusCode.Unauthorized || err.status === HttpStatusCode.Forbidden) {
-                    this.refreshTokens(req, next);
-                }
-                throw new Error(err.message);
+    }
+
+    getHeaders(): Observable<HttpHeaders> {
+        const headers = new HttpHeaders();
+        const tokens: Observable<Tokens> = this.getAccessToken();
+        const username = this.accountService.user?.username;
+        if (username === undefined) {
+            throw new Error('No username');
+        }
+
+        const fullHeaders = tokens.pipe(
+            map((token: Tokens) => {
+                return headers.append('Authorization', `Bearer ${token.accessToken}`).append('username', username);
+            }),
+        );
+
+        return fullHeaders;
+    }
+
+    addAuthToken(request: HttpRequest<unknown>): Observable<HttpRequest<unknown>> {
+        return this.getHeaders().pipe(
+            map((headers: HttpHeaders) => {
+                return request.clone({ headers });
             }),
         );
     }
 
-    refreshTokens(req: HttpRequest<unknown>, next: HttpHandler) {
-        this.accountService.refreshToken().subscribe((response) => {
-            localStorage.setItem('token', response.accessToken);
-            const tokenizedReq = req.clone({
-                headers: req.headers.set('Authorization', `Bearer ${response.accessToken}`).set('username', `${this.accountService.user?.username}`),
-            });
-            return next.handle(tokenizedReq).pipe(
-                catchError((err: HttpErrorResponse) => {
-                    this.accountService.logOut();
-                    throw new Error(err.message);
-                }),
-            );
-        });
+    intercept(request: HttpRequest<unknown>, next: HttpHandler) {
+        if (request.url.includes('auth')) {
+            if (this.accountService.user !== undefined) {
+                const requestWithUsername = request.clone({ headers: request.headers.append('username', this.accountService.user?.username) });     
+                return next.handle(requestWithUsername);
+            }
+            throw new Error('No user');
+        }
+
+        return this.addAuthToken(request).pipe(
+            concatMap((tokenizedRequest: HttpRequest<unknown>) => {
+                return next.handle(tokenizedRequest).pipe(
+                    catchError((error) => {
+                        this.accountService.logOut();
+                        throw new Error(error.message);
+                    }),
+                );
+            }),
+        );
     }
 }
