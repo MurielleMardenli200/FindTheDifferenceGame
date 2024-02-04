@@ -1,19 +1,17 @@
 import { Injectable } from '@angular/core';
 import { AccessToken, JwtPayload, RawPayload, RefreshToken, Tokens } from '@common/tokens';
 import { TokenExpiredError } from './token-expired-error';
-
+import { EPOCH_TO_SECONDS, REFRESH_TOKEN_KEY } from './token.constants';
 @Injectable({
     providedIn: 'root',
 })
 export class TokenService {
-    private readonly refreshTokenKey = 'refresh-token';
     private accessToken: string | null = null;
     private accessTokenPayload: JwtPayload | null = null;
     // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-    private timeMultiplier = 1000;
 
     getTokens(): Tokens {
-        const refreshToken: RefreshToken | null = localStorage.getItem(this.refreshTokenKey);
+        const refreshToken: RefreshToken | null = localStorage.getItem(REFRESH_TOKEN_KEY);
         if (refreshToken === null) {
             throw new TokenExpiredError('No refresh token found');
         }
@@ -22,7 +20,7 @@ export class TokenService {
     }
 
     getRefreshToken(): RefreshToken {
-        const refreshToken: RefreshToken | null = localStorage.getItem(this.refreshTokenKey);
+        const refreshToken: RefreshToken | null = localStorage.getItem(REFRESH_TOKEN_KEY);
         if (refreshToken === null) {
             throw new TokenExpiredError('No refresh token found');
         }
@@ -30,7 +28,7 @@ export class TokenService {
     }
 
     setRefreshToken(token: RefreshToken) {
-        localStorage.setItem(this.refreshTokenKey, token);
+        localStorage.setItem(REFRESH_TOKEN_KEY, token);
     }
 
     setAccessToken(token: AccessToken): void {
@@ -38,7 +36,7 @@ export class TokenService {
     }
 
     removeTokens(): void {
-        localStorage.removeItem(this.refreshTokenKey);
+        localStorage.removeItem(REFRESH_TOKEN_KEY);
         this.accessToken = null;
     }
 
@@ -76,8 +74,8 @@ export class TokenService {
 
         return {
             sub: rawPayload.sub,
-            createdAt: new Date(rawPayload.createdAt * this.timeMultiplier),
-            expiresAt: new Date(rawPayload.expiresAt * this.timeMultiplier),
+            createdAt: new Date(rawPayload.createdAt * EPOCH_TO_SECONDS),
+            expiresAt: new Date(rawPayload.expiresAt * EPOCH_TO_SECONDS),
             username: rawPayload.username,
         };
     }

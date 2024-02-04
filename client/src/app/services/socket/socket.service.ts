@@ -4,7 +4,6 @@ import { Socket, io } from 'socket.io-client';
 import { environment } from 'src/environments/environment';
 import { AccountService } from '@app/services/account/account.service';
 import { TokenService } from '@app/services/token/token.service';
-export const TIMEOUT = 100;
 
 @Injectable({
     providedIn: 'root',
