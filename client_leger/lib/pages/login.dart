@@ -1,5 +1,6 @@
 import 'package:client_leger/base-widgets/wrapper_widget.dart';
 import 'package:client_leger/pages/account_creation.dart';
+import 'package:client_leger/services/google_signin_service.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -12,6 +13,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final logInFormKey = GlobalKey<FormState>();
+  final googleSigninService = GoogleSigninService();
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
@@ -152,13 +154,13 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                             GestureDetector(
                               onTap: () async {
-                                // TODO: test google sign
-                                // await googleSign();
+                                await googleSigninService.signIn();
                                 if (mounted) {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
+                                          // TODO: replace with Page with chat box
                                           const AccountCreationPage(),
                                     ),
                                   );
@@ -179,7 +181,8 @@ class _LoginPageState extends State<LoginPage> {
                                     Padding(
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 8.0),
-                                      child: Image.asset('assets/google.png'),
+                                      child: Image.asset(
+                                          'assets/logo/google_logo.png'),
                                     ),
                                     const Text(
                                       'Continue with google',

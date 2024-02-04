@@ -1,5 +1,6 @@
 import 'package:client_leger/base-widgets/wrapper_widget.dart';
 import 'package:client_leger/constants/form_constants.dart';
+import 'package:client_leger/services/google_signin_service.dart';
 import 'package:client_leger/validators/account_form_validator.dart';
 import 'package:flutter/material.dart';
 
@@ -19,6 +20,7 @@ class _AccountCreationPageState extends State<AccountCreationPage> {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController passwordConfirmationController =
       TextEditingController();
+  final GoogleSigninService googleSigninService = GoogleSigninService();
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +36,18 @@ class _AccountCreationPageState extends State<AccountCreationPage> {
                   onPressed: () {
                     Navigator.pop(context);
                   },
+                ),
+              ],
+            ),
+            Column(
+              children: [
+                const Text('Profile page'),
+                ElevatedButton(
+                  onPressed: () async {
+                    await googleSigninService.logout();
+                    Navigator.pop(context);
+                  },
+                  child: const Text('Logout'),
                 ),
               ],
             ),
