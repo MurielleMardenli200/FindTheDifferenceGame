@@ -1,11 +1,19 @@
 class UserInfo {
-    String username;
-    String password;
-    String? email;
+  String username;
+  String password;
+  String? email;
 
-    UserInfo({required this.username, required this.password, this.email});
+  UserInfo({required this.username, required this.password, this.email});
 
-    factory UserInfo.fromJson(Map<String, dynamic> json) {
+  Map<String, dynamic> toMap() {
+    return {
+      'username': username,
+      'password': password,
+      'email': email,
+    };
+  }
+
+  factory UserInfo.fromJson(Map<String, dynamic> json) {
     return switch (json) {
       {
         'username': String username,

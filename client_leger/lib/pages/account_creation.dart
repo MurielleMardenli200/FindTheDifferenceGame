@@ -1,5 +1,7 @@
 import 'package:client_leger/base-widgets/wrapper_widget.dart';
 import 'package:client_leger/constants/form_constants.dart';
+import 'package:client_leger/interfaces/user-info.dart';
+import 'package:client_leger/services/account_service.dart';
 import 'package:client_leger/services/google_signin_service.dart';
 import 'package:client_leger/validators/account_form_validator.dart';
 import 'package:flutter/material.dart';
@@ -107,12 +109,8 @@ class _AccountCreationPageState extends State<AccountCreationPage> {
                                 AccountInfo.passwordConfirmation,
                                 AccountInfo.passwordConfirmation),
                             ElevatedButton(
-                              onPressed: () {
-                                if (accountCreationPageFormKey.currentState
-                                        ?.validate() ??
-                                    false) {
-                                  // TODO: handle account creation
-                                }
+                              onPressed: () async {
+                                await handleAccountCreation();
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFFC3E0E5),
@@ -136,6 +134,18 @@ class _AccountCreationPageState extends State<AccountCreationPage> {
         ),
       ),
     );
+  }
+
+  Future<void> handleAccountCreation() async {
+    if (accountCreationPageFormKey.currentState?.validate() ?? false) {
+      UserInfo userInfo = UserInfo(
+        username: usernameController.text,
+        password: passwordController.text,
+        email: emailController.text,
+      );
+      AccountService accountService = AccountService();
+      await accountService.registerAccount(userInfo);
+    }
   }
 
   Widget buildLabel(String text, String htmlFor) {
