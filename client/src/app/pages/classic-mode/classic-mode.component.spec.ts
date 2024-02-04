@@ -11,6 +11,8 @@ import { MessageBarStubComponent } from '@app/stubs/message-bar.component.stub';
 import { TimerStubComponent } from '@app/stubs/timer.component.stub';
 import { ClassicModeComponent } from './classic-mode.component';
 import SpyObj = jasmine.SpyObj;
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { TimeLimitedModeService } from '@app/services/time-limited-mode/time-limited-mode.service';
 
 describe('ClassicModeComponent', () => {
     let component: ClassicModeComponent;
@@ -18,6 +20,7 @@ describe('ClassicModeComponent', () => {
     let classicModeServiceSpy: SpyObj<ClassicModeService>;
     let modalServiceSpy: SpyObj<ModalService>;
     let messageServiceSpy: SpyObj<MessageService>;
+    let timeLimitedModeServiceSpy: SpyObj<TimeLimitedModeService>;
 
     beforeEach(async () => {
         classicModeServiceSpy = jasmine.createSpyObj(ClassicModeService, ['initialize', 'showModal', 'endGame', 'giveUp', 'setupCheatMode']);
@@ -25,12 +28,15 @@ describe('ClassicModeComponent', () => {
         classicModeServiceSpy.gameInfo.game = {} as any;
         modalServiceSpy = jasmine.createSpyObj(ModalService, ['createConfirmModal']);
         messageServiceSpy = jasmine.createSpyObj(MessageService, ['addMessage']);
+        timeLimitedModeServiceSpy = jasmine.createSpyObj(TimeLimitedModeService, ['initialize', 'setupEventListeners']);
         await TestBed.configureTestingModule({
+            imports: [HttpClientTestingModule],
             declarations: [ClassicModeComponent, ButtonStubComponent, ImageAreaGameStubComponent, TimerStubComponent, MessageBarStubComponent],
             providers: [
                 { provide: ClassicModeService, useValue: classicModeServiceSpy },
                 { provide: ModalService, useValue: modalServiceSpy },
                 { provide: MessageService, useValue: messageServiceSpy },
+                { provide: TimeLimitedModeService, useValue: timeLimitedModeServiceSpy },
             ],
         }).compileComponents();
 

@@ -7,6 +7,7 @@ import { Socket } from 'socket.io-client';
 import { SocketService } from './socket.service';
 
 import SpyObj = jasmine.SpyObj;
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('SocketService', () => {
     let service: SocketService;
@@ -14,6 +15,7 @@ describe('SocketService', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
+            imports: [HttpClientTestingModule],
             providers: [SocketService],
         });
 
