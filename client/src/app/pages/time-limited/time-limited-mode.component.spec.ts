@@ -25,7 +25,8 @@
 
 //     beforeEach(async () => {
 //         socketServiceSpy = jasmine.createSpyObj(SocketService, ['send', 'on', 'once']);
-//         timeLimitedModeServiceSpy = jasmine.createSpyObj(TimeLimitedModeService, ['initialize', 'showModal', 'endGame', 'giveUp', 'setupCheatMode']);
+//         timeLimitedModeServiceSpy = jasmine.createSpyObj(TimeLimitedModeService, [
+// 'initialize', 'showModal', 'endGame', 'giveUp', 'setupCheatMode']);
 //         timeLimitedModeServiceSpy.gameInfo = {} as any;
 //         timeLimitedModeServiceSpy.gameInfo.game = {} as any;
 //         timeLimitedModeServiceSpy.gameInfo.game.name = 'Bonjour';
