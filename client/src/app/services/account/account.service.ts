@@ -8,6 +8,7 @@ import { environment } from 'src/environments/environment';
 import { RefreshDto } from '@common/model/dto/refresh.dto';
 import { Observable } from 'rxjs';
 import { TokenService } from '@app/services/token/token.service';
+import { REFRESH_TOKEN_KEY } from '@app/services/token/token.constants';
 
 @Injectable({
     providedIn: 'root',
@@ -36,14 +37,10 @@ export class AccountService {
     }
 
     logOut() {
-        localStorage.removeItem('access-token');
-        localStorage.removeItem('refresh-token');
-        this.http.post(`${this.baseUrl}/auth/logout`, { username: this.user?.username }).subscribe({
-            next: () => {
-                this.isLoggedIn.set(false);
-                this.router.navigate(['/login']);
-            },
-        });
+        localStorage.removeItem(REFRESH_TOKEN_KEY);
+        this.http.post(`${this.baseUrl}/auth/logout`, { username: this.user?.username });
+        this.isLoggedIn.set(false);
+        this.router.navigate(['/login']);
     }
 
     refreshToken(): Observable<JwtTokensDto> {
