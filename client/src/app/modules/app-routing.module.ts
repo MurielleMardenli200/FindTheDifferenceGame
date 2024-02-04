@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { ChatComponent } from '@app/pages/chat/chat.component';
 import { ClassicModeComponent } from '@app/pages/classic-mode/classic-mode.component';
 import { ConfigurationComponent } from '@app/pages/configuration/configuration.component';
 import { CreateGamePageComponent } from '@app/pages/create-game-page/create-game-page.component';
@@ -20,6 +21,7 @@ const routes: Routes = [
     { path: 'time-limited', component: TimeLimitedModeComponent, canActivate: [authGuard] },
     { path: 'time-limited-selection', component: TimeLimitedSelectionPageComponent, canActivate: [authGuard] },
     { path: 'login', component: LoginPageComponent },
+    { path: 'chat', component: ChatComponent },
     { path: '**', redirectTo: '/login' },
 ];
 

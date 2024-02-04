@@ -44,6 +44,7 @@ import { SelectionPageComponent } from './pages/selection-page/selection-page.co
 import { TimeLimitedSelectionPageComponent } from './pages/time-limited-selection-page/time-limited-selection-page.component';
 import { TimeLimitedModeComponent } from './pages/time-limited/time-limited-mode.component';
 import { InterceptorService } from './services/interceptor/interceptor.service';
+import { ChatComponent } from './pages/chat/chat.component';
 /**
  * Main module that is used in main.ts.
  * All automatically generated components will appear in this module.
@@ -88,6 +89,7 @@ import { InterceptorService } from './services/interceptor/interceptor.service';
         TimerComponent,
         HistoryModalComponent,
         LoginPageComponent,
+        ChatComponent,
     ],
     imports: [
         AppMaterialModule,
