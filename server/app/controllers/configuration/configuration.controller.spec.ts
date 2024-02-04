@@ -7,11 +7,15 @@ import { GameConstants } from '@common/game-constants';
 import { Test, TestingModule } from '@nestjs/testing';
 import { SinonStubbedInstance, createStubInstance } from 'sinon';
 import { ConfigurationController } from './configuration.controller';
+import { AccessAuthGuard } from '@app/authentication/access.guard';
+import { AuthenticationService } from '@app/services/authentication/authentication.service';
 
 describe('ConfigurationController', () => {
     let controller: ConfigurationController;
     let gameConstantsService: SinonStubbedInstance<GameConstantsService>;
     let gameHistoryService: SinonStubbedInstance<GameHistoryService>;
+    let accessAuthGuard: SinonStubbedInstance<AccessAuthGuard>;
+    let authenticationService: SinonStubbedInstance<AuthenticationService>;
 
     beforeEach(async () => {
         gameConstantsService = createStubInstance(GameConstantsService);
@@ -27,6 +31,14 @@ describe('ConfigurationController', () => {
                 {
                     provide: GameHistoryService,
                     useValue: gameHistoryService,
+                },
+                {
+                    provide: AccessAuthGuard,
+                    useValue: accessAuthGuard,
+                },
+                {
+                    provide: AuthenticationService,
+                    useValue: authenticationService,
                 },
             ],
         }).compile();

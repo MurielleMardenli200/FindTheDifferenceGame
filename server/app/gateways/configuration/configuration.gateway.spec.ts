@@ -6,11 +6,15 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { SinonStubbedInstance, createStubInstance } from 'sinon';
 import { Server } from 'socket.io';
 import { ConfigurationGateway } from './configuration.gateway';
+import { SocketAuthGuard } from '@app/authentication/ws-jwt-auth.guard';
+import { AuthenticationService } from '@app/services/authentication/authentication.service';
 
 describe('ConfigurationGateway', () => {
     let gateway: ConfigurationGateway;
     let gameServiceSpy: SinonStubbedInstance<GameService>;
     let serverSocket: SinonStubbedInstance<Server>;
+    let socketAuthGuard: SinonStubbedInstance<SocketAuthGuard>;
+    let authenticationService: SinonStubbedInstance<AuthenticationService>;
 
     beforeEach(async () => {
         serverSocket = createStubInstance<Server>(Server);
@@ -19,7 +23,15 @@ describe('ConfigurationGateway', () => {
         gameServiceSpy = createStubInstance<GameService>(GameService);
 
         const module: TestingModule = await Test.createTestingModule({
-            providers: [ConfigurationGateway, { provide: GameService, useValue: gameServiceSpy }],
+            providers: [
+                ConfigurationGateway,
+                { provide: GameService, useValue: gameServiceSpy },
+                {
+                    provide: SocketAuthGuard,
+                    useValue: socketAuthGuard,
+                },
+                { provide: AuthenticationService, useValue: authenticationService },
+            ],
         }).compile();
 
         gateway = module.get<ConfigurationGateway>(ConfigurationGateway);

@@ -44,6 +44,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { Subject } from 'rxjs';
 import { SinonStubbedInstance, createStubInstance } from 'sinon';
 import { GameSessionGateway } from './game-session.gateway';
+import { SocketAuthGuard } from '@app/authentication/ws-jwt-auth.guard';
+import { AuthenticationService } from '@app/services/authentication/authentication.service';
 
 describe('GameSessionGateway', () => {
     const createMockSocket = (id: string): SinonStubbedInstance<Socket> => {
@@ -73,6 +75,8 @@ describe('GameSessionGateway', () => {
     let gameManagerService: SinonStubbedInstance<GameManagerService>;
     let hintService: SinonStubbedInstance<HintService>;
     let gameServiceDeletedGameSubject: Subject<string>;
+    let socketAuthGuard: SinonStubbedInstance<SocketAuthGuard>;
+    let authenticationService: SinonStubbedInstance<AuthenticationService>;
 
     beforeEach(async () => {
         gameService = createStubInstance<GameService>(GameService);
@@ -82,8 +86,9 @@ describe('GameSessionGateway', () => {
         waitingRoomService = createStubInstance<WaitingRoomService>(WaitingRoomService);
         gameManagerService = createStubInstance<GameManagerService>(GameManagerService);
         hintService = createStubInstance<HintService>(HintService);
-
+        socketAuthGuard = createStubInstance<SocketAuthGuard>(SocketAuthGuard);
         socket = createMockSocket(SOCKET_ID);
+        authenticationService = createStubInstance<AuthenticationService>(AuthenticationService);
 
         serverSocket = createStubInstance<Server>(Server);
         serverSocket.to.returns(serverSocket as any);
@@ -112,6 +117,14 @@ describe('GameSessionGateway', () => {
                 {
                     provide: HintService,
                     useValue: hintService,
+                },
+                {
+                    provide: SocketAuthGuard,
+                    useValue: socketAuthGuard,
+                },
+                {
+                    provide: AuthenticationService,
+                    useValue: authenticationService,
                 },
             ],
         }).compile();
