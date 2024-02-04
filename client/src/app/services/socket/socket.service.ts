@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { HostListener, Injectable, OnDestroy } from '@angular/core';
 import { SocketEvent } from '@common/socket-event';
 import { Socket, io } from 'socket.io-client';
 import { environment } from 'src/environments/environment';
@@ -16,6 +16,7 @@ export class SocketService implements OnDestroy {
         this.connect();
     }
 
+    @HostListener('window:beforeunload')
     ngOnDestroy(): void {
         this.disconnect();
     }

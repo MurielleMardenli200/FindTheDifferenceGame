@@ -18,6 +18,7 @@ export class AccountService {
     refreshCounter = 0;
 
     private readonly baseUrl: string = environment.serverUrl;
+    // eslint-disable-next-line max-params
     constructor(private readonly http: HttpClient, private router: Router, private tokenService: TokenService) {
         if (localStorage.getItem('refresh-token') != null) {
             this.isLoggedIn.set(true);

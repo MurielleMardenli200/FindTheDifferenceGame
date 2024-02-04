@@ -63,10 +63,11 @@ export class InterceptorService implements HttpInterceptor {
     intercept(request: HttpRequest<unknown>, next: HttpHandler) {
         if (request.url.includes('auth')) {
             if (this.accountService.user !== undefined) {
-                const requestWithUsername = request.clone({ headers: request.headers.append('username', this.accountService.user?.username) });     
+                const requestWithUsername = request.clone({ headers: request.headers.append('username', this.accountService.user?.username) });
                 return next.handle(requestWithUsername);
             }
-            throw new Error('No user');
+            this.accountService.logOut();
+            throw new Error('Interceptor No user');
         }
 
         return this.addAuthToken(request).pipe(
