@@ -37,6 +37,7 @@ export class TokenService {
 
     removeTokens(): void {
         localStorage.removeItem(REFRESH_TOKEN_KEY);
+        this.accessTokenPayload = null;
         this.accessToken = null;
     }
 

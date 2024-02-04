@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, WritableSignal, signal } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoginDto } from '@common/model/dto/login.dto';
 import { UserInfo } from '@app/interfaces/user-info';
@@ -15,33 +15,32 @@ import { REFRESH_TOKEN_KEY } from '@app/services/token/token.constants';
 })
 export class AccountService {
     user: UserInfo | undefined;
-    isLoggedIn: WritableSignal<boolean> = signal(false);
-    refreshCounter = 0;
 
     private readonly baseUrl: string = environment.serverUrl;
     // eslint-disable-next-line max-params
-    constructor(private readonly http: HttpClient, private router: Router, private tokenService: TokenService) {
-        if (localStorage.getItem(REFRESH_TOKEN_KEY) != null) {
-            this.isLoggedIn.set(true);
-        } else {
-            this.isLoggedIn.set(false);
-        }
+    constructor(private readonly http: HttpClient, private router: Router, private tokenService: TokenService) {}
+
+    isLoggedIn(): boolean {
+        return localStorage.getItem(REFRESH_TOKEN_KEY) !== null;
     }
 
     logInAccount(info: LoginDto) {
         this.user = { username: info.username, password: info.password };
-        this.http.post<JwtTokensDto>(`${this.baseUrl}/auth/login`, info).subscribe((response: JwtTokensDto) => {
-            this.tokenService.setAccessToken(response.accessToken);
-            this.tokenService.setRefreshToken(response.refreshToken);
-            this.isLoggedIn.set(true);
-            this.router.navigate(['/home']);
+        this.http.post<JwtTokensDto>(`${this.baseUrl}/auth/login`, info).subscribe({
+            next: (response: JwtTokensDto) => {
+                this.tokenService.setAccessToken(response.accessToken);
+                this.tokenService.setRefreshToken(response.refreshToken);
+                this.router.navigate(['/home']);
+            },
+            error: (error) => {
+                throw new Error(error.error.message || 'Unknown error');
+            },
         });
     }
 
     logOut() {
         localStorage.removeItem(REFRESH_TOKEN_KEY);
         this.http.post(`${this.baseUrl}/auth/logout`, { username: this.user?.username });
-        this.isLoggedIn.set(false);
         this.router.navigate(['/login']);
     }
 
