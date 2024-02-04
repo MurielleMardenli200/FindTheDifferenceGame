@@ -6,7 +6,7 @@ import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
-    constructor(@InjectRepository(User) private userRepository: Repository<User>) { }
+    constructor(@InjectRepository(User) private userRepository: Repository<User>) {}
 
     async createUser(username: string, password: string, email: string): Promise<User> {
         const saltedHashedPassword = await this.hashPassword(password);

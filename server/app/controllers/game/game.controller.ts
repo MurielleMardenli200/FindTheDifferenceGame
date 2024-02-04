@@ -2,7 +2,6 @@ import { ExistingGame } from '@app/model/database/game.entity';
 import { GameService } from '@app/services/game/game.service';
 import { ClassSerializerInterceptor, Controller, Delete, Get, HttpCode, UseGuards, HttpStatus, Param, UseInterceptors } from '@nestjs/common';
 import { ApiOperation, ApiTags, ApiBearerAuth, ApiHeader } from '@nestjs/swagger';
-import { AuthGuard } from '@nestjs/passport';
 import { AccessAuthGuard } from '@app/authentication/access.guard';
 
 @ApiTags('Games')

@@ -1,9 +1,8 @@
 import { UserDto } from '@app/model/dto/user-dto';
 import { AuthenticationService } from '@app/services/authentication/authentication.service';
 import { JwtTokensDto } from '@common/model/dto/jwt-tokens.dto';
-import { Body, Controller, Get, HttpException, HttpStatus, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, HttpException, HttpStatus, Post, Req } from '@nestjs/common';
 import { ApiBody, ApiForbiddenResponse, ApiHeader, ApiOkResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { RefreshAuthGuard } from '@app/authentication/refresh.guard';
 import { Request } from 'express';
 import { LoginDto } from '@common/model/dto/login.dto';
 import { RefreshDto } from '@common/model/dto/refresh.dto';
