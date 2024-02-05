@@ -11,10 +11,9 @@ Ce serveur nécessite Node.js et npm pour fonctionner.
 ## Développement
 Pour développer, il est utile d'avoir un environnement de développement. Pour ce faire, il est possible d'utiliser Docker pour avoir un environnement de développement similaire à celui de production.
 
-Dans l'environnement de développement, votre dossier serveur est monté dans le conteneur Docker. Ainsi, vous pouvez modifier le code source et voir les changements en temps réel. Vous devez donc utiliser les commandes suivantes pour installer les dépendances du projet localement:
-```bash
-npm ci
-```
+
+Dans l'environnement de développement, votre dossier serveur est monté dans le conteneur Docker. Dans la plupart des cas cela fonctionne, mais dû à la librairie bcrypt qui nécessite des exécutables différents selon le type d'OS, il est plus optimisé d'installer les librairies node_modules dans le conteneur Docker. C'est long, mais cela permet de ne pas avoir de problèmes de compatibilité.
+
 Pour démarrer le serveur en mode développement, utilisez la commande suivante:
 ```bash
 docker compose -f docker-compose.dev.yml up

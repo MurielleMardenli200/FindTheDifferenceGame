@@ -1,4 +1,5 @@
-import { HttpClientModule } from '@angular/common/http';
+import { GoogleLoginProvider, GoogleSigninButtonModule, SocialAuthServiceConfig, SocialLoginModule } from '@abacritt/angularx-social-login';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -16,6 +17,7 @@ import { AppMaterialModule } from '@app/modules/material.module';
 import { AppComponent } from '@app/pages/app/app.component';
 import { ConfigurationComponent } from '@app/pages/configuration/configuration.component';
 import { CreateGamePageComponent } from '@app/pages/create-game-page/create-game-page.component';
+import { environment } from 'src/environments/environment';
 import { ActionModalComponent } from './components/action-modal/action-modal.component';
 import { AnimatedBackgroundComponent } from './components/animated-background/animated-background.component';
 import { ButtonComponent } from './components/button/button.component';
@@ -35,14 +37,13 @@ import { TimerComponent } from './components/timer/timer.component';
 import { UserNameComponent } from './components/user-name/user-name.component';
 import { ClassicModeComponent } from './pages/classic-mode/classic-mode.component';
 import { GamePageComponent } from './pages/game-page/game-page.component';
+import { LoginPageComponent } from './pages/login-page/login-page.component';
 import { MainPageComponent } from './pages/main-page/main-page.component';
 import { PageBaseComponent } from './pages/page-base-component/page-base-component.component';
 import { SelectionPageComponent } from './pages/selection-page/selection-page.component';
 import { TimeLimitedSelectionPageComponent } from './pages/time-limited-selection-page/time-limited-selection-page.component';
 import { TimeLimitedModeComponent } from './pages/time-limited/time-limited-mode.component';
-import { LoginPageComponent } from './pages/login-page/login-page.component';
-import { GoogleLoginProvider, SocialAuthServiceConfig, SocialLoginModule, GoogleSigninButtonModule } from '@abacritt/angularx-social-login';
-import { environment } from 'src/environments/environment';
+import { InterceptorService } from './services/interceptor/interceptor.service';
 /**
  * Main module that is used in main.ts.
  * All automatically generated components will appear in this module.
@@ -118,6 +119,11 @@ import { environment } from 'src/environments/environment';
                     console.error(err);
                 },
             } as SocialAuthServiceConfig,
+        },
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: InterceptorService,
+            multi: true,
         },
     ],
     bootstrap: [AppComponent],

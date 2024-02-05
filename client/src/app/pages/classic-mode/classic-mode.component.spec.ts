@@ -11,6 +11,7 @@ import { MessageBarStubComponent } from '@app/stubs/message-bar.component.stub';
 import { TimerStubComponent } from '@app/stubs/timer.component.stub';
 import { ClassicModeComponent } from './classic-mode.component';
 import SpyObj = jasmine.SpyObj;
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('ClassicModeComponent', () => {
     let component: ClassicModeComponent;
@@ -26,6 +27,7 @@ describe('ClassicModeComponent', () => {
         modalServiceSpy = jasmine.createSpyObj(ModalService, ['createConfirmModal']);
         messageServiceSpy = jasmine.createSpyObj(MessageService, ['addMessage']);
         await TestBed.configureTestingModule({
+            imports: [HttpClientTestingModule],
             declarations: [ClassicModeComponent, ButtonStubComponent, ImageAreaGameStubComponent, TimerStubComponent, MessageBarStubComponent],
             providers: [
                 { provide: ClassicModeService, useValue: classicModeServiceSpy },

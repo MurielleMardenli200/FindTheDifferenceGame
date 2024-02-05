@@ -23,6 +23,9 @@ import { HighScoreService } from './services/high-score/high-score.service';
 import { HintService } from './services/hints/hint.service';
 import { MessageFormatterService } from './services/message-formatter/message-formatter.service';
 import { WaitingRoomService } from './services/waiting-room/waiting-room.service';
+import { UsersModule } from './modules/users/users.module';
+import { AuthenticationModule } from './modules/authentication/authentication.module';
+import { User } from './model/database/user.entity';
 
 @Module({
     imports: [
@@ -37,11 +40,13 @@ import { WaitingRoomService } from './services/waiting-room/waiting-room.service
                 username: configService.get<string>('POSTGRES_USER'),
                 password: configService.get<string>('POSTGRES_PASSWORD'),
                 database: configService.get<string>('DB_DATABASE'),
-                entities: [Game, GameConstantEntity, History, HighScore, SoloHighScore, DuelHighScore],
+                entities: [Game, GameConstantEntity, History, HighScore, SoloHighScore, DuelHighScore, User],
                 synchronize: configService.get<boolean>('DB_SYNC'),
             }),
         }),
         TypeOrmModule.forFeature([Game, GameConstantEntity, History, HighScore, SoloHighScore, DuelHighScore]),
+        UsersModule,
+        AuthenticationModule,
     ],
     controllers: [GameController, ConfigurationController],
     providers: [

@@ -1,8 +1,9 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { HostListener, Injectable, OnDestroy } from '@angular/core';
 import { SocketEvent } from '@common/socket-event';
 import { Socket, io } from 'socket.io-client';
 import { environment } from 'src/environments/environment';
-export const TIMEOUT = 2000;
+import { AccountService } from '@app/services/account/account.service';
+import { TokenService } from '@app/services/token/token.service';
 
 @Injectable({
     providedIn: 'root',
@@ -10,10 +11,12 @@ export const TIMEOUT = 2000;
 export class SocketService implements OnDestroy {
     socket!: Socket;
 
-    constructor() {
+    constructor(private accountService: AccountService, private readonly tokenService: TokenService) {
+        // FIXME: War crimes, socket needs to be connected but auth token needs async or observable
         this.connect();
     }
 
+    @HostListener('window:beforeunload')
     ngOnDestroy(): void {
         this.disconnect();
     }
@@ -22,8 +25,13 @@ export class SocketService implements OnDestroy {
         return this.socket && this.socket.connected;
     }
 
-    connect() {
-        this.socket = io(environment.socketUrl);
+    async connect() {
+        this.socket = io(environment.socketUrl, {
+            query: {
+                token: this.tokenService.getRefreshToken(),
+                username: this.accountService.user?.username,
+            },
+        });
     }
 
     disconnect() {
@@ -44,7 +52,6 @@ export class SocketService implements OnDestroy {
     // Based on https://gitlab.com/nikolayradoev/socket-io-exemple/-/blob/master/client/src/app/services/socket-client.service.ts
     send<T = unknown, U = unknown>(event: SocketEvent, data?: T, callback?: (data: U) => void): void {
         if (!callback) callback = () => undefined;
-
         this.socket.emit(event, data, callback);
     }
 }

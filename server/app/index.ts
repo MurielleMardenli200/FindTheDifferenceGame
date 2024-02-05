@@ -20,14 +20,26 @@ const bootstrap = async () => {
     });
     const config = new DocumentBuilder()
         .setTitle('Cadriciel Serveur')
-        .setDescription('Serveur du projet de base pour le cours de LOG2990')
+        .setDescription('Serveur du projet de base pour le cours de LOG3900')
         .setVersion('1.0.0')
+        .addBearerAuth(
+            {
+                type: 'http',
+                scheme: 'bearer',
+                bearerFormat: 'JWT',
+                name: 'Bearer',
+                description: 'Enter JWT token',
+                in: 'header',
+            },
+            'access-token',
+        )
         .build();
+
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('api/docs', app, document);
     SwaggerModule.setup('', app, document);
 
-    await app.listen(process.env.PORT || DEFAULT_PORT);
+    await app.listen(process.env.PORT || DEFAULT_PORT, '0.0.0.0');
 };
 
 bootstrap();

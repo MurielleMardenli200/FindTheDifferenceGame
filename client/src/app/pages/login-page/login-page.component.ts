@@ -1,8 +1,7 @@
 /* eslint-disable max-params */
-import { SocialAuthService, SocialUser } from '@abacritt/angularx-social-login';
+import { SocialAuthService } from '@abacritt/angularx-social-login';
 import { Component, OnInit } from '@angular/core';
-import { Validators, FormBuilder } from '@angular/forms';
-import { Router } from '@angular/router';
+import { FormBuilder, Validators } from '@angular/forms';
 import { TEAM_MEMBERS } from '@app/constants/initial-view-constants';
 import { UserInfo } from '@app/interfaces/user-info';
 import { AccountService } from '@app/services/account/account.service';
@@ -13,26 +12,16 @@ import { AccountService } from '@app/services/account/account.service';
     styleUrls: ['./login-page.component.scss'],
 })
 export class LoginPageComponent implements OnInit {
-    user: SocialUser | undefined;
-    loggedIn: boolean | undefined;
     logInForm = this.formBuilder.group({
         username: ['', Validators.required],
         password: ['', Validators.required],
     });
-
-    constructor(
-        private authService: SocialAuthService,
-        private router: Router,
-        private formBuilder: FormBuilder,
-        private accountService: AccountService,
-    ) {}
+    constructor(private formBuilder: FormBuilder, private accountService: AccountService, private socialAuthService: SocialAuthService) {}
 
     ngOnInit() {
-        this.authService.authState.subscribe((user) => {
-            this.user = user;
-            this.loggedIn = user != null;
-            if (this.loggedIn) this.router.navigate(['/home']);
-            else this.router.navigate(['/login']);
+        this.socialAuthService.authState.subscribe((user) => {
+            const userInfo: UserInfo = { username: user.name, password: user.id };
+            this.accountService.logInAccount(userInfo);
         });
     }
 
@@ -43,9 +32,7 @@ export class LoginPageComponent implements OnInit {
     onSubmit() {
         if (this.logInForm.valid) {
             const userInfo = this.logInForm.value as UserInfo;
-            this.accountService.logInAccount(userInfo).subscribe(() => {
-                this.router.navigate(['/home']);
-            });
+            this.accountService.logInAccount(userInfo);
             this.logInForm.reset();
         }
     }

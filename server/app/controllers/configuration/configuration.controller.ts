@@ -13,12 +13,16 @@ import {
     Param,
     Patch,
     Put,
+    UseGuards,
     UseInterceptors,
     ValidationPipe,
 } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { AccessAuthGuard } from '@app/authentication/access.guard';
 
+@UseGuards(AccessAuthGuard)
 @ApiTags('Game Constants')
+@ApiBearerAuth('access-token')
 @Controller('configuration')
 export class ConfigurationController {
     constructor(private readonly gameConstantsService: GameConstantsService, private readonly gameHistoryService: GameHistoryService) {}

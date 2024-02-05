@@ -5,12 +5,16 @@ import { GameService } from '@app/services/game/game.service';
 import { Test, TestingModule } from '@nestjs/testing';
 import { SinonStubbedInstance, createStubInstance } from 'sinon';
 import { GameController } from './game.controller';
+import { AccessAuthGuard } from '@app/authentication/access.guard';
+import { AuthenticationService } from '@app/services/authentication/authentication.service';
 
 describe('GameController', () => {
     let controller: GameController;
     let gameService: SinonStubbedInstance<GameService>;
     let bitmapService: SinonStubbedInstance<BitmapService>;
     let differencesService: SinonStubbedInstance<DifferencesService>;
+    let accessAuthGuard: SinonStubbedInstance<AccessAuthGuard>;
+    let authenticationService: SinonStubbedInstance<AuthenticationService>;
 
     beforeEach(async () => {
         gameService = createStubInstance(GameService);
@@ -31,6 +35,14 @@ describe('GameController', () => {
                 {
                     provide: DifferencesService,
                     useValue: differencesService,
+                },
+                {
+                    provide: AccessAuthGuard,
+                    useValue: accessAuthGuard,
+                },
+                {
+                    provide: AuthenticationService,
+                    useValue: authenticationService,
                 },
             ],
         }).compile();

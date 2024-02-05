@@ -5,6 +5,7 @@ import { MainPageComponent } from '@app/pages/main-page/main-page.component';
 import { ButtonStubComponent } from '@app/stubs/button.component.stub';
 import { ErrorModalComponent } from './error-modal.component';
 import SpyObj = jasmine.SpyObj;
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('ErrorModalComponent', () => {
     let component: ErrorModalComponent;
@@ -16,7 +17,7 @@ describe('ErrorModalComponent', () => {
         await TestBed.configureTestingModule({
             declarations: [ErrorModalComponent, ButtonStubComponent],
             providers: [{ provide: MatDialogRef<ErrorModalComponent>, useValue: modalRefSpy }],
-            imports: [RouterTestingModule.withRoutes([{ path: 'home', component: MainPageComponent }])],
+            imports: [HttpClientTestingModule, RouterTestingModule.withRoutes([{ path: 'home', component: MainPageComponent }])],
         }).compileComponents();
 
         fixture = TestBed.createComponent(ErrorModalComponent);

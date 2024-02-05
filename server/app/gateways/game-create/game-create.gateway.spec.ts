@@ -13,6 +13,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { SinonStubbedInstance, createStubInstance } from 'sinon';
 import { Server, Socket } from 'socket.io';
 import { GameCreateGateway } from './game-create.gateway';
+import { SocketAuthGuard } from '@app/authentication/ws-jwt-auth.guard';
+import { AuthenticationService } from '@app/services/authentication/authentication.service';
 
 describe('GameCreateGateway', () => {
     let gateway: GameCreateGateway;
@@ -21,6 +23,8 @@ describe('GameCreateGateway', () => {
     let differencesService: SinonStubbedInstance<DifferencesService>;
     let socket: SinonStubbedInstance<Socket>;
     let serverSocket: SinonStubbedInstance<Server>;
+    let socketAuthGuard: SinonStubbedInstance<SocketAuthGuard>;
+    let authenticationService: SinonStubbedInstance<AuthenticationService>;
 
     beforeEach(async () => {
         gameService = createStubInstance<GameService>(GameService);
@@ -46,6 +50,14 @@ describe('GameCreateGateway', () => {
                 {
                     provide: DifferencesService,
                     useValue: differencesService,
+                },
+                {
+                    provide: SocketAuthGuard,
+                    useValue: socketAuthGuard,
+                },
+                {
+                    provide: AuthenticationService,
+                    useValue: authenticationService,
                 },
             ],
         }).compile();

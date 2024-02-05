@@ -51,6 +51,7 @@ describe('TimeLimitedModeService', () => {
 
         spyOn(window, 'setInterval');
         service = TestBed.inject(TimeLimitedModeService);
+        socketServiceSpy.once.and.returnValue();
         service['gameInfo'] = {} as GameInfo;
     });
 
