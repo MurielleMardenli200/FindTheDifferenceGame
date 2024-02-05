@@ -1,4 +1,4 @@
-import 'package:client_leger/widgets/message_input_field.dart';
+import 'package:client_leger/pages/chat_provider.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -13,7 +13,7 @@ class MainApp extends StatelessWidget {
     return const MaterialApp(
       home: Scaffold(
         body: Center(
-          child: MessageInputField(),
+          child: ChatPageProvider(),
         ),
       ),
     );
