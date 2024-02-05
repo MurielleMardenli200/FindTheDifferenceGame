@@ -1,4 +1,7 @@
+import 'package:client_leger/interfaces/chat_message.dart';
+import 'package:client_leger/services/chat_service.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 // This widget is based on https://api.flutter.dev/flutter/material/TextField-class.html
 
@@ -26,36 +29,26 @@ class _MessageInputFieldState extends State<MessageInputField> {
 
   @override
   Widget build(BuildContext context) {
+    ChatService chatService = context.watch<ChatService>();
+
+    _sendMessage(String message) {
+      // FIXME: Validate message is not empty
+      _controller.text = '';
+      chatService.addMessage(ChatMessage(
+          author: 'client_leger_user', content: message, time: DateTime.now()));
+    }
+
     return Center(
       child: TextField(
         controller: _controller,
-        onSubmitted: (String value) async {
-          await showDialog<void>(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: const Text('Thanks!'),
-                content: Text(
-                    'You typed "$value", which has length ${value.characters.length}.'),
-                actions: <Widget>[
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Text('OK'),
-                  ),
-                ],
-              );
-            },
-          );
+        onSubmitted: (String message) {
+          _sendMessage(message);
         },
         decoration: InputDecoration(
           suffixIcon: IconButton(
             icon: const Icon(Icons.send_rounded),
-            // TODO: Link with the submit logic
-            // ignore: avoid_print
             onPressed: () {
-              print('Pressed send');
+              _sendMessage(_controller.text);
             },
           ),
           border: const OutlineInputBorder(),
