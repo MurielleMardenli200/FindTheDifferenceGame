@@ -275,17 +275,17 @@ export class GameSessionGateway implements OnGatewayConnection, OnGatewayDisconn
         }
     }
 
-    @UseGuards(SocketAuthGuard)
+    // FIXME: Reenable
+    // @UseGuards(SocketAuthGuard)
     @SubscribeMessage(GameSessionEvent.Message)
     message(@ConnectedSocket() socket: Socket, @MessageBody() message: Message): void {
-        // FIXME: Change this logic
+        // FIXME: Temporary disable
         // if (message.author !== MessageAuthor.User) {
         //     throw new WsException('Invalid message author');
         // }
 
-        Logger.log(`You have mail!: ${JSON.stringify(message)}`);
-
-        socket.emit(GameSessionEvent.Message, { author: 'SERVER', content: 'I received the message', time: Date.now() });
+        Logger.log(`You have mail!: ${socket.id} ${JSON.stringify(message)}`);
+        socket.broadcast.emit(GameSessionEvent.Message, message);
 
         const gameSession = this.gameManagerService.getPlayerGameSession(socket.id);
         socket.to(gameSession.roomId).emit(GameSessionEvent.Message, { ...message, author: MessageAuthor.Opponent });

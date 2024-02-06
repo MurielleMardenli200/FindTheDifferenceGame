@@ -1,7 +1,7 @@
 <div class="chat">
     <div #messagesDiv class="event-display">
         <app-message #messagesList [message]="message"
-            *ngFor="let message of chatService.messages; trackBy: getMessageTime">
+            *ngFor="let message of messageService.messages; trackBy: getMessageTime">
         </app-message>
     </div>
     <div class="write">

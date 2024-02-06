@@ -24,6 +24,7 @@ const routes: Routes = [
     { path: 'chat', component: ChatComponent, canActivate: [authGuard] },
     { path: 'create-account', component: CreateAccountPageComponent },
     { path: 'login', component: LoginPageComponent },
+    { path: 'chat', component: ChatComponent },
     { path: '**', redirectTo: '/login' },
 ];
 
