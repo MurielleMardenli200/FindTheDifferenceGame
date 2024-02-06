@@ -7,7 +7,7 @@ import 'package:get/instance_manager.dart';
 class ChatService extends GetxController {
   static ChatService get to => Get.find();
 
-  _newMessageHandler(message) => addMessage(ChatMessage.fromJson(message));
+  _newMessageHandler(message) => messages.add(ChatMessage.fromJson(message));
 
   @override
   void onInit() {
@@ -46,7 +46,6 @@ class ChatService extends GetxController {
   void addMessage(ChatMessage message) {
     messages.add(message);
     SocketService.to.send(SocketEvent.message, message);
-    messages.refresh();
   }
 
   bool isMessageSentByUser(ChatMessage message) {

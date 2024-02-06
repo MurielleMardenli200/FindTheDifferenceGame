@@ -25,7 +25,7 @@ import { GuessResult, ResultType, SessionType } from '@common/model/guess-result
 import { Hint, HintType, RemainingHints } from '@common/model/hints';
 import { Message, MessageAuthor } from '@common/model/message';
 import { WaitingRoomStatus } from '@common/model/waiting-room-status';
-import { ClassSerializerInterceptor, Injectable, SerializeOptions, UseGuards, UseInterceptors, UsePipes } from '@nestjs/common';
+import { ClassSerializerInterceptor, Injectable, Logger, SerializeOptions, UseGuards, UseInterceptors, UsePipes } from '@nestjs/common';
 import {
     ConnectedSocket,
     MessageBody,
@@ -268,9 +268,14 @@ export class GameSessionGateway implements OnGatewayConnection, OnGatewayDisconn
     @UseGuards(SocketAuthGuard)
     @SubscribeMessage(GameSessionEvent.Message)
     message(@ConnectedSocket() socket: Socket, @MessageBody() message: Message): void {
-        if (message.author !== MessageAuthor.User) {
-            throw new WsException('Invalid message author');
-        }
+        // FIXME: Change this logic
+        // if (message.author !== MessageAuthor.User) {
+        //     throw new WsException('Invalid message author');
+        // }
+
+        Logger.log(`You have mail!: ${JSON.stringify(message)}`);
+
+        socket.emit(GameSessionEvent.Message, { author: 'SERVER', content: 'I received the message', time: Date.now() });
 
         const gameSession = this.gameManagerService.getPlayerGameSession(socket.id);
         socket.to(gameSession.roomId).emit(GameSessionEvent.Message, { ...message, author: MessageAuthor.Opponent });
