@@ -13,7 +13,6 @@ export class MessageService {
 
     initialize() {
         this.socketService.on(GameSessionEvent.Message, (message: Message) => {
-            console.log('Received message service', message);
             this.receiveMessage(message);
         });
     }
@@ -23,7 +22,6 @@ export class MessageService {
     }
 
     sendMessage(message: Message) {
-        console.log('Sending message service', message);
         this.socketService.send(GameSessionEvent.Message, message);
     }
 }
