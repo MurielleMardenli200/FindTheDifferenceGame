@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { ActionModalData } from '@app/components/action-modal/action-modal.component';
-import { ErrorModalComponent } from '@app/components/error-modal/error-modal.component';
+// import { ErrorModalComponent } from '@app/components/error-modal/error-modal.component';
 import { UserNameComponent } from '@app/components/user-name/user-name.component';
 import { ButtonState } from '@app/enums/button-state';
 import { GameInfo } from '@app/interfaces/game-info';
@@ -61,7 +61,7 @@ export class GameStartService {
     private setupEventListeners() {
         this.socketService.on(GlobalEvent.Exception, () => {
             this.onExceptionCallbacks.forEach((callback) => callback());
-            this.modal.open(ErrorModalComponent);
+            // this.modal.open(ErrorModalComponent);
         });
 
         this.socketService.on<NewOpponentInfo>(GameSessionEvent.NewOpponent, ({ username, socketId }) => {

@@ -10,6 +10,7 @@ import { SelectionPageComponent } from '@app/pages/selection-page/selection-page
 import { TimeLimitedSelectionPageComponent } from '@app/pages/time-limited-selection-page/time-limited-selection-page.component';
 import { TimeLimitedModeComponent } from '@app/pages/time-limited/time-limited-mode.component';
 import { authGuard } from '@app/services/auth-guard/auth.guard';
+import { ChatComponent } from '@app/pages/chat/chat.component';
 
 const routes: Routes = [
     { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -22,6 +23,7 @@ const routes: Routes = [
     { path: 'time-limited-selection', component: TimeLimitedSelectionPageComponent, canActivate: [authGuard] },
     { path: 'create-account', component: CreateAccountPageComponent },
     { path: 'login', component: LoginPageComponent },
+    { path: 'chat', component: ChatComponent },
     { path: '**', redirectTo: '/login' },
 ];
 

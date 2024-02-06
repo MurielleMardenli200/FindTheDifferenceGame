@@ -7,14 +7,23 @@ import { Message } from '@common/model/message';
 })
 export class MessageService {
     messages: Message[] = [];
+    constructor(private socketService: SocketService) {
+        this.initialize();
+    }
 
-    constructor(private socketService: SocketService) {}
+    initialize() {
+        this.socketService.on(GameSessionEvent.Message, (message: Message) => {
+            console.log('Received message service', message);
+            this.receiveMessage(message);
+        });
+    }
 
     receiveMessage(message: Message) {
         this.messages.push(message);
     }
 
     sendMessage(message: Message) {
+        console.log('Sending message service', message);
         this.socketService.send(GameSessionEvent.Message, message);
     }
 }
