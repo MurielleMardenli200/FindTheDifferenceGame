@@ -1,5 +1,7 @@
-import 'package:client_leger/pages/chat_provider.dart';
+import 'package:client_leger/bindings/chat_bindings.dart';
+import 'package:client_leger/pages/chat.dart';
 import 'package:flutter/material.dart';
+import 'package:get/route_manager.dart';
 
 void main() {
   runApp(const MainApp());
@@ -10,12 +12,14 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: ChatPageProvider(),
-        ),
-      ),
+    return GetMaterialApp(
+      initialRoute: '/chat',
+      getPages: [
+        GetPage(
+            name: '/chat',
+            page: () => const ChatPage(),
+            binding: ChatBinding()),
+      ],
     );
   }
 }

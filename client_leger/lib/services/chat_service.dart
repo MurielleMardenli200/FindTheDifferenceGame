@@ -1,13 +1,15 @@
-import 'dart:collection';
-
 import 'package:client_leger/interfaces/chat_message.dart';
-import 'package:flutter/material.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+import 'package:get/instance_manager.dart';
 
-class ChatService extends ChangeNotifier {
+class ChatService extends GetxController {
+  static ChatService get to => Get.find();
+
   // FIXME: Only for testing purposes
   final String _username = 'client_leger_user';
 
-  final List<ChatMessage> _messages = [
+  RxList<ChatMessage> messages = [
     ChatMessage(
         author: 'client_leger_user',
         content: 'Hello everyone!',
@@ -24,14 +26,11 @@ class ChatService extends ChangeNotifier {
         author: 'client_leger_user',
         content: 'Yes',
         time: DateTime.now().add(const Duration(seconds: 30))),
-  ];
-
-  UnmodifiableListView<ChatMessage> get messages =>
-      UnmodifiableListView(_messages);
+  ].obs;
 
   void addMessage(ChatMessage message) {
-    _messages.add(message);
-    notifyListeners();
+    messages.add(message);
+    messages.refresh();
   }
 
   bool isMessageSentByUser(ChatMessage message) {

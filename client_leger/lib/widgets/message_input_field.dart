@@ -1,7 +1,6 @@
 import 'package:client_leger/interfaces/chat_message.dart';
 import 'package:client_leger/services/chat_service.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 // This widget is based on https://api.flutter.dev/flutter/material/TextField-class.html
 
@@ -29,12 +28,10 @@ class _MessageInputFieldState extends State<MessageInputField> {
 
   @override
   Widget build(BuildContext context) {
-    ChatService chatService = context.watch<ChatService>();
-
-    _sendMessage(String message) {
+    void sendMessage(String message) {
       // FIXME: Validate message is not empty
       _controller.text = '';
-      chatService.addMessage(ChatMessage(
+      ChatService.to.addMessage(ChatMessage(
           author: 'client_leger_user', content: message, time: DateTime.now()));
     }
 
@@ -42,13 +39,13 @@ class _MessageInputFieldState extends State<MessageInputField> {
       child: TextField(
         controller: _controller,
         onSubmitted: (String message) {
-          _sendMessage(message);
+          sendMessage(message);
         },
         decoration: InputDecoration(
           suffixIcon: IconButton(
             icon: const Icon(Icons.send_rounded),
             onPressed: () {
-              _sendMessage(_controller.text);
+              sendMessage(_controller.text);
             },
           ),
           border: const OutlineInputBorder(),

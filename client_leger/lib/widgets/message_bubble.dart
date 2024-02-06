@@ -1,7 +1,6 @@
 import 'package:client_leger/interfaces/chat_message.dart';
 import 'package:client_leger/services/chat_service.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class MessageBubble extends StatelessWidget {
   const MessageBubble({
@@ -13,10 +12,9 @@ class MessageBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AlignmentGeometry alignment =
-        context.watch<ChatService>().isMessageSentByUser(message)
-            ? Alignment.centerRight
-            : Alignment.centerLeft;
+    AlignmentGeometry alignment = ChatService.to.isMessageSentByUser(message)
+        ? Alignment.centerRight
+        : Alignment.centerLeft;
 
     return Align(
       alignment: alignment,
