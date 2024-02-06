@@ -80,7 +80,8 @@
 }
 
 .form-container input[type='text'],
-.form-container input[type='password'] {
+.form-container input[type='password'],
+.form-container input[type='password-confirmation'] {
     width: 100%;
     padding: 10px;
     border: none;
@@ -90,6 +91,10 @@
     font-family: 'Pirata';
     color: black;
     margin-bottom: 10px;
+}
+
+.error-tooltip {
+    white-space: pre-line;
 }
 
 .form-container a {
@@ -112,6 +117,24 @@
     margin-bottom: 10px;
 }
 
+.top-bar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.arrow-back {
+    background-color: #1b3b6f;
+    color: #ffffff;
+    border-radius: 50%;
+    margin-right: 10px;
+
+    button {
+        font-size: 24px;
+    }
+}
+
 .form-container .or {
     font-size: 14pt;
     font-family: 'Pirata';
@@ -127,63 +150,6 @@
     margin-top: 10px;
     margin-bottom: 10px;
 }
-
-.password-reset {
-    font-size: 14pt;
-    font-family: 'Pirata';
-    color: #c3e0e5;
-    text-align: left;
-    margin-top: 10px;
-    margin-bottom: 10px;
-}
-
-.password-reset:hover {
-    cursor: pointer;
-    color: red;
-    transform: scale(1.1);
-    transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-.form-container .social-media {
-    display: flex;
-    justify-content: center;
-}
-
-.form-container .social-media a {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s ease;
-}
-
-.form-container .social-media a:hover {
-    background-color: #f2f2f2;
-    transform: scale(1.1);
-    transition: background-color 0.3s ease, transform 0.3s ease;
-}
-.form-container .social-media a img {
-    width: 25px;
-    height: 25px;
-}
-
-.credits {
-    display: flex;
-    flex-direction: row;
-    width: 80%;
-    font-family: Pirata;
-    height: 10px;
-    font-size: 15pt;
-    justify-self: center;
-    justify-content: space-between;
-    color: black;
-}
-
-//inspired code written by Shireen Taj on https://codepen.io/TajShireen/pen/xxGPEEp
 
 h1 {
     font-size: 80pt;
@@ -219,4 +185,8 @@ h2 {
     margin: 0;
     position: relative;
     border-color: black;
+}
+
+mat-error {
+    color: red;
 }

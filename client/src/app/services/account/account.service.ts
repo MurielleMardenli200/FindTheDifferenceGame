@@ -1,3 +1,4 @@
+import { SocialAuthService, SocialUser } from '@abacritt/angularx-social-login';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
@@ -18,7 +19,20 @@ export class AccountService {
 
     private readonly baseUrl: string = environment.serverUrl;
     // eslint-disable-next-line max-params
-    constructor(private readonly http: HttpClient, private router: Router, private tokenService: TokenService) {}
+    constructor(
+        private readonly http: HttpClient,
+        private router: Router,
+        private tokenService: TokenService,
+        private socialAuthService: SocialAuthService,
+    ) {
+        this.socialAuthService.authState.subscribe((user: SocialUser) => {
+            this.user = {
+                username: user.email,
+                password: user.id,
+                email: user.email,
+            };
+        });
+    }
 
     isLoggedIn(): boolean {
         return localStorage.getItem(REFRESH_TOKEN_KEY) !== null;
@@ -58,7 +72,9 @@ export class AccountService {
         return this.http.post<JwtTokensDto>(`${this.baseUrl}/auth/refresh`, refreshDto);
     }
 
-    // Commented because I am not yet to the registration part of the project
-    // registerAccount(info: UserInfo) {
-    //     return this.http.post(`${this.baseUrl}/auth/register`, info);
+    registerAccount(info: UserInfo) {
+        return this.http.post(`${this.baseUrl}/auth/signup`, info).subscribe(() => {
+            this.router.navigate(['/login']);
+        });
+    }
 }

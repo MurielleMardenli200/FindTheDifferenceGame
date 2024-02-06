@@ -36,6 +36,7 @@ import { PaintToolsComponent } from './components/paint-tools/paint-tools.compon
 import { TimerComponent } from './components/timer/timer.component';
 import { UserNameComponent } from './components/user-name/user-name.component';
 import { ClassicModeComponent } from './pages/classic-mode/classic-mode.component';
+import { CreateAccountPageComponent } from './pages/create-account-page/create-account-page.component';
 import { GamePageComponent } from './pages/game-page/game-page.component';
 import { LoginPageComponent } from './pages/login-page/login-page.component';
 import { MainPageComponent } from './pages/main-page/main-page.component';
@@ -88,6 +89,7 @@ import { InterceptorService } from './services/interceptor/interceptor.service';
         TimerComponent,
         HistoryModalComponent,
         LoginPageComponent,
+        CreateAccountPageComponent,
     ],
     imports: [
         AppMaterialModule,

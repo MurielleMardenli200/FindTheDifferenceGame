@@ -78,8 +78,8 @@ export class AuthenticationService {
 
     generateTokens(username: string): JwtTokensDto {
         const payload = { username };
-        const accessToken: string = this.jwtService.sign(payload, { expiresIn: '1m' });
-        const refreshToken: string = this.jwtService.sign(payload, { expiresIn: '1h' });
+        const accessToken: string = this.jwtService.sign(payload, { expiresIn: '15m' });
+        const refreshToken: string = this.jwtService.sign(payload, { expiresIn: '24h' });
         this.connectedUsers.set(username, { accessToken, refreshToken });
         return { accessToken, refreshToken };
     }

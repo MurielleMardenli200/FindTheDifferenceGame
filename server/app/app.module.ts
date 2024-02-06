@@ -40,7 +40,7 @@ import { User } from './model/database/user.entity';
                 username: configService.get<string>('POSTGRES_USER'),
                 password: configService.get<string>('POSTGRES_PASSWORD'),
                 database: configService.get<string>('DB_DATABASE'),
-                entities: [Game, GameConstantEntity, History, HighScore, SoloHighScore, DuelHighScore, User],
+                entities: [User, Game, GameConstantEntity, History, HighScore, SoloHighScore, DuelHighScore],
                 synchronize: configService.get<boolean>('DB_SYNC'),
             }),
         }),

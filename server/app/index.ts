@@ -7,6 +7,7 @@ import { json } from 'body-parser';
 import { urlencoded } from 'express';
 import { join } from 'path';
 import { DEFAULT_PORT } from './index.constants';
+import { ALLOWED_ORIGINS } from '@app/gateways/gateway.constants';
 
 const bootstrap = async () => {
     const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -14,7 +15,9 @@ const bootstrap = async () => {
     app.useGlobalPipes(new ValidationPipe());
     app.use(json({ limit: '5mb' }));
     app.use(urlencoded({ extended: true, limit: '5mb' }));
-    app.enableCors();
+    app.enableCors({
+        origin: ALLOWED_ORIGINS,
+    });
     app.useStaticAssets(join(process.cwd(), './uploads'), {
         prefix: '/uploads/',
     });

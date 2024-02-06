@@ -1,6 +1,5 @@
-/* eslint-disable max-params */
-import { SocialAuthService } from '@abacritt/angularx-social-login';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { SocialUser } from '@abacritt/angularx-social-login';
 import { FormBuilder, Validators } from '@angular/forms';
 import { TEAM_MEMBERS } from '@app/constants/initial-view-constants';
 import { UserInfo } from '@app/interfaces/user-info';
@@ -11,20 +10,13 @@ import { AccountService } from '@app/services/account/account.service';
     templateUrl: './login-page.component.html',
     styleUrls: ['./login-page.component.scss'],
 })
-export class LoginPageComponent implements OnInit {
+export class LoginPageComponent {
+    user: SocialUser | undefined;
     logInForm = this.formBuilder.group({
         username: ['', Validators.required],
         password: ['', Validators.required],
     });
-    constructor(private formBuilder: FormBuilder, private accountService: AccountService, private socialAuthService: SocialAuthService) {}
-
-    ngOnInit() {
-        this.socialAuthService.authState.subscribe((user) => {
-            const userInfo: UserInfo = { username: user.name, password: user.id };
-            this.accountService.logInAccount(userInfo);
-        });
-    }
-
+    constructor(private formBuilder: FormBuilder, private accountService: AccountService) {}
     getTeamMembers() {
         return TEAM_MEMBERS;
     }
