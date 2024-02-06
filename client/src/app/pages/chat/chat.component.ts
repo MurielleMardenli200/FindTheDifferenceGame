@@ -34,7 +34,6 @@ export class ChatComponent implements AfterViewInit {
         if (event.key === 'Enter') {
             const message = target.value;
             if (message.trim().length === 0) return false;
-            console.log('Sending message client', { author: MessageAuthor.User, content: message, time: Date.now() });
             this.messageService.sendMessage({ author: MessageAuthor.User, content: message, time: Date.now() });
             target.value = '';
         }
