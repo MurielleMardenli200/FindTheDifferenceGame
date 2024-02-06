@@ -23,7 +23,7 @@ import { GameSheetState, JoinableGame } from '@common/model/game';
 import { GuessResult, ResultType, SessionType } from '@common/model/guess-result';
 import { Hint, HintType, RemainingHints } from '@common/model/hints';
 import { WaitingRoomStatus } from '@common/model/waiting-room-status';
-import { ClassSerializerInterceptor, Injectable, SerializeOptions, UseInterceptors, UsePipes } from '@nestjs/common';
+import { ClassSerializerInterceptor, Injectable, Logger, SerializeOptions, UseGuards, UseInterceptors, UsePipes } from '@nestjs/common';
 import {
     ConnectedSocket,
     MessageBody,
@@ -273,6 +273,33 @@ export class GameSessionGateway implements OnGatewayConnection, OnGatewayDisconn
                 this.cleanupGame(gameSession);
             }
         }
+    }
+
+    @UseGuards(SocketAuthGuard)
+    @SubscribeMessage(GameSessionEvent.Message)
+    message(@ConnectedSocket() socket: Socket, @MessageBody() message: Message): void {
+        // FIXME: Change this logic
+        // if (message.author !== MessageAuthor.User) {
+        //     throw new WsException('Invalid message author');
+        // }
+
+        Logger.log(`You have mail!: ${JSON.stringify(message)}`);
+
+        socket.emit(GameSessionEvent.Message, { author: 'SERVER', content: 'I received the message', time: Date.now() });
+
+        const gameSession = this.gameManagerService.getPlayerGameSession(socket.id);
+        socket.to(gameSession.roomId).emit(GameSessionEvent.Message, { ...message, author: MessageAuthor.Opponent });
+    }
+
+    @UseGuards(SocketAuthGuard)
+    @SubscribeMessage(GameSessionEvent.GetGameState)
+    getGameState(@MessageBody() gameId: string): JoinableGame {
+        const waitingRoom = this.waitingRoomService.getGameWaitingRoom(gameId);
+
+        if (!waitingRoom) {
+            return { _id: gameId, sheetState: GameSheetState.Creatable };
+        }
+        return { _id: gameId, sheetState: GameSheetState.Joinable };
     }
 
     handleConnection(socket: Socket) {
