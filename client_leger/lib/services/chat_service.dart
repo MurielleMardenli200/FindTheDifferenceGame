@@ -24,24 +24,7 @@ class ChatService extends GetxController {
   // FIXME: Only for testing purposes
   final String _username = 'client_leger_user';
 
-  RxList<ChatMessage> messages = [
-    ChatMessage(
-        author: 'client_leger_user',
-        content: 'Hello everyone!',
-        time: DateTime.now()),
-    ChatMessage(
-        author: 'joe',
-        content: 'Hello!',
-        time: DateTime.now().add(const Duration(seconds: 10))),
-    ChatMessage(
-        author: 'joe',
-        content: 'You are writting!',
-        time: DateTime.now().add(const Duration(seconds: 20))),
-    ChatMessage(
-        author: 'client_leger_user',
-        content: 'Yes',
-        time: DateTime.now().add(const Duration(seconds: 30))),
-  ].obs;
+  RxList<ChatMessage> messages = <ChatMessage>[].obs;
 
   void addMessage(ChatMessage message) {
     messages.add(message);

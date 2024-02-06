@@ -265,7 +265,7 @@ export class GameSessionGateway implements OnGatewayConnection, OnGatewayDisconn
         }
     }
 
-    @UseGuards(SocketAuthGuard)
+    // @UseGuards(SocketAuthGuard)
     @SubscribeMessage(GameSessionEvent.Message)
     message(@ConnectedSocket() socket: Socket, @MessageBody() message: Message): void {
         // FIXME: Change this logic
@@ -273,9 +273,13 @@ export class GameSessionGateway implements OnGatewayConnection, OnGatewayDisconn
         //     throw new WsException('Invalid message author');
         // }
 
-        Logger.log(`You have mail!: ${JSON.stringify(message)}`);
+        if (!socket.rooms.has('chat-hack')) {
+            socket.join('chat-hack');
+        }
 
-        socket.emit(GameSessionEvent.Message, { author: 'SERVER', content: 'I received the message', time: Date.now() });
+        Logger.log(`You have mail!: ${socket.id} ${JSON.stringify(message)}`);
+
+        socket.to('chat-hack').emit(GameSessionEvent.Message, { ...message, author: `Person ${socket.id}` });
 
         const gameSession = this.gameManagerService.getPlayerGameSession(socket.id);
         socket.to(gameSession.roomId).emit(GameSessionEvent.Message, { ...message, author: MessageAuthor.Opponent });
