@@ -21,9 +21,9 @@ const routes: Routes = [
     { path: 'selection', component: SelectionPageComponent, canActivate: [authGuard] },
     { path: 'time-limited', component: TimeLimitedModeComponent, canActivate: [authGuard] },
     { path: 'time-limited-selection', component: TimeLimitedSelectionPageComponent, canActivate: [authGuard] },
+    { path: 'chat', component: ChatComponent, canActivate: [authGuard] },
     { path: 'create-account', component: CreateAccountPageComponent },
     { path: 'login', component: LoginPageComponent },
-    { path: 'chat', component: ChatComponent },
     { path: '**', redirectTo: '/login' },
 ];
 
