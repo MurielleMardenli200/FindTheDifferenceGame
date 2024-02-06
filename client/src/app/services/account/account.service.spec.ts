@@ -1,20 +1,40 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { TestBed } from '@angular/core/testing';
 import { AccountService } from './account.service';
-import { HttpTestingController, HttpClientTestingModule } from '@angular/common/http/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { UserInfo } from '@app/interfaces/user-info';
+import { SocialAuthService } from '@abacritt/angularx-social-login';
+import SpyObj = jasmine.SpyObj;
+import { TokenService } from '@app/services/token/token.service';
+import { Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
+import { of } from 'rxjs';
 
 describe('AccountService', () => {
     let service: AccountService;
     let httpMock: HttpTestingController;
-    // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
-    const baseUrl = 'http://localhost:3000';
+    let socialAuthServiceSpy: SpyObj<SocialAuthService>;
+    let tokenServiceSpy: SpyObj<TokenService>;
+    let routerSpy: SpyObj<Router>;
+    let baseUrl: string;
+
     beforeEach(() => {
+        tokenServiceSpy = jasmine.createSpyObj('TokenService', ['setAccessToken', 'setRefreshToken']);
+        socialAuthServiceSpy = jasmine.createSpyObj('SocialAuthService', ['authState', 'verify']);
+        routerSpy = jasmine.createSpyObj('Router', ['navigate']);
         TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule],
+            imports: [HttpClientTestingModule, RouterTestingModule.withRoutes([{}])],
+            providers: [
+                { provide: SocialAuthService, useValue: socialAuthServiceSpy },
+                { provide: TokenService, useValue: tokenServiceSpy },
+                { provide: Router, useValue: routerSpy },
+            ],
         });
+
+        Object.defineProperty(socialAuthServiceSpy, 'authState', { value: of({}) });
         service = TestBed.inject(AccountService);
         httpMock = TestBed.inject(HttpTestingController);
+        baseUrl = service['baseUrl'];
     });
 
     afterEach(() => {

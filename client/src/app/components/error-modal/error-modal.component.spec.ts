@@ -6,17 +6,23 @@ import { ButtonStubComponent } from '@app/stubs/button.component.stub';
 import { ErrorModalComponent } from './error-modal.component';
 import SpyObj = jasmine.SpyObj;
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { AccountService } from '@app/services/account/account.service';
 
 describe('ErrorModalComponent', () => {
     let component: ErrorModalComponent;
     let fixture: ComponentFixture<ErrorModalComponent>;
     let modalRefSpy: SpyObj<MatDialogRef<ErrorModalComponent>>;
+    let accountServiceSpy: SpyObj<AccountService>;
 
     beforeEach(async () => {
         modalRefSpy = jasmine.createSpyObj('MatDialogRef<ErrorModalComponent>', ['open', 'close']);
+        accountServiceSpy = jasmine.createSpyObj('AccountService', ['logOut']);
         await TestBed.configureTestingModule({
             declarations: [ErrorModalComponent, ButtonStubComponent],
-            providers: [{ provide: MatDialogRef<ErrorModalComponent>, useValue: modalRefSpy }],
+            providers: [
+                { provide: MatDialogRef<ErrorModalComponent>, useValue: modalRefSpy },
+                { provide: AccountService, useValue: accountServiceSpy },
+            ],
             imports: [HttpClientTestingModule, RouterTestingModule.withRoutes([{ path: 'home', component: MainPageComponent }])],
         }).compileComponents();
 

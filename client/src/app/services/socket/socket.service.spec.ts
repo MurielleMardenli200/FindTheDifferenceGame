@@ -8,15 +8,25 @@ import { SocketService } from './socket.service';
 
 import SpyObj = jasmine.SpyObj;
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { AccountService } from '@app/services/account/account.service';
+import { TokenService } from '@app/services/token/token.service';
 
 describe('SocketService', () => {
     let service: SocketService;
     let socketSpy: SpyObj<Socket>;
+    let accountServiceSpy: SpyObj<AccountService>;
+    let tokenServiceSpy: SpyObj<TokenService>;
 
     beforeEach(() => {
+        accountServiceSpy = jasmine.createSpyObj(AccountService, ['getUser']);
+        tokenServiceSpy = jasmine.createSpyObj(TokenService, ['getRefreshToken']);
         TestBed.configureTestingModule({
             imports: [HttpClientTestingModule],
-            providers: [SocketService],
+            providers: [
+                SocketService,
+                { provide: AccountService, useValue: accountServiceSpy },
+                { provide: TokenService, useValue: tokenServiceSpy },
+            ],
         });
 
         socketSpy = jasmine.createSpyObj(Socket, ['disconnect', 'emit', 'on', 'once']);
