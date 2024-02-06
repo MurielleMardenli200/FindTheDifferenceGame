@@ -1,4 +1,5 @@
 import 'package:client_leger/bindings/chat_bindings.dart';
+import 'package:client_leger/bindings/global_bingings.dart';
 import 'package:client_leger/pages/chat.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
@@ -14,6 +15,7 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       initialRoute: '/chat',
+      initialBinding: GlobalBinding(),
       getPages: [
         GetPage(
             name: '/chat',
