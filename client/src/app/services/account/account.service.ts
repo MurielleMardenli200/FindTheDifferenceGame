@@ -7,7 +7,7 @@ import { UserInfo } from '@app/interfaces/user-info';
 import { JwtTokensDto } from '@common/model/dto/jwt-tokens.dto';
 import { environment } from 'src/environments/environment';
 import { RefreshDto } from '@common/model/dto/refresh.dto';
-import { Observable } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { TokenService } from '@app/services/token/token.service';
 import { REFRESH_TOKEN_KEY } from '@app/services/token/token.constants';
 
@@ -42,8 +42,7 @@ export class AccountService {
         this.user = { username: info.username, password: info.password };
         this.http.post<JwtTokensDto>(`${this.baseUrl}/auth/login`, info).subscribe({
             next: (response: JwtTokensDto) => {
-                this.tokenService.setAccessToken(response.accessToken);
-                this.tokenService.setRefreshToken(response.refreshToken);
+                this.tokenService.setTokens(response);
                 this.router.navigate(['/home']);
             },
             error: (error) => {
@@ -54,22 +53,24 @@ export class AccountService {
 
     logOut() {
         localStorage.removeItem(REFRESH_TOKEN_KEY);
-        this.http.post(`${this.baseUrl}/auth/logout`, { username: this.user?.username });
+        this.http.post(`${this.baseUrl}/auth/logout`, { username: this.tokenService.getUsername() });
         this.router.navigate(['/login']);
     }
 
-    refreshToken(): Observable<JwtTokensDto> {
+    async refreshToken(): Promise<void> {
         const refreshToken = this.tokenService.getRefreshToken();
-        if (this.user === undefined || this.user.username === undefined || refreshToken === null) {
+        const username = this.tokenService.getUsername();
+        if (refreshToken === null || username === null) {
             this.logOut();
             throw new Error('No user or refresh token');
         }
 
         const refreshDto: RefreshDto = {
-            username: this.user.username,
+            username,
             refreshToken,
         };
-        return this.http.post<JwtTokensDto>(`${this.baseUrl}/auth/refresh`, refreshDto);
+        const tokens = await firstValueFrom(this.http.post<JwtTokensDto>(`${this.baseUrl}/auth/refresh`, refreshDto));
+        this.tokenService.setTokens(tokens);
     }
 
     registerAccount(info: UserInfo) {

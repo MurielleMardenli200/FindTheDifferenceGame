@@ -7,15 +7,13 @@ export interface Tokens {
 }
 
 export interface JwtPayload {
-    sub: string;
     createdAt: Date;
     expiresAt: Date;
     username: string;
 }
 
 export interface RawPayload {
-    sub: string;
-    createdAt: number;
-    expiresAt: number;
+    iat: number;
+    exp: number;
     username: string;
 }

@@ -2,8 +2,10 @@ import { HostListener, Injectable, OnDestroy } from '@angular/core';
 import { SocketEvent } from '@common/socket-event';
 import { Socket, io } from 'socket.io-client';
 import { environment } from 'src/environments/environment';
-import { AccountService } from '@app/services/account/account.service';
 import { TokenService } from '@app/services/token/token.service';
+import { Tokens } from '@common/tokens';
+import { TokenExpiredError } from '@app/services/token/token-expired-error';
+import { AccountService } from '@app/services/account/account.service';
 
 @Injectable({
     providedIn: 'root',
@@ -11,7 +13,7 @@ import { TokenService } from '@app/services/token/token.service';
 export class SocketService implements OnDestroy {
     socket!: Socket;
 
-    constructor(private accountService: AccountService, private readonly tokenService: TokenService) {
+    constructor(private readonly tokenService: TokenService, private readonly accountService: AccountService) {
         // FIXME: War crimes, socket needs to be connected but auth token needs async or observable
         this.connect();
     }
@@ -26,10 +28,21 @@ export class SocketService implements OnDestroy {
     }
 
     async connect() {
+        let tokens: Tokens;
+        try {
+            tokens = this.tokenService.getTokens();
+        } catch (error) {
+            if (error instanceof TokenExpiredError) {
+                await this.accountService.refreshToken();
+                tokens = this.tokenService.getTokens();
+            } else {
+                throw error;
+            }
+        }
         this.socket = io(environment.socketUrl, {
             query: {
-                token: this.tokenService.getRefreshToken(),
-                username: this.accountService.user?.username,
+                token: tokens.refreshToken,
+                username: this.tokenService.getUsername(),
             },
         });
     }
