@@ -8,7 +8,7 @@ import { TokenExpiredError } from '@app/services/token/token-expired-error';
 import { AccountService } from '@app/services/account/account.service';
 
 @Injectable({
-    providedIn: 'root',
+    providedIn: 'any',
 })
 export class SocketService implements OnDestroy {
     socket!: Socket;
