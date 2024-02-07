@@ -52,8 +52,8 @@ export class AccountService {
     }
 
     logOut() {
-        localStorage.removeItem(REFRESH_TOKEN_KEY);
         this.http.post(`${this.baseUrl}/auth/logout`, { username: this.tokenService.getUsername() });
+        this.tokenService.removeTokens();
         this.router.navigate(['/login']);
     }
 

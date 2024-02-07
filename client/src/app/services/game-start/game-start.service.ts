@@ -59,7 +59,8 @@ export class GameStartService {
     }
 
     private setupEventListeners() {
-        this.socketService.on(GlobalEvent.Exception, () => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        this.socketService.on(GlobalEvent.Exception, (_) => {
             this.onExceptionCallbacks.forEach((callback) => callback());
             // this.modal.open(ErrorModalComponent);
         });

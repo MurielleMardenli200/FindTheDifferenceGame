@@ -1,4 +1,3 @@
-import { SocketAuthGuard } from '@app/authentication/ws-jwt-auth.guard';
 import { GATEWAY_CONFIGURATION_OBJECT } from '@app/gateways/gateway.constants';
 import { CreateGameDto } from '@app/model/dto/game/create-game.dto';
 import { CreateTemporaryGameDto } from '@app/model/dto/game/create-temporary-game.dto';
@@ -10,7 +9,7 @@ import { GameService } from '@app/services/game/game.service';
 import { WSValidationPipe } from '@app/validation-pipes/web-socket/web-socket.validation-pipe';
 import { GameCreateEvent } from '@common/game-create.events';
 import { Difficulty } from '@common/model/difficulty';
-import { ClassSerializerInterceptor, Injectable, UseGuards, UseInterceptors, UsePipes } from '@nestjs/common';
+import { ClassSerializerInterceptor, Injectable, UseInterceptors, UsePipes } from '@nestjs/common';
 import {
     ConnectedSocket,
     MessageBody,
@@ -31,7 +30,6 @@ export class GameCreateGateway implements OnGatewayDisconnect {
 
     constructor(private gameService: GameService, private bitmapService: BitmapService, private differencesService: DifferencesService) {}
 
-    @UseGuards(SocketAuthGuard)
     @SubscribeMessage(GameCreateEvent.CreateTemporaryGame)
     async createTemporaryGame(
         @ConnectedSocket() socket: Socket,
@@ -56,7 +54,6 @@ export class GameCreateGateway implements OnGatewayDisconnect {
         return new TemporaryGameInfo(true, differencesCount, differencesImage);
     }
 
-    @UseGuards(SocketAuthGuard)
     @UseInterceptors(ClassSerializerInterceptor)
     @SubscribeMessage(GameCreateEvent.CreateGame)
     async createGame(@ConnectedSocket() socket: Socket, @MessageBody() createGameDto: CreateGameDto): Promise<string> {

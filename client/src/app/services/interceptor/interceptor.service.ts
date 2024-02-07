@@ -29,7 +29,7 @@ export class InterceptorService implements HttpInterceptor {
     async getHeaders(): Promise<HttpHeaders> {
         const headers = new HttpHeaders();
         const tokens: Tokens = await this.getAccessToken();
-        const username = this.accountService.user?.username;
+        const username = this.tokenService.getUsername();
         if (username === undefined) {
             throw new Error('No username');
         }
