@@ -19,7 +19,7 @@ describe('AccountService', () => {
     let baseUrl: string;
 
     beforeEach(() => {
-        tokenServiceSpy = jasmine.createSpyObj('TokenService', ['setAccessToken', 'setRefreshToken']);
+        tokenServiceSpy = jasmine.createSpyObj('TokenService', ['setTokens', 'getRefreshToken', 'getUsername']);
         socialAuthServiceSpy = jasmine.createSpyObj('SocialAuthService', ['authState', 'verify']);
         routerSpy = jasmine.createSpyObj('Router', ['navigate']);
         TestBed.configureTestingModule({
