@@ -1,4 +1,4 @@
-const baseUrl = 'https://api.spot-seven.step.polymtl.ca';
+const baseUrl = 'http://localhost:3000';
 
 export const environment = {
     production: true,

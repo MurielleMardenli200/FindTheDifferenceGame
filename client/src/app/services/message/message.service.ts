@@ -22,6 +22,7 @@ export class MessageService {
     }
 
     sendMessage(message: Message) {
+        this.receiveMessage(message);
         this.socketService.send(GameSessionEvent.Message, message);
     }
 }

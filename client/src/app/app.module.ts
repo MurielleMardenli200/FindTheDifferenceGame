@@ -1,4 +1,4 @@
-import { GoogleLoginProvider, GoogleSigninButtonModule, SocialAuthServiceConfig, SocialLoginModule } from '@abacritt/angularx-social-login';
+import { SocialAuthServiceConfig, SocialLoginModule } from '@abacritt/angularx-social-login';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -17,7 +17,6 @@ import { AppMaterialModule } from '@app/modules/material.module';
 import { AppComponent } from '@app/pages/app/app.component';
 import { ConfigurationComponent } from '@app/pages/configuration/configuration.component';
 import { CreateGamePageComponent } from '@app/pages/create-game-page/create-game-page.component';
-import { environment } from 'src/environments/environment';
 import { ActionModalComponent } from './components/action-modal/action-modal.component';
 import { AnimatedBackgroundComponent } from './components/animated-background/animated-background.component';
 import { ButtonComponent } from './components/button/button.component';
@@ -105,19 +104,13 @@ import { ChatComponent } from './pages/chat/chat.component';
         MatTableModule,
         ReactiveFormsModule,
         SocialLoginModule,
-        GoogleSigninButtonModule,
     ],
     providers: [
         {
             provide: 'SocialAuthServiceConfig',
             useValue: {
                 autoLogin: false,
-                providers: [
-                    {
-                        id: GoogleLoginProvider.PROVIDER_ID,
-                        provider: new GoogleLoginProvider(environment.googleClientId),
-                    },
-                ],
+                providers: [],
                 onError: (err) => {
                     // eslint-disable-next-line no-console
                     console.error(err);
