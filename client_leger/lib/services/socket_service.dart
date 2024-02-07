@@ -24,7 +24,7 @@ class SocketService extends GetxController {
   void _connect() {
     // FIXME: Only for testing purposes
     _socket = IO.io(
-        'http://10.0.0.244:3000',
+        'http://192.168.47.200:3000',
         IO.OptionBuilder()
             .setTransports(['websocket'])
             .disableAutoConnect()

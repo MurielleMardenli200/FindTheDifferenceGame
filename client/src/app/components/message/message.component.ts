@@ -1,12 +1,12 @@
 import { Component, Input } from '@angular/core';
-import { Message, MessageAuthor } from '@common/model/message';
+import { ChatMessage, MessageAuthor } from '@common/model/message';
 @Component({
     selector: 'app-message[message]',
     templateUrl: './message.component.html',
     styleUrls: ['./message.component.scss'],
 })
 export class MessageComponent {
-    @Input() message!: Message;
+    @Input() message!: ChatMessage;
     authors = MessageAuthor;
 
     get messageTime() {

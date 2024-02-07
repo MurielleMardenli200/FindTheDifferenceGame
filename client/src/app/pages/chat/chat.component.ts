@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { MessageService } from '@app/services/message/message.service';
-import { Message, MessageAuthor } from '@common/model/message';
 import { MAX_MESSAGE_LENGTH } from '@app/pages/chat/chat.constants';
+import { ChatService } from '@app/services/chat/chat.service';
+import { ChatMessage } from '@common/model/message';
 
 @Component({
     selector: 'app-chat',
@@ -12,7 +12,7 @@ import { MAX_MESSAGE_LENGTH } from '@app/pages/chat/chat.constants';
 export class ChatComponent implements AfterViewInit {
     @ViewChildren('messagesList') private messagesList!: QueryList<HTMLDivElement>;
     @ViewChild('messagesDiv') private messagesDiv!: ElementRef<HTMLDivElement>;
-    constructor(public messageService: MessageService) {}
+    constructor(public chatService: ChatService) {}
 
     ngAfterViewInit(): void {
         this.messagesList.changes.subscribe(() => {
@@ -24,7 +24,7 @@ export class ChatComponent implements AfterViewInit {
         this.messagesDiv.nativeElement.scrollTop = this.messagesDiv.nativeElement.scrollHeight;
     }
 
-    getMessageTime(_: number, message: Message) {
+    getMessageTime(_: number, message: ChatMessage) {
         return message.time;
     }
 
@@ -34,7 +34,7 @@ export class ChatComponent implements AfterViewInit {
         if (event.key === 'Enter') {
             const message = target.value;
             if (message.trim().length === 0) return false;
-            this.messageService.sendMessage({ author: MessageAuthor.User, content: message, time: Date.now() });
+            this.chatService.sendMessage({ author: 'client_lourd_user', content: message, time: Date.now() });
             target.value = '';
         }
         return true;

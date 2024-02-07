@@ -16,3 +16,10 @@ export interface Message {
     author: MessageAuthor;
     time: number;
 }
+
+// TODO: Keep either Message or ChatMessage
+export interface ChatMessage {
+    content: string;
+    author: string;
+    time: number;
+}
