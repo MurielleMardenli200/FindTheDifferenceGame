@@ -1,5 +1,6 @@
 /* eslint-disable max-lines */
 // FIXME: remove disable
+import { SocketAuthGuard } from '@app/authentication/ws-jwt-auth.guard';
 import { TIME_LIMITED_ID } from '@app/constants/waiting-room.constants';
 import { GATEWAY_CONFIGURATION_OBJECT } from '@app/gateways/gateway.constants';
 import { Player } from '@app/interfaces/player/player.interface';
@@ -22,6 +23,7 @@ import { GameSessionEvent } from '@common/game-session.events';
 import { GameSheetState, JoinableGame } from '@common/model/game';
 import { GuessResult, ResultType, SessionType } from '@common/model/guess-result';
 import { Hint, HintType, RemainingHints } from '@common/model/hints';
+import { Message, MessageAuthor } from '@common/model/message';
 import { WaitingRoomStatus } from '@common/model/waiting-room-status';
 import { ClassSerializerInterceptor, Injectable, Logger, SerializeOptions, UseGuards, UseInterceptors, UsePipes } from '@nestjs/common';
 import {
@@ -101,16 +103,23 @@ export class GameSessionGateway implements OnGatewayConnection, OnGatewayDisconn
         }
     }
 
+    // FIXME: Reenable
+    // @UseGuards(SocketAuthGuard)
     @SubscribeMessage(GameSessionEvent.Message)
     message(@ConnectedSocket() socket: Socket, @MessageBody() message: Message): void {
-        if (message.author !== MessageAuthor.User) {
-            throw new WsException('Invalid message author');
-        }
+        // FIXME: Temporary disable
+        // if (message.author !== MessageAuthor.User) {
+        //     throw new WsException('Invalid message author');
+        // }
+
+        Logger.log(`You have mail!: ${socket.id} ${JSON.stringify(message)}`);
+        socket.broadcast.emit(GameSessionEvent.Message, message);
 
         const gameSession = this.gameManagerService.getPlayerGameSession(socket.id);
         socket.to(gameSession.roomId).emit(GameSessionEvent.Message, { ...message, author: MessageAuthor.Opponent });
     }
 
+    @UseGuards(SocketAuthGuard)
     @SubscribeMessage(GameSessionEvent.GetGameState)
     getGameState(@MessageBody() gameId: string): JoinableGame {
         const waitingRoom = this.waitingRoomService.getGameWaitingRoom(gameId);
@@ -273,33 +282,6 @@ export class GameSessionGateway implements OnGatewayConnection, OnGatewayDisconn
                 this.cleanupGame(gameSession);
             }
         }
-    }
-
-    // FIXME: Reenable
-    // @UseGuards(SocketAuthGuard)
-    @SubscribeMessage(GameSessionEvent.Message)
-    message(@ConnectedSocket() socket: Socket, @MessageBody() message: Message): void {
-        // FIXME: Temporary disable
-        // if (message.author !== MessageAuthor.User) {
-        //     throw new WsException('Invalid message author');
-        // }
-
-        Logger.log(`You have mail!: ${socket.id} ${JSON.stringify(message)}`);
-        socket.broadcast.emit(GameSessionEvent.Message, message);
-
-        const gameSession = this.gameManagerService.getPlayerGameSession(socket.id);
-        socket.to(gameSession.roomId).emit(GameSessionEvent.Message, { ...message, author: MessageAuthor.Opponent });
-    }
-
-    @UseGuards(SocketAuthGuard)
-    @SubscribeMessage(GameSessionEvent.GetGameState)
-    getGameState(@MessageBody() gameId: string): JoinableGame {
-        const waitingRoom = this.waitingRoomService.getGameWaitingRoom(gameId);
-
-        if (!waitingRoom) {
-            return { _id: gameId, sheetState: GameSheetState.Creatable };
-        }
-        return { _id: gameId, sheetState: GameSheetState.Joinable };
     }
 
     handleConnection(socket: Socket) {
