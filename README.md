@@ -46,3 +46,19 @@ The tests can be found in the `*.spec.ts` files in the source code of both proje
     -   A report will be generated in the console output.
     -   A detailed report will be generated in the `/coverage` directory as a web page. You can open the `index.html` file in your browser and navigate through the report. You will see the lines of code not covered by the tests.
 
+
+# Preview
+
+## Login page
+<img width="1423" alt="Screenshot 2024-03-01 at 11 46 55 AM" src="https://github.com/MurielleMardenli200/FindTheDifferenceGame/assets/90001299/ac00faa0-5b8a-41e9-92c3-5addcdec0f33">
+
+## Home page
+<img width="1422" alt="Screenshot 2024-03-01 at 10 39 47 AM" src="https://github.com/MurielleMardenli200/FindTheDifferenceGame/assets/90001299/9f5c7ac3-55f9-464b-b86e-70689ec5edc3">
+
+## Game creation page
+<img width="1436" alt="Screenshot 2024-03-01 at 11 42 56 AM" src="https://github.com/MurielleMardenli200/FindTheDifferenceGame/assets/90001299/f7a493d6-c873-4f65-ab5f-f9cb7566b4b0">
+
+## Game page
+<img width="1434" alt="Screenshot 2024-03-01 at 11 45 13 AM" src="https://github.com/MurielleMardenli200/FindTheDifferenceGame/assets/90001299/d1e90e35-d14e-4dce-9b88-488b869bf791">
+
+
